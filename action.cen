@@ -1,0 +1,40 @@
+#template name
+name::Action
+
+#number of cennic for 1 page
+on_page::3
+
+base::640,450
+textInBox::0,0,640,30,20,OOO "ЮЖНЫЙ ДВОР - 34"
+
+#NAME of good is a text in box: startX, startY, +X, +Y, fontsize, fontfamily
+good::0,30,640,230,20,43,Arial
+
+textInBox::20,280,250,50,30,Стар. цена:
+textInBox::20,360,250,50,30,Нов. цена:
+priceold::300,300,300,70,50,р,коп
+price::300,380,300,70,50,р,коп
+
+#DATE startX, strartY, +X, +Y, fontsize, dateformat
+date::400,410,170,40,20,dd.MM.yy
+
+#line startX, startY, +X, +Y, width of Line
+line::280,260,340,70,5
+line::280,330,340,-70,5
+
+#simple text is used for fixed text: startX, startY, text
+#simpleText::0,30,Старая цена:       15руб.
+
+#Barcode - startX, startY, +X, +Y, 0 - not render Digits
+barcode::50,420,300,20,0
+
+#text in BOX
+#startX, startY, +X, +Y, font size, text
+#textInBox::0,50,500,60,30,Белизна/Каустик/
+
+
+#TNOMER startX, startY, +X, +Y, fontsize
+#tnomer::350,300,100,30,17
+
+#PRICE startX, startY, +X, +Y, fontsize,символ рублей, символ копеек
+
