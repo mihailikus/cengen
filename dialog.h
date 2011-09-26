@@ -11,10 +11,6 @@ class QGridLayout;
 class QTableWidget;
 QT_END_NAMESPACE
 
-//class QLineEdit;
-
-//=================
-
 class MyDialog : public QDialog {
     Q_OBJECT
 private:
