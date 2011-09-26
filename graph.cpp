@@ -1,4 +1,4 @@
-//дополнительные функции для QGraphicsScene
+//additional functions for QGraphicsScene
 #include "graph.h"
 #include <QGraphicsRectItem>
 
