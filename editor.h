@@ -1,6 +1,8 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
+//EDITOR of templates for price lists in XML format
+
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsView>
