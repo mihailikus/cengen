@@ -2,7 +2,6 @@
 #define GRAPH_H
 //This is used for draw thick line
 //is deprecated and will be removed
-
 #include <QGraphicsScene>
 #include <math.h>
 
@@ -13,6 +12,5 @@ QGraphicsItem * imagelinethick(QGraphicsScene * image, \
 float max(float x1, float x2);
 float min(float x1, float x2);
 float round(float x);
-
 
 #endif // GRAPH_H
