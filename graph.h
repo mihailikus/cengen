@@ -3,6 +3,8 @@
 //This is used for draw thick line
 //is deprecated and will be removed
 
+
+
 #include <QGraphicsScene>
 #include <math.h>
 
