@@ -18,7 +18,6 @@ void Cennic::create(Tovar *tovar, const QDomNode &shablon) {
     //qDebug() <<barcode->is_valid();
 
     this->codec = QTextCodec::codecForName("UTF-8");
-    on_page_is_set = false;
     this->setShablonName(shablon);
     ctovar = tovar;
     if (ctovar->name_of_tovar == "") {
@@ -41,7 +40,12 @@ Cennic::~Cennic() {
     qDebug() << "destructor of cennic";
 }
 
-QPoint* Cennic::render(QGraphicsScene *scene, float X, float Y) {
+QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
+    if (!is_shablon_correct) {
+        QPoint pos;
+        pos = QPoint (X, Y);
+        return (pos);
+    }
     QPen pen(Qt::black, 1);
     QBrush brush (Qt::white);
     QDomNode node = this->domNode.firstChild();
@@ -70,7 +74,7 @@ QPoint* Cennic::render(QGraphicsScene *scene, float X, float Y) {
 
             if (element == "base" ) {
                 scene->addRect(X, Y, width, heith,pen, brush);
-                point = new QPoint (width, heith);
+                point = QPoint (width, heith);
             }
 
             if (element == "line" ) {

@@ -232,9 +232,9 @@ void editor::on_previewButton_clicked()
     tovar.price1 = 299.90;
     tovar.price2 = 999.90;
     Cennic* preview_cennic = new Cennic(&tovar, doc.documentElement());
-    QPoint* pos = preview_cennic->render(ui_preScene, 0, 0);
+    QPoint pos = preview_cennic->render(ui_preScene, 0, 0);
 
-    ui_preView->fitInView(0, 0, pos->x(), pos->y(), Qt::KeepAspectRatio);
+    ui_preView->fitInView(0, 0, pos.x(), pos.y(), Qt::KeepAspectRatio);
 
 
 }

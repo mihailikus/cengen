@@ -481,14 +481,14 @@ void cengen::generate_preview() {
         currentTovar = spisok.at(i);
         currentTovar.name_of_tovar = currentTovar.name_of_tovar.toUtf8();
         Cennic* cennic = new Cennic(&currentTovar, shablonElement);
-        QPoint* corner = cennic->render(currentScene, bXpos, bYpos);
+        QPoint corner = cennic->render(currentScene, bXpos, bYpos);
 
         if ( ((i+1) % this->Ccols) != 0) {
-            bXpos += corner->x();
+            bXpos += corner.x();
         } else {
             //qDebug() << "Next line";
             bXpos = bXstart;
-            bYpos += corner->y();
+            bYpos += corner.y();
         }
 
         if ( !((i+1) % (Crows * Ccols)) ) {
