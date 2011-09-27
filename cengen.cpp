@@ -1515,8 +1515,3 @@ void cengen::on_radioButton_7_clicked()
     this->paperOrientation = "landscape";
     update_values();
 }
-
-void cengen::on_groupBox_9_toggled(bool arg1)
-{
-    qDebug() << "bool";
-}
