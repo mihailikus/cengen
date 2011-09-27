@@ -32,7 +32,6 @@ bool dbf_informer::describe_dbf() {
     this->number_of_records = (unsigned char) header[4] + (unsigned char) header[5]*256 + \
                             (unsigned char) header[6]*65536 + (unsigned char) header[7]*65536*256;
 
-
     this->length_of_header_structure = (unsigned char) header[8] + (unsigned char) header[9]*256;
 
     this->length_of_each_record = (unsigned char) header[10] + (unsigned char) header[11]*256;
@@ -52,7 +51,6 @@ bool dbf_informer::describe_dbf() {
         qDebug() << "Wrong DBF file. Select proper one";
         this->fields.clear();
         return false;
-
     }
 
     //--------------------------------------------------------
