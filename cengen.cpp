@@ -631,12 +631,11 @@ void cengen::writeSettings()
         //qDebug() << "desc written";
     }
 
+    //записываем настройки фильтра
+    m_settings.setValue("/filterIsOn", filter_is_on);
     if (filter_is_on) {
-        //записываем настройки фильтра
 
         m_settings.beginGroup("/filter");
-
-        m_settings.setValue("/isOn", "isOn");
 
         //записываем название файла
         m_settings.setValue("/FileName", filterDbf.fileName);
@@ -780,8 +779,8 @@ void cengen::readSettings() {
     //qDebug() << "Closing group settings. Count " << i;
 
     //Читаем настройки фильтра
-    QString filter = m_settings.value("/Settings/filter/isOn", "NO").toString();
-    if (filter == "isOn") {
+    bool filter = m_settings.value("/Settings/filterIsOn", "false").toBool();
+    if (filter) {
         //если фильтр включен - включаем контрол в UI и читаем настройки
         ui_filterBox->setChecked(true);
         this->read_filter_settings();
