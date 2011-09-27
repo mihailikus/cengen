@@ -18,7 +18,6 @@ public:
     ~Cennic();
 
 public slots:
-    void setShablonName(const QDomNode& shablon);
     QPoint render(QGraphicsScene * scene, float X, float Y);
     QString money_format(float price, QString rub, QString kop);
 
@@ -34,12 +33,10 @@ private:
     //QFile file;
     QDomNode domNode;
     QDomElement domElement;
-    bool is_shablon_correct;
     bool preview;   //флаг для указания, что будет просто превью
     QString text;
     QRectF* rect;    //для указания области, в которой будет рисоваться элемент
     QTextCodec *codec;      //для перекодирования
-    QPoint point;  //для возврата из ренрегинга правого нижнего угла
 
     Barcode* barcode;
     Tovar * ctovar;

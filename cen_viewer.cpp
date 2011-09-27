@@ -13,12 +13,10 @@ Cennic::Cennic(Tovar *tovar, const QDomNode &shablon) {
 }
 
 void Cennic::create(Tovar *tovar, const QDomNode &shablon) {
-    //qDebug() << "cennic SUB creation";
     barcode = new Barcode(tovar->barcode);
-    //qDebug() <<barcode->is_valid();
 
     this->codec = QTextCodec::codecForName("UTF-8");
-    this->setShablonName(shablon);
+    this->domNode = shablon;
     ctovar = tovar;
     if (ctovar->name_of_tovar == "") {
         ctovar->name_of_tovar = "tname is not set";
@@ -27,27 +25,15 @@ void Cennic::create(Tovar *tovar, const QDomNode &shablon) {
     }
 }
 
-void Cennic::setShablonName(const QDomNode& shablon) {
-    this->domNode = shablon;
-    if (!domNode.isNull()) {
-        is_shablon_correct = true;
-    } else {
-        is_shablon_correct = false;
-    }
-}
-
 Cennic::~Cennic() {
     qDebug() << "destructor of cennic";
 }
 
 QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
-    if (!is_shablon_correct) {
-        QPoint pos;
-        pos = QPoint (X, Y);
-        return (pos);
-    }
     QPen pen(Qt::black, 1);
     QBrush brush (Qt::white);
+    QPoint point;
+    point = QPoint(X, Y);
     QDomNode node = this->domNode.firstChild();
     while (!node.isNull()){
         //qDebug() << "rendering";
@@ -69,8 +55,6 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
             QFont font = QFont(font_family, font_size);
             QString rubSymbol = domElement.attribute("rub", "");
             QString kopSymbol = domElement.attribute("kop", "");
-
-
 
             if (element == "base" ) {
                 scene->addRect(X, Y, width, heith,pen, brush);
