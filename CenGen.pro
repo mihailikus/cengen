@@ -17,7 +17,6 @@ SOURCES += main.cpp \
     tinformer.cpp \
     cen_viewer.cpp \
     barcode.cpp \
-    button_for_table.cpp \
     dbf_informer.cpp \
     dialog.cpp \
     editor.cpp \
@@ -34,7 +33,6 @@ HEADERS += cengen.h \
     dbf_config.h \
     db_translator.h \
     sql_validator.h \
-    button_for_table.h \
     dbf.h \
     dbf_informer.h \
     dialog.h \

@@ -23,7 +23,6 @@
 #include "cen_viewer.h"
 #include "bvalidator.h"
 #include "sql_validator.h"
-#include "button_for_table.h"
 #include "dialog.h"
 #include "editor.h"
 
