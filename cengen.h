@@ -222,7 +222,6 @@ private slots:
 
     void on_radioButton_6_clicked();
     void on_radioButton_7_clicked();
-    void on_groupBox_9_toggled(bool arg1);
 };
 
 #endif // CENGEN_H
