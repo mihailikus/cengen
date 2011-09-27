@@ -5,13 +5,10 @@
 
 Barcode::Barcode(QString text)
 {
-    //qDebug() <<"barcode SUB creation: " << text;
     this->setText(text);
     if (this->is_valid()) {
         this->TextToBit();
-        //qDebug() << "barcode VALID";
     } else {
-        //qDebug() << "barcode WRONG";
         for (int i=0; i<95; i++)
         {
             lines << false;

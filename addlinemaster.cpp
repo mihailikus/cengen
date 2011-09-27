@@ -30,8 +30,6 @@ AddLineMaster::AddLineMaster(QWidget *parent) :
 
     line_number = 0;
 
-
-
 }
 
 AddLineMaster::~AddLineMaster()
@@ -42,20 +40,18 @@ AddLineMaster::~AddLineMaster()
 
 void AddLineMaster::on_values_changed() {
 
-    qDebug() << "values changed";
-
+    //qDebug() << "values changed";
     float startX, startY, width, heith, thick;
     startX = ui_startXspin->value();
     startY = ui_startYspin->value();
     width = ui_widthSpin->value();
     heith = ui_heithSpin->value();
     thick = ui_thickSpin->value();
-
     emit values_changed("line" + QString::number(line_number), startX, startY, width, heith, thick);
 }
 
 void AddLineMaster::set_line_number(int number) {
-    qDebug() << "LINE number setted " << number;
+    //qDebug() << "LINE number setted " << number;
     this->line_number = number;
 }
 
