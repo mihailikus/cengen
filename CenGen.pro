@@ -48,3 +48,6 @@ FORMS += cengen.ui \
 OTHER_FILES += \
     todo.txt \
     tmp.txt
+
+RESOURCES += \
+    resource.qrc

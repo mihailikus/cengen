@@ -18,6 +18,8 @@
 #include <QSettings>
 #include <QGroupBox>
 #include <QSpinBox>
+#include <QToolBar>
+#include <QAction>
 #include "tinformer.h"
 #include "barcode.h"
 #include "cen_viewer.h"
@@ -42,6 +44,7 @@ class QGraphicsScene;
 class QTabWidget;
 class QValidator;
 class QStringList;
+class QToolBar;
 
 class BarcodeValidator;
 class Tinformer;
@@ -141,9 +144,8 @@ private:
 
     bool add_flag;
 
-    //для работы с фильтром
-    //QGroupBox* ui_filterBox;
-
+    QToolBar* ui_mainToolBar;
+    QAction* ui_action3;
 
 
 

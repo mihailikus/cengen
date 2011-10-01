@@ -13,6 +13,14 @@ cengen::cengen(QWidget *parent) :
     ui(new Ui::cengen)
 {
     ui->setupUi(this);
+
+    ui_mainToolBar = qFindChild<QToolBar*>(this, "mainToolBar");
+    ui_action3 = qFindChild<QAction*>(this, "action_3");
+    ui_action3->setIcon(QIcon(":/share/images/tmp.ico"));
+
+    ui_mainToolBar->addAction(ui_action3);
+
+
     ui_lineEdit = qFindChild<QLineEdit*>(this,"lineEdit");
     ui_lineW = qFindChild<QLineEdit*>(this,"lineW");
     ui_lineH = qFindChild<QLineEdit*>(this,"lineH");

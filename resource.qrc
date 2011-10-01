@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/share/images">
+        <file>tmp.ico</file>
+    </qresource>
+</RCC>
