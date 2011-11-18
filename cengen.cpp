@@ -1475,32 +1475,102 @@ void cengen::on_filterFileName_changed() {
 QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     QList<Tovar> filteredList;
 
-    filterConfig.tbarcode = ui_filterWhatBox->currentText();
 
     filterConfig.tnomer = ui_filterWhereBox->currentText();
     filterConfig.tprice = ui_filterWhereBox->currentText();
     filterConfig.tname = ui_filterWhereBox->currentText();
+    filterConfig.tbarcode = ui_filterWhereBox->currentText();
+
+    int WhatToFound = ui_filterWhatToFoundBox->currentIndex();
+    qDebug() << "What to found is " << WhatToFound;
+    switch (WhatToFound) {
+    case 0:
+        filterConfig.tnomer = ui_filterWhatBox->currentText();
+        break;
+    case 1:
+        filterConfig.tbarcode = ui_filterWhatBox->currentText();
+        break;
+    case 2:
+        filterConfig.tname = ui_filterWhatBox->currentText();
+        break;
+    case 3:
+        filterConfig.tprice = ui_filterWhatBox->currentText();
+        break;
+
+    }
+
+    //filterConfig.tbarcode = ui_filterWhatBox->currentText();
 
 
     filterInformer->set_fields(&filterConfig);
 
     filterInformer->set_limit_search(1);
 
+    int method = ui_filterMethodBox->currentIndex();
+    QString search = ui_filterLineText->text();
+    bool itemfound;
 
+    qDebug() << "Method in filter " << method;
 
     Tovar tovarItem, tovarFound;
 
     for (int i = 0; i<inputList.count(); i++) {
         tovarItem = inputList.at(i);
-        qDebug() << "filter i=" << i;
-        QString searchText = QString::number(tovarItem.nomer_of_tovar);
-        QList<Tovar> foundList = filterInformer->info(searchText, "tbarcode");
+        //qDebug() << "filter i=" << i;
+
+        QString searchText, searchMethod;
+        //в зависимости от выбранного ищем по номеру, цене и т.п.
+        switch (WhatToFound) {
+        case 0:
+            searchText = QString::number(tovarItem.nomer_of_tovar);
+            searchMethod = "tnomer";
+            break;
+        case 1:
+            searchText = tovarItem.barcode;
+            searchMethod = "tbarcode";
+            break;
+        case 2:
+            searchText = tovarItem.name_of_tovar;
+            searchMethod = "tname";
+            break;
+        case 3:
+            searchText = QString::number(tovarItem.price1);
+            searchMethod = "tprice";
+        default:
+            searchText = tovarItem.nomer_of_tovar;
+            searchMethod = "tnomer";
+            break;
+        }
+        //qDebug() << "Search text in filter: " << searchText;
+
+        QList<Tovar> foundList = filterInformer->info(searchText, searchMethod);
         if (foundList.count()) {
+            itemfound = false;
             tovarFound = foundList.at(0);
-            qDebug() << "tovar is " << tovarFound.price1;
-            if (tovarFound.price1 > 0) {
-                filteredList << tovarItem;
+            //qDebug() << "tovar is " << tovarFound.price1;
+            qDebug() << "FOUND in filter: " << tovarFound.name_of_tovar;
+
+            //проверяем, используя выбранный метод сравнения
+            switch (method) {
+            case 0:
+                if (tovarFound.price1 == search.toFloat()) itemfound = true;
+                break;
+            case 1:
+                if (tovarFound.price1 != search.toFloat()) itemfound = true;
+                break;
+            case 2:
+                if (tovarFound.price1 > search.toFloat()) itemfound = true;
+                break;
+            case 3:
+                if (tovarFound.price1 < search.toFloat()) itemfound = true;
+                break;
+            case 4:
+                if (tovarFound.name_of_tovar.contains(searchText, Qt::CaseInsensitive)) itemfound = true;
+            default:
+                break;
             }
+
+            if (itemfound) filteredList <<tovarItem;
 
         }
     }
@@ -1521,4 +1591,9 @@ void cengen::on_radioButton_7_clicked()
 {
     this->paperOrientation = "landscape";
     update_values();
+}
+
+void cengen::on_action_4_activated()
+{
+    this->on_exitButton_clicked();
 }

@@ -192,7 +192,7 @@ bool Tinformer::set_fields(dbTranslator *rows) {
                 if (dbf_info->fields.at(i).name == values.at(j)) {
                     //qDebug() << "found " << dbf_info->fields.at(i).name;
                     dbf_info->dbf_fields[names.at(j)].offset = offset;
-                    qDebug() << "offset is " << offset;
+                    //qDebug() << "offset is " << offset;
                     dbf_info->dbf_fields[names.at(j)].length = dbf_info->fields.at(i).length;
 
                     //qDebug() << "writing field " << names.at(j);
