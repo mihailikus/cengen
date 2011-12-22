@@ -119,6 +119,8 @@ private:
     bool db_is_ready;
     bool describer_is_ready;
 
+    bool editing_price2;
+
     //переменные для работы фильтра
     QGroupBox* ui_filterBox;
     bool filter_is_on;

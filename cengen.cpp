@@ -70,8 +70,8 @@ cengen::cengen(QWidget *parent) :
     this->ui_comboTbList->setEnabled(false);
 
     this->new_line_ready();
-    //DataSource mode = MySQL;
-    //qDebug() << "preparing";
+
+    editing_price2 = false;
 
     my_informer = new Tinformer();
     zoom = 1.0;
@@ -231,12 +231,25 @@ void cengen::on_pushButton_clicked()
 
 void cengen::on_lineEdit_returnPressed()
 {
-    this->tovar_search();
-    this->new_line_ready();
+    if (ui_lineEdit->text() != "") {
+        this->tovar_search();
+        this->new_line_ready();
+    } else {
+        //нажата Энтер с пустым полем - значит, хотим отредактировать
+        //    цену только что введенного товара
+        editing_price2 = true;
+        if (ui_tableWidget->rowCount()) {
+            QTableWidgetItem* item = ui_tableWidget->item
+                    (ui_tableWidget->rowCount()-1, 5);
+            ui_tableWidget->setCurrentItem(item);
+            ui_tableWidget->setFocus();
+        }
+    }
+
 }
 
 void cengen::new_line_ready() {
-    ui_lineEdit->selectAll();
+    ui_lineEdit->clear();
     ui_lineEdit->setFocus();
 }
 
@@ -1168,6 +1181,11 @@ void cengen::on_tableWidget_cellEntered(int row, int column)
 
 void cengen::on_tableWidget_cellChanged(int row, int column)
 {
+    if (editing_price2) {
+        editing_price2 = false;
+        new_line_ready();
+        return;
+    }
 
     if (add_flag) {
         return;
@@ -1181,9 +1199,8 @@ void cengen::on_tableWidget_cellChanged(int row, int column)
         }
     }
 
-    qDebug() << "row will be selected = " << row;
-        QTableWidgetItem* item = ui_tableWidget->item(row, column);
-        ui_tableWidget->setCurrentItem(item);
+    QTableWidgetItem* item = ui_tableWidget->item(row, column);
+    ui_tableWidget->setCurrentItem(item);
 
 
 }
