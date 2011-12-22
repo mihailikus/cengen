@@ -225,6 +225,10 @@ private slots:
     void on_radioButton_7_clicked();
 
     void on_action_4_activated();
+    void on_comboTnomer_currentIndexChanged(int index);
+    void on_comboTname_currentIndexChanged(int index);
+    void on_comboTbarcode_currentIndexChanged(int index);
+    void on_comboTprice_currentIndexChanged(int index);
 };
 
 #endif // CENGEN_H

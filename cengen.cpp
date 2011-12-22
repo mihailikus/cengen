@@ -631,10 +631,10 @@ void cengen::writeSettings()
     if (describer_is_ready) {
         m_settings.beginGroup("/describer");
         m_settings.setValue("/tnomer", config_index[0]);
-        //qDebug() << "writing index ot 0 = " << config_index[0];
         m_settings.setValue("/tname", config_index[1]);
         m_settings.setValue("/tbarcode", config_index[2]);
         m_settings.setValue("/tprice", config_index[3]);
+        //qDebug() << "writing index of 3 = " << config_index[3];
         m_settings.endGroup();
         //qDebug() << "desc written";
     }
@@ -672,9 +672,7 @@ void cengen::writeSettings()
 }
 
 void cengen::readSettings() {
-    //m_settings.sync();
-    //m_settings.beginGroup("/Settings");
-    //m_settings.sync();
+
     static int i = 0;
     i++;
 
@@ -689,8 +687,8 @@ void cengen::readSettings() {
     this->dbf = new DbfConfig;
     this->sql = new SqlConfig;
 
-    //читаем источник данных (по умолчанию - MySQL)
-    this->db_source = m_settings.value("/Settings/source", "1").toInt();
+    //читаем источник данных (по умолчанию - DBF)
+    this->db_source = m_settings.value("/Settings/source", "0").toInt();
 
     if (db_source) {
         //если 1 - ищем в мускуле
@@ -797,8 +795,8 @@ void cengen::readSettings() {
         ui_filterBox->setChecked(false);
     }
 
-    //читаем номер текущей вкладки
-    int ind = m_settings.value("/Settings/tabIndex", "0").toInt();
+    //читаем номер текущей вкладки (по умолчанию - вкладка с источником данных)
+    int ind = m_settings.value("/Settings/tabIndex", "3").toInt();
     if (ind > ui_tabWidget->count()-1) {
         ind = 0;
     }
@@ -890,7 +888,7 @@ void cengen::on_save_db_config_button_clicked()
     my_informer->set_fields(&config);
     this->describer_is_ready = true;
 
-    //qDebug() << "Save db headers";
+    qDebug() << "Save db headers. 3 is " << config_index[3];
 }
 
 void cengen::update_ui_db_controls() {
@@ -909,10 +907,20 @@ void cengen::update_ui_db_controls() {
         if (this->db_source) {
             this->on_comboTbList_activated(sql->tbName);
         }
+        ui_comboTnomer->blockSignals(true);
+        ui_comboTname->blockSignals(true);
+        ui_comboTbarcode->blockSignals(true);
+        ui_comboTprice->blockSignals(true);
+
         this->ui_comboTnomer->setCurrentIndex(config_index[0]);
         this->ui_comboTname->setCurrentIndex(config_index[1]);
         this->ui_comboTbarcode->setCurrentIndex(config_index[2]);
         this->ui_comboTprice->setCurrentIndex(config_index[3]);
+
+        ui_comboTnomer->blockSignals(false);
+        ui_comboTname->blockSignals(false);
+        ui_comboTbarcode->blockSignals(false);
+        ui_comboTprice->blockSignals(false);
 
         this->on_save_db_config_button_clicked();
         ui_save_db_config_button->setEnabled(true);
@@ -1596,4 +1604,25 @@ void cengen::on_radioButton_7_clicked()
 void cengen::on_action_4_activated()
 {
     this->on_exitButton_clicked();
+}
+
+void cengen::on_comboTnomer_currentIndexChanged(int index)
+{
+    //при изменении комбобоксов из списка соответствий - сохраняем
+    on_save_db_config_button_clicked();
+}
+
+void cengen::on_comboTname_currentIndexChanged(int index)
+{
+    on_save_db_config_button_clicked();
+}
+
+void cengen::on_comboTbarcode_currentIndexChanged(int index)
+{
+    on_save_db_config_button_clicked();
+}
+
+void cengen::on_comboTprice_currentIndexChanged(int index)
+{
+    on_save_db_config_button_clicked();
 }

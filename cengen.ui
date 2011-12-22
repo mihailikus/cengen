@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab1">
      <attribute name="title">
@@ -821,7 +821,7 @@
        </rect>
       </property>
       <property name="title">
-       <string>GroupBox</string>
+       <string>База данных</string>
       </property>
       <widget class="QLabel" name="label_16">
        <property name="geometry">
@@ -879,6 +879,9 @@
        <string>Источник данных</string>
       </property>
       <widget class="QRadioButton" name="radioButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -891,7 +894,7 @@
         <string>MySQL</string>
        </property>
        <property name="checked">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
       <widget class="QRadioButton" name="radioButton_4">
@@ -905,6 +908,9 @@
        </property>
        <property name="text">
         <string>DBF-файл</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>

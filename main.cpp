@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setOrganizationName("IP_Volkov");
+    QCoreApplication::setOrganizationName("UG_Dvor_34");
     QCoreApplication::setApplicationName("CenGen");
     QApplication a(argc, argv);
     cengen w;
