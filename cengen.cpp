@@ -203,11 +203,8 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList, QString method) {
         Tovar tovar;
         for (int i = 0; i<inputList.count(); i++) {
             tovar = inputList.at(i);
-            //int position = table->rowCount();
-            //table->setRowCount(position + 1);
 
             add_table_item(table, i, tovar);
-
 
             QTableWidgetItem* itemCheck = new QTableWidgetItem(" ");
             table->setItem(i, 6, itemCheck);
