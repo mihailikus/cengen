@@ -18,18 +18,19 @@ private:
     QTableWidget* myTable;
     QPushButton* buttonOK;
     QPushButton* buttonCancel;
-    //QScrollArea* area;
+    QPushButton* buttonSelectAll;
 
+    bool itemsToSelectAll;
 
 public:
     MyDialog (QWidget* pwgt = 0);
 
-    //QString dialogText() const;
     void setTable(QTableWidget **table);
     void setTable(QString error);
 
 private slots:
     void addTovarToList(int row, int column);
+    void selectAllItems();
 
 };
 

@@ -8,49 +8,48 @@
 MyDialog::MyDialog (QWidget* pwgt/*= 0*/)
     : QDialog (pwgt, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
 {
-    //ui_lineEdit = new QLineEdit;
 
+    buttonOK = new QPushButton (tr("OK"));
+    buttonCancel = new QPushButton (tr("Cancel"));
+    buttonSelectAll = new QPushButton (tr("SelectALL"));
 
-    //label1->setBuddy (ui_lineEdit);
-
-    buttonOK = new QPushButton ("OK");
-    buttonCancel = new QPushButton ("Cancel");
+    itemsToSelectAll = true;
 
     connect (buttonOK, SIGNAL(clicked()), SLOT (accept()));
     connect (buttonCancel, SIGNAL(clicked()), SLOT (reject()));
 
     //Layout setup
     myLayout = new QGridLayout;
-    //myLayout->addWidget (ui_lineEdit, 0, 1);
     myLayout->addWidget (buttonOK, 1, 0);
     myLayout->addWidget (buttonCancel, 1, 1);
 
     setLayout(myLayout);
-    //this->setFixedWidth(1000);
     this->setFixedSize(1000, 500);
 
 }
 
 void MyDialog::setTable(QTableWidget **table) {
     myTable = *table;
-    myLayout->addWidget(myTable, 0, 0);
+    myLayout->addWidget(myTable, 0, 0, 1, 3);
     connect(myTable, SIGNAL(cellClicked(int,int)), SLOT(addTovarToList(int,int)));
+
+    myLayout->addWidget(buttonSelectAll, 1, 2);
+    connect(buttonSelectAll, SIGNAL(clicked()), SLOT(selectAllItems()));
+
 }
 
 void MyDialog::setTable(QString error) {
     QLabel* label = new QLabel (error);
     label->setAlignment(Qt::AlignCenter);
     myLayout->addWidget (label, 0, 0, 1, 0);
-    //myLayout->removeWidget(buttonCancel);
-    //myLayout->addWidget(buttonOK, 1, 0, 1, 1);
     this->setFixedSize(300, 70);
 
 }
 
 void MyDialog::addTovarToList(int row, int column) {
-    qDebug() << "column = " << column;
+    //qDebug() << "column = " << column;
     QString text = myTable->item(row, 6)->text();
-    qDebug() << text;
+    //qDebug() << text;
 
     if (text == "V") {
         text = " ";
@@ -58,13 +57,24 @@ void MyDialog::addTovarToList(int row, int column) {
         text = "V";
     }
 
-    //QTableWidgetItem* item = new QTableWidgetItem(text);
-    //myTable->setItem(row, 6, item);
-    //myTable->itemAt(row, 6)->setText(text);
     myTable->item(row, 6)->setText(text);
-    //myTable->item(row, 6)->setBackgroundColor(Qt::red);
     myTable->repaint();
 
 }
 
+void MyDialog::selectAllItems() {
+    QString text;
+    if (itemsToSelectAll) {
+        text = "V";
+        itemsToSelectAll = false;
+    } else {
+        text = " ";
+        itemsToSelectAll = true;
+    }
+
+    for (int i = 0; i<myTable->rowCount(); i++) {
+        myTable->item(i, 6)->setText(text);
+    }
+    myTable->repaint();
+}
 
