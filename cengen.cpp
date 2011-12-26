@@ -194,7 +194,7 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList, QString method) {
 
     if (!inputList.count()) {
         //если пусто - показать ошибку
-        dlg->setTable("NOT FOUND");
+        dlg->setTable(tr("NOT FOUND"));
 
     } else {
         table->setRowCount(inputList.count());
