@@ -190,7 +190,7 @@ void cengen::load_tovar_list_into_cengen(QList<Tovar> tovarList) {
 QList<Tovar> cengen::show_found_items(QList<Tovar> inputList, QString method) {
     QList<Tovar> tovarList;
     QTableWidget* table = new QTableWidget;
-    MyDialog* dlg = new MyDialog;
+    MyDialog* dlg = new MyDialog(this);
 
     if (!inputList.count()) {
         //если пусто - показать ошибку
