@@ -11,7 +11,7 @@ class QGridLayout;
 class QTableWidget;
 QT_END_NAMESPACE
 
-class MyDialog : public QDialog {
+class ListFoundedItemsDialog : public QDialog {
     Q_OBJECT
 private:
     QGridLayout* myLayout;
@@ -23,7 +23,7 @@ private:
     bool itemsToSelectAll;
 
 public:
-    MyDialog (QWidget* pwgt = 0);
+    ListFoundedItemsDialog (QWidget* pwgt = 0);
 
     void setTable(QTableWidget **table);
     void setTable(QString error);

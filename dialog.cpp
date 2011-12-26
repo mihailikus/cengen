@@ -5,7 +5,7 @@
 
 
 
-MyDialog::MyDialog (QWidget* pwgt/*= 0*/)
+ListFoundedItemsDialog::ListFoundedItemsDialog (QWidget* pwgt/*= 0*/)
     : QDialog (pwgt, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
 {
 
@@ -28,7 +28,7 @@ MyDialog::MyDialog (QWidget* pwgt/*= 0*/)
 
 }
 
-void MyDialog::setTable(QTableWidget **table) {
+void ListFoundedItemsDialog::setTable(QTableWidget **table) {
     myTable = *table;
     myLayout->addWidget(myTable, 0, 0, 1, 3);
     connect(myTable, SIGNAL(cellClicked(int,int)), SLOT(addTovarToList(int,int)));
@@ -38,7 +38,7 @@ void MyDialog::setTable(QTableWidget **table) {
 
 }
 
-void MyDialog::setTable(QString error) {
+void ListFoundedItemsDialog::setTable(QString error) {
     QLabel* label = new QLabel (error);
     label->setAlignment(Qt::AlignCenter);
     myLayout->addWidget (label, 0, 0, 1, 0);
@@ -46,7 +46,7 @@ void MyDialog::setTable(QString error) {
 
 }
 
-void MyDialog::addTovarToList(int row, int column) {
+void ListFoundedItemsDialog::addTovarToList(int row, int column) {
     //qDebug() << "column = " << column;
     QString text = myTable->item(row, 6)->text();
     //qDebug() << text;
@@ -62,7 +62,7 @@ void MyDialog::addTovarToList(int row, int column) {
 
 }
 
-void MyDialog::selectAllItems() {
+void ListFoundedItemsDialog::selectAllItems() {
     QString text;
     if (itemsToSelectAll) {
         text = "V";
