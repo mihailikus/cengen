@@ -101,7 +101,7 @@ cengen::cengen(QWidget *parent) :
 
     this->readSettings();
 
-    this->set_tableWidget_header(ui_tableWidget);
+    //this->set_tableWidget_header(ui_tableWidget);
 
     //подготовка сцены для рендеринга ценников
     currentScene = new QGraphicsScene;
@@ -675,8 +675,19 @@ void cengen::writeSettings()
 
     }
 
+    //указываем текущую вкладку
     m_settings.setValue("tabIndex", ui_tabWidget->currentIndex());
 
+    //сохранение параметров отображения окна
+    int mainTableCount = ui_tableWidget->horizontalHeader()->count();
+    m_settings.setValue("mainTableCount", mainTableCount);
+    m_settings.beginGroup("/mainTable");
+    for (int i=0; i<mainTableCount; i++) {
+        m_settings.setValue("tab"+QString::number(i), ui_tableWidget->horizontalHeader()->sectionSize(i));
+    }
+    m_settings.endGroup();
+
+    //закрываем вообще settings
     m_settings.endGroup();
 
 }
@@ -686,7 +697,14 @@ void cengen::readSettings() {
     static int i = 0;
     i++;
 
-    qDebug() << "Group is " << m_settings.group();
+    //устанавливаем геометрию окна
+    int mainTableCount = m_settings.value("/Settings/mainTableCount", 0).toInt();
+    qDebug() << "TAB count = " << mainTableCount;
+    mainTableTabs.clear();
+    for (int i = 0; i<mainTableCount; i++) {
+        mainTableTabs << m_settings.value("/Settings/mainTable/tab"+QString::number(i), 10).toInt();
+    }
+    set_tableWidget_header(ui_tableWidget);
 
     //добавить, если там нет названия шаблона
     QString fileName = m_settings.value("/Settings/shablon", "").toString();
@@ -1100,14 +1118,11 @@ void cengen::set_opisateli_from_settings()
 
 void cengen::set_tableWidget_header(QTableWidget *table) {
 
-    table->horizontalHeader()->resizeSection(0, 25);
-    table->horizontalHeader()->resizeSection(1, 380);
-    table->horizontalHeader()->resizeSection(2, 120);
-    table->horizontalHeader()->resizeSection(3, 80);
-    table->horizontalHeader()->resizeSection(4, 70);
-    table->horizontalHeader()->resizeSection(5, 70);
-    table->horizontalHeader()->resizeSection(6, 30);
-
+    qDebug() << "COUNT " << mainTableTabs.count();
+    for (int i = 0; i<mainTableTabs.count(); i++) {
+        table->horizontalHeader()->resizeSection(i, mainTableTabs.at(i));
+        qDebug() << "TAB " << mainTableTabs.at(i);
+    }
     table->verticalHeader()->hide();
 
 }

@@ -69,6 +69,7 @@ protected:
 private:
     Ui::cengen *ui;
     QSettings m_settings;
+    QList<int> mainTableTabs;
 
     editor* shablon_editor;
 
