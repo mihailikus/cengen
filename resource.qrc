@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/share/images">
-        <file>tmp.ico</file>
+        <file>resources/button_cancel.png</file>
+        <file>resources/folder_blue_open.png</file>
+        <file>resources/window_new.png</file>
+        <file>resources/save.png</file>
     </qresource>
 </RCC>

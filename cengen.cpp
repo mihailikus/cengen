@@ -15,11 +15,32 @@ cengen::cengen(QWidget *parent) :
     ui->setupUi(this);
 
     ui_mainToolBar = qFindChild<QToolBar*>(this, "mainToolBar");
-    ui_action3 = qFindChild<QAction*>(this, "action_3");
-    ui_action3->setIcon(QIcon(":/share/images/tmp.ico"));
 
+    //создание нового списка товаров
+    ui_action3 = qFindChild<QAction*>(this, "action_3");
+    ui_action3->setIcon(QIcon(":/share/images/resources/window_new.png"));
+    ui_action3->setToolTip(tr("New tovar list"));
     ui_mainToolBar->addAction(ui_action3);
 
+    //загрузить
+    ui_action2 = qFindChild<QAction*>(this, "action_2");
+    ui_action2->setIcon(QIcon(":/share/images/resources/folder_blue_open.png"));
+    ui_action2->setToolTip(tr("Load and append tovar list"));
+    ui_mainToolBar->addAction(ui_action2);
+
+    //сохранить
+    ui_action = qFindChild<QAction*>(this, "action");
+    ui_action->setIcon(QIcon(":/share/images/resources/save.png"));
+    ui_action->setToolTip(tr("Save current tovar list"));
+    ui_mainToolBar->addAction(ui_action);
+
+    ui_mainToolBar->addSeparator();
+
+    //выход из программы
+    ui_action4 = qFindChild<QAction*>(this, "action_4");
+    ui_action4->setIcon(QIcon(":/share/images/resources/button_cancel.png"));
+    ui_mainToolBar->addAction(ui_action4);
+    connect(ui_action4, SIGNAL(triggered()), SLOT(close()));
 
     ui_lineEdit = qFindChild<QLineEdit*>(this,"lineEdit");
     ui_lineW = qFindChild<QLineEdit*>(this,"lineW");
@@ -132,12 +153,6 @@ void cengen::changeEvent(QEvent *e)
     default:
         break;
     }
-}
-
-void cengen::on_exitButton_clicked()
-{
-    this->writeSettings();
-    close();
 }
 
 void cengen::tovar_search() {
@@ -1632,7 +1647,9 @@ void cengen::on_radioButton_7_clicked()
 
 void cengen::on_action_4_activated()
 {
-    this->on_exitButton_clicked();
+    qDebug() << "Correct action on exit";
+    this->writeSettings();
+    close();
 }
 
 void cengen::on_comboTnomer_currentIndexChanged(int index)

@@ -148,10 +148,10 @@ private:
     bool add_flag;
 
     QToolBar* ui_mainToolBar;
-    QAction* ui_action3;
-
-
-
+    QAction* ui_action3; //новый файл
+    QAction* ui_action4; //выход
+    QAction* ui_action; //сохранить
+    QAction* ui_action2; //загрузить список
 
 private slots:
     //void on_tabWidget_selected(QString );
@@ -176,7 +176,6 @@ private slots:
     void on_pushButton_2_clicked();
     void on_lineEdit_returnPressed();
     void on_pushButton_clicked();
-    void on_exitButton_clicked();
     void tovar_search();
     void new_line_ready();
     void update_values();   //обновить значеня шаблона в UI-форме

@@ -14,25 +14,12 @@
    <string>cengen</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="exitButton">
-    <property name="geometry">
-     <rect>
-      <x>910</x>
-      <y>20</y>
-      <width>105</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Выход</string>
-    </property>
-   </widget>
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>901</width>
+      <width>1001</width>
       <height>461</height>
      </rect>
     </property>
@@ -152,7 +139,7 @@
        <rect>
         <x>0</x>
         <y>110</y>
-        <width>891</width>
+        <width>991</width>
         <height>301</height>
        </rect>
       </property>
@@ -200,8 +187,8 @@
      <widget class="QGroupBox" name="groupBox_6">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>50</y>
+        <x>620</x>
+        <y>10</y>
         <width>120</width>
         <height>51</height>
        </rect>
@@ -233,6 +220,46 @@
        </property>
        <property name="text">
         <string>max</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_5">
+      <property name="geometry">
+       <rect>
+        <x>790</x>
+        <y>10</y>
+        <width>91</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="title">
+       <string>ИТОГО</string>
+      </property>
+      <widget class="QLabel" name="countLabel">
+       <property name="geometry">
+        <rect>
+         <x>17</x>
+         <y>27</y>
+         <width>57</width>
+         <height>15</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </widget>
@@ -1097,46 +1124,6 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_5">
-    <property name="geometry">
-     <rect>
-      <x>920</x>
-      <y>90</y>
-      <width>91</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="title">
-     <string>ИТОГО</string>
-    </property>
-    <widget class="QLabel" name="countLabel">
-     <property name="geometry">
-      <rect>
-       <x>17</x>
-       <y>27</y>
-       <width>57</width>
-       <height>15</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -1273,7 +1260,6 @@
   <tabstop>zoomInButton</tabstop>
   <tabstop>printButton</tabstop>
   <tabstop>lineW</tabstop>
-  <tabstop>exitButton</tabstop>
   <tabstop>pushButton_3</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>comboBox</tabstop>
