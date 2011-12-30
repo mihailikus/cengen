@@ -62,6 +62,7 @@ public:
     ~cengen();
     void writeSettings();
     void readSettings();
+    void resizeEvent(QResizeEvent *);
 
 protected:
     void changeEvent(QEvent *e);
@@ -94,6 +95,7 @@ private:
     QRadioButton* ui_radioButton_3, *ui_radioButton, *ui_radioButton_4,
                     *ui_radioButton_5;
     QTableWidget* ui_tableWidget;
+    int sizeDelta;  //разница в ширине между основным окном и таблицей
     QLabel* ui_label, *ui_statusLabel, *ui_countLabel, *ui_labelDBFname;
     QScrollArea* ui_scrollArea;
     QTabWidget* ui_tabWidget;

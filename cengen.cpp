@@ -122,7 +122,8 @@ cengen::cengen(QWidget *parent) :
 
     this->readSettings();
 
-    //this->set_tableWidget_header(ui_tableWidget);
+    ui_tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    sizeDelta = this->size().width() - ui_tableWidget->size().width();
 
     //подготовка сцены для рендеринга ценников
     currentScene = new QGraphicsScene;
@@ -140,6 +141,7 @@ cengen::cengen(QWidget *parent) :
 
 cengen::~cengen()
 {
+    writeSettings();
     delete ui;
 }
 
@@ -456,7 +458,6 @@ void cengen::update_values() {
         break;
     }
 
-    qDebug() << "orient" << paperOrientation;
     if (paperOrientation == "landscape") {
         float tmp = this->pageW;
         this->pageW = this->pageH;
@@ -714,7 +715,6 @@ void cengen::readSettings() {
 
     //устанавливаем геометрию окна
     int mainTableCount = m_settings.value("/Settings/mainTableCount", 0).toInt();
-    qDebug() << "TAB count = " << mainTableCount;
     mainTableTabs.clear();
     for (int i = 0; i<mainTableCount; i++) {
         mainTableTabs << m_settings.value("/Settings/mainTable/tab"+QString::number(i), 10).toInt();
@@ -1133,12 +1133,15 @@ void cengen::set_opisateli_from_settings()
 
 void cengen::set_tableWidget_header(QTableWidget *table) {
 
-    qDebug() << "COUNT " << mainTableTabs.count();
+    //qDebug() << "COUNT " << mainTableTabs.count();
+    table->blockSignals(true);
     for (int i = 0; i<mainTableTabs.count(); i++) {
         table->horizontalHeader()->resizeSection(i, mainTableTabs.at(i));
-        qDebug() << "TAB " << mainTableTabs.at(i);
+        //qDebug() << "TAB " << mainTableTabs.at(i);
     }
     table->verticalHeader()->hide();
+    table->blockSignals(false);
+
 
 }
 
@@ -1198,13 +1201,6 @@ void cengen::on_maxButton_clicked()
     //нажата кнопка выбора лимита поиска без ограничений
     ui_spinLimit->setValue(0);
 }
-
-/*
-void cengen::on_tableWidget_cellEntered(int row, int column)
-{
-//избавиться от этой функции
-}
-*/
 
 void cengen::on_tableWidget_cellChanged(int row, int column)
 {
@@ -1671,4 +1667,30 @@ void cengen::on_comboTbarcode_currentIndexChanged(int index)
 void cengen::on_comboTprice_currentIndexChanged(int index)
 {
     on_save_db_config_button_clicked();
+}
+
+
+void cengen::resizeEvent(QResizeEvent*) {
+
+    int w = this->width();
+    int h = this->height();
+    qDebug() << "old w=" << w;
+
+    int sum = 0;
+    for (int i = 0; i<ui_tableWidget->columnCount(); i++) {
+        sum += mainTableTabs.at(i);
+    }
+
+    w -= sizeDelta;
+
+    for (int i = 0; i<ui_tableWidget->columnCount(); i++) {
+        //qDebug() << "i="<< i;
+        ui_tableWidget->horizontalHeader()->resizeSection
+                (i, mainTableTabs.at(i) * w / sum);
+    }
+
+    ui_tableWidget->resize(w, h);
+    qDebug() << "new w=" << ui_tableWidget->width() << "; all new w = " <<
+                this->width();
+
 }
