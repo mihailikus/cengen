@@ -123,7 +123,7 @@ cengen::cengen(QWidget *parent) :
     this->readSettings();
 
     ui_tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    sizeDelta = this->size().width() - ui_tableWidget->size().width();
+    //sizeDeltaX = this->size().width() - ui_tableWidget->size().width();
 
     //подготовка сцены для рендеринга ценников
     currentScene = new QGraphicsScene;
@@ -728,8 +728,12 @@ void cengen::readSettings() {
 
     int mainTableCount = m_settings.value("/Settings/mainTableCount", 0).toInt();
     mainTableWidth = m_settings.value("/Settings/mainTable/tabWidth", 950).toInt();
-    ui_tableWidget->resize(mainTableWidth, ui_tableWidget->height());
-    sizeDelta = bWidth - mainTableWidth;
+    mainTableHeith = m_settings.value("/Settings/mainTable/tabHeith", 300).toInt();
+
+    ui_tableWidget->resize(mainTableWidth, mainTableHeith);
+    sizeDeltaX = bWidth - mainTableWidth;
+    sizeDeltaY = bHeith - mainTableHeith;
+
     mainTableTabs.clear();
     for (int i = 0; i<mainTableCount; i++) {
         mainTableTabs << m_settings.value("/Settings/mainTable/tab"+QString::number(i), 100).toFloat();
@@ -1684,8 +1688,8 @@ void cengen::update_mainTableTabs(QTableWidget *table) {
 
 void cengen::resizeEvent(QResizeEvent*) {
     update_mainTableTabs(ui_tableWidget);
-    mainTableWidth = this->width() - sizeDelta;
-    int bHeith = ui_tableWidget->height();
+    mainTableWidth = this->width() - sizeDeltaX;
+    int bHeith = this->height() - sizeDeltaY;
     ui_tableWidget->resize(mainTableWidth, bHeith);
     set_tableWidget_header(ui_tableWidget);
 }

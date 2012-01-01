@@ -71,7 +71,7 @@ private:
     Ui::cengen *ui;
     QSettings m_settings;
     QList<qreal> mainTableTabs;
-    int mainTableWidth;
+    int mainTableWidth, mainTableHeith;
 
     editor* shablon_editor;
 
@@ -96,7 +96,8 @@ private:
     QRadioButton* ui_radioButton_3, *ui_radioButton, *ui_radioButton_4,
                     *ui_radioButton_5;
     QTableWidget* ui_tableWidget;
-    int sizeDelta;  //разница в ширине между основным окном и таблицей
+    int sizeDeltaX;  //разница в ширине между основным окном и таблицей
+    int sizeDeltaY;
     QLabel* ui_label, *ui_statusLabel, *ui_countLabel, *ui_labelDBFname;
     QScrollArea* ui_scrollArea;
     QTabWidget* ui_tabWidget;
