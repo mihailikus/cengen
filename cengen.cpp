@@ -71,6 +71,9 @@ cengen::cengen(QWidget *parent) :
     ui_labelDBFname = qFindChild<QLabel*>(this, "labelDBFname");
 
     ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
+    this->setCentralWidget(ui_tabWidget);
+
+
     ui_tableWidget = qFindChild<QTableWidget*>(this, "tableWidget");
     ui_scrollArea = qFindChild<QScrollArea*>(this,"scrollArea");
     ui_comboBox = qFindChild<QComboBox*>(this,"comboBox");
@@ -1687,9 +1690,11 @@ void cengen::update_mainTableTabs(QTableWidget *table) {
 }
 
 void cengen::resizeEvent(QResizeEvent*) {
+    /*
     update_mainTableTabs(ui_tableWidget);
     mainTableWidth = this->width() - sizeDeltaX;
     int bHeith = this->height() - sizeDeltaY;
     ui_tableWidget->resize(mainTableWidth, bHeith);
     set_tableWidget_header(ui_tableWidget);
+    */
 }
