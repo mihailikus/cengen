@@ -70,7 +70,8 @@ protected:
 private:
     Ui::cengen *ui;
     QSettings m_settings;
-    QList<int> mainTableTabs;
+    QList<qreal> mainTableTabs;
+    int mainTableWidth;
 
     editor* shablon_editor;
 
@@ -206,6 +207,7 @@ private slots:
     //void on_tableWidget_cellEntered(int row, int column);
     void on_tableWidget_cellChanged(int row, int column);
     void on_tableWidget_itemEntered(QTableWidgetItem* item);
+    void update_mainTableTabs(QTableWidget * ui_tableWidget);
 
 
     void on_show_editor_button_clicked();

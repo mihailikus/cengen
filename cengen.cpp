@@ -695,11 +695,19 @@ void cengen::writeSettings()
     m_settings.setValue("tabIndex", ui_tabWidget->currentIndex());
 
     //сохранение параметров отображения окна
+    m_settings.beginGroup("/Window");
+    m_settings.setValue("width", this->width());
+    m_settings.setValue("heith", this->height());
+    m_settings.endGroup();
+
     int mainTableCount = ui_tableWidget->horizontalHeader()->count();
     m_settings.setValue("mainTableCount", mainTableCount);
     m_settings.beginGroup("/mainTable");
+    mainTableWidth = ui_tableWidget->width();
+    m_settings.setValue("tabWidth", mainTableWidth);
+    update_mainTableTabs(ui_tableWidget);
     for (int i=0; i<mainTableCount; i++) {
-        m_settings.setValue("tab"+QString::number(i), ui_tableWidget->horizontalHeader()->sectionSize(i));
+        m_settings.setValue("tab"+QString::number(i), mainTableTabs.at(i));
     }
     m_settings.endGroup();
 
@@ -714,10 +722,17 @@ void cengen::readSettings() {
     i++;
 
     //устанавливаем геометрию окна
+    int bWidth = m_settings.value("/Settings/Window/width", 950).toInt();
+    int bHeith = m_settings.value("/Settings/Window/heith", 500).toInt();
+    this->resize(bWidth, bHeith);
+
     int mainTableCount = m_settings.value("/Settings/mainTableCount", 0).toInt();
+    mainTableWidth = m_settings.value("/Settings/mainTable/tabWidth", 950).toInt();
+    ui_tableWidget->resize(mainTableWidth, ui_tableWidget->height());
+    sizeDelta = bWidth - mainTableWidth;
     mainTableTabs.clear();
     for (int i = 0; i<mainTableCount; i++) {
-        mainTableTabs << m_settings.value("/Settings/mainTable/tab"+QString::number(i), 10).toInt();
+        mainTableTabs << m_settings.value("/Settings/mainTable/tab"+QString::number(i), 100).toFloat();
     }
     set_tableWidget_header(ui_tableWidget);
 
@@ -844,8 +859,6 @@ void cengen::readSettings() {
         ind = 0;
     }
     ui_tabWidget->setCurrentIndex(ind);
-
-
 }
 
 void cengen::read_filter_settings() {
@@ -899,6 +912,7 @@ void cengen::on_comboTbList_activated(QString tbName)
 
 
 }
+
 void cengen::update_ui_tb_fields(QStringList list) {
     //обновляем пользовательские контролы для выбора в таблице цены, названия и т.п.
     ui_comboTnomer->clear();
@@ -1133,16 +1147,14 @@ void cengen::set_opisateli_from_settings()
 
 void cengen::set_tableWidget_header(QTableWidget *table) {
 
-    //qDebug() << "COUNT " << mainTableTabs.count();
+    //устанавливаем заданную ширину столбцов таблицы
     table->blockSignals(true);
     for (int i = 0; i<mainTableTabs.count(); i++) {
-        table->horizontalHeader()->resizeSection(i, mainTableTabs.at(i));
-        //qDebug() << "TAB " << mainTableTabs.at(i);
+        table->horizontalHeader()->resizeSection(i,
+               mainTableWidth * mainTableTabs.at(i) / 1000);
     }
     table->verticalHeader()->hide();
     table->blockSignals(false);
-
-
 }
 
 void cengen::add_table_item(QTableWidget *table, int position, Tovar tovar) {
@@ -1477,12 +1489,6 @@ QList<Tovar> cengen::minus(QList<Tovar> oldList, QList<Tovar> newList) {
 
     return final;
 }
-/*
-void cengen::on_checkBox_toggled(bool checked)
-{
-    ui_filterGrid->setEnabled(checked);
-}
-*/
 
 void cengen::on_filterBox_toggled(bool arg1)
 {
@@ -1628,7 +1634,6 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     return filteredList;
 }
 
-
 void cengen::on_radioButton_6_clicked()
 {
     this->paperOrientation = "portrate";
@@ -1643,7 +1648,6 @@ void cengen::on_radioButton_7_clicked()
 
 void cengen::on_action_4_activated()
 {
-    qDebug() << "Correct action on exit";
     this->writeSettings();
     close();
 }
@@ -1669,28 +1673,19 @@ void cengen::on_comboTprice_currentIndexChanged(int index)
     on_save_db_config_button_clicked();
 }
 
+void cengen::update_mainTableTabs(QTableWidget *table) {
+    mainTableTabs.clear();
+    float w;
+    for (int i = 0; i<table->columnCount(); i++) {
+        w = 1000 * table->horizontalHeader()->sectionSize(i) / static_cast<float>(table->width());
+        mainTableTabs << w;
+    }
+}
 
 void cengen::resizeEvent(QResizeEvent*) {
-
-    int w = this->width();
-    int h = this->height();
-    qDebug() << "old w=" << w;
-
-    int sum = 0;
-    for (int i = 0; i<ui_tableWidget->columnCount(); i++) {
-        sum += mainTableTabs.at(i);
-    }
-
-    w -= sizeDelta;
-
-    for (int i = 0; i<ui_tableWidget->columnCount(); i++) {
-        //qDebug() << "i="<< i;
-        ui_tableWidget->horizontalHeader()->resizeSection
-                (i, mainTableTabs.at(i) * w / sum);
-    }
-
-    ui_tableWidget->resize(w, h);
-    qDebug() << "new w=" << ui_tableWidget->width() << "; all new w = " <<
-                this->width();
-
+    update_mainTableTabs(ui_tableWidget);
+    mainTableWidth = this->width() - sizeDelta;
+    int bHeith = ui_tableWidget->height();
+    ui_tableWidget->resize(mainTableWidth, bHeith);
+    set_tableWidget_header(ui_tableWidget);
 }
