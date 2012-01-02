@@ -62,6 +62,7 @@ public:
     ~cengen();
     void writeSettings();
     void readSettings();
+   // void translate();
 
 protected:
     void changeEvent(QEvent *e);

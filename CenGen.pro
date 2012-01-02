@@ -49,5 +49,8 @@ OTHER_FILES += \
     todo.txt \
     tmp.txt
 
+TRANSLATIONS = cengen_ru.ts\
+    cengen_en.ts
+
 RESOURCES += \
     resource.qrc

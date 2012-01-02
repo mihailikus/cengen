@@ -183,6 +183,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 
     //После создания всех форм - читаем настройки из конфига
     this->readSettings();
+
 }
 
 cengen::~cengen()
@@ -197,6 +198,7 @@ void cengen::changeEvent(QEvent *e)
     switch (e->type()) {
     case QEvent::LanguageChange:
         ui->retranslateUi(this);
+        qDebug() << "EVENT-----------";
         break;
     default:
         break;
