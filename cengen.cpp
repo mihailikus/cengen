@@ -8,9 +8,7 @@
 #include "cen_viewer.h"
 
 
-cengen::cengen(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::cengen)
+cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 {
     ui->setupUi(this);
 
@@ -33,6 +31,15 @@ cengen::cengen(QWidget *parent) :
     ui_action->setIcon(QIcon(":/share/images/resources/save.png"));
     ui_action->setToolTip(tr("Save current tovar list"));
     ui_mainToolBar->addAction(ui_action);
+
+    ui_mainToolBar->addSeparator();
+
+    //сформировать ценники
+    ui_actionMake = new QAction(QIcon(":/share/images/resources/apply.png"),
+                                tr("MakeUp cennic"), this);
+    ui_actionMake->setToolTip(tr("Make up cennic for tovar list"));
+    ui_mainToolBar->addAction(ui_actionMake);
+    connect(ui_actionMake, SIGNAL(triggered()), SLOT(on_pushButton_2_clicked()));
 
     ui_mainToolBar->addSeparator();
 
@@ -60,10 +67,18 @@ cengen::cengen(QWidget *parent) :
     ui_spinLimit = qFindChild<QSpinBox*>(this, "spinLimit");
 
     ui_radioButton = qFindChild<QRadioButton*>(this,"radioButton");
+    ui_radioButton_1 = qFindChild<QRadioButton*>(this,"radioButton_1");
+    ui_radioButton_2 = qFindChild<QRadioButton*>(this,"radioButton_2");
     ui_radioButton_3 = qFindChild<QRadioButton*>(this,"radioButton_3");
     ui_radioButton_4 = qFindChild<QRadioButton*>(this,"radioButton_4");
     ui_radioButton_5 = qFindChild<QRadioButton*>(this, "radioButton_5");
 
+    ui_pushButton = qFindChild<QPushButton*>(this,"pushButton");
+    ui_maxButton = qFindChild<QPushButton*>(this,"maxButton");
+
+    ui_groupBox =qFindChild<QGroupBox*>(this, "groupBox");
+    ui_groupBox_5 =qFindChild<QGroupBox*>(this, "groupBox_5");
+    ui_groupBox_6 =qFindChild<QGroupBox*>(this, "groupBox_6");
 
     ui_label = qFindChild<QLabel*>(this, "label");
     ui_statusLabel = qFindChild<QLabel*>(this, "statusLabel");
@@ -71,6 +86,7 @@ cengen::cengen(QWidget *parent) :
     ui_labelDBFname = qFindChild<QLabel*>(this, "labelDBFname");
 
     ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
+
     this->setCentralWidget(ui_tabWidget);
 
 
@@ -101,8 +117,6 @@ cengen::cengen(QWidget *parent) :
     zoom = 1.0;
 
     method = "tbarcode";
-    //db_source = 1;
-
 
     this->paperOrientation = "portrate";
 
@@ -122,9 +136,6 @@ cengen::cengen(QWidget *parent) :
     ui_filterMethodBox = qFindChild<QComboBox*>(this, "filterMethodBox");
     ui_filterLineText = qFindChild<QLineEdit*>(this, "filterLineText");
 
-
-    this->readSettings();
-
     ui_tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     //sizeDeltaX = this->size().width() - ui_tableWidget->size().width();
 
@@ -138,8 +149,40 @@ cengen::cengen(QWidget *parent) :
     shablon_editor = new editor(this);
     connect(shablon_editor, SIGNAL(shablon_is_ready(QDomDocument)), SLOT(describe_shablon(QDomDocument)));
 
+    //--------------------------------
+    //попытка сделать нормальную форму
+    this->setCentralWidget(ui_tabWidget);
+    tab1 = new QWidget;
+    layTab1 = new QGridLayout;
+    layTab1->addWidget(ui_lineEdit, 0, 0, 1, 3);
+
+    layBox1 = new QGridLayout;
+    layBox1->addWidget(ui_radioButton_1, 0, 0);
+    layBox1->addWidget(ui_radioButton_2, 0, 1);
+    layBox1->addWidget(ui_radioButton_3, 0, 2);
+    layBox1->addWidget(ui_radioButton_5, 0, 3);
+    ui_groupBox->setLayout(layBox1);
+
+    layBox6 = new QGridLayout;
+    layBox6->addWidget(ui_spinLimit, 0, 0, 2, 2);
+    layBox6->addWidget(ui_maxButton, 0, 2, 2, 1);
+    ui_groupBox_6->setLayout(layBox6);
+
+    layBox5 = new QGridLayout;
+    layBox5->addWidget(ui_countLabel, 0, 0);
+    ui_groupBox_5->setLayout(layBox5);
+
+    layTab1->addWidget(ui_pushButton, 0, 3);
+    layTab1->addWidget(ui_groupBox, 1, 0, 1, 4);
+    layTab1->addWidget(ui_groupBox_5, 0, 5, 2, 1);
+    layTab1->addWidget(ui_groupBox_6, 0, 4, 2, 1);
+    layTab1->addWidget(ui_tableWidget, 2, 0, 1, 6);
+    tab1->setLayout(layTab1);
+    ui_tabWidget->addTab(tab1, tr("SEARCH"));
 
 
+    //После создания всех форм - читаем настройки из конфига
+    this->readSettings();
 }
 
 cengen::~cengen()
@@ -721,25 +764,16 @@ void cengen::writeSettings()
 
 void cengen::readSettings() {
 
-    static int i = 0;
-    i++;
-
     //устанавливаем геометрию окна
     int bWidth = m_settings.value("/Settings/Window/width", 950).toInt();
     int bHeith = m_settings.value("/Settings/Window/heith", 500).toInt();
     this->resize(bWidth, bHeith);
 
     int mainTableCount = m_settings.value("/Settings/mainTableCount", 0).toInt();
-    mainTableWidth = m_settings.value("/Settings/mainTable/tabWidth", 950).toInt();
-    mainTableHeith = m_settings.value("/Settings/mainTable/tabHeith", 300).toInt();
-
-    ui_tableWidget->resize(mainTableWidth, mainTableHeith);
-    sizeDeltaX = bWidth - mainTableWidth;
-    sizeDeltaY = bHeith - mainTableHeith;
 
     mainTableTabs.clear();
     for (int i = 0; i<mainTableCount; i++) {
-        mainTableTabs << m_settings.value("/Settings/mainTable/tab"+QString::number(i), 100).toFloat();
+        mainTableTabs << m_settings.value("/Settings/mainTable/tab"+QString::number(i), 10).toInt();
     }
     set_tableWidget_header(ui_tableWidget);
 
@@ -1153,15 +1187,11 @@ void cengen::set_opisateli_from_settings()
 }
 
 void cengen::set_tableWidget_header(QTableWidget *table) {
-
-    //устанавливаем заданную ширину столбцов таблицы
-    table->blockSignals(true);
+//устанавливаем заданную ширину столбцов таблицы
     for (int i = 0; i<mainTableTabs.count(); i++) {
-        table->horizontalHeader()->resizeSection(i,
-               mainTableWidth * mainTableTabs.at(i) / 1000);
+        table->horizontalHeader()->resizeSection(i, mainTableTabs.at(i));
     }
     table->verticalHeader()->hide();
-    table->blockSignals(false);
 }
 
 void cengen::add_table_item(QTableWidget *table, int position, Tovar tovar) {
@@ -1682,19 +1712,7 @@ void cengen::on_comboTprice_currentIndexChanged(int index)
 
 void cengen::update_mainTableTabs(QTableWidget *table) {
     mainTableTabs.clear();
-    float w;
     for (int i = 0; i<table->columnCount(); i++) {
-        w = 1000 * table->horizontalHeader()->sectionSize(i) / static_cast<float>(table->width());
-        mainTableTabs << w;
+        mainTableTabs << table->horizontalHeader()->sectionSize(i);
     }
-}
-
-void cengen::resizeEvent(QResizeEvent*) {
-    /*
-    update_mainTableTabs(ui_tableWidget);
-    mainTableWidth = this->width() - sizeDeltaX;
-    int bHeith = this->height() - sizeDeltaY;
-    ui_tableWidget->resize(mainTableWidth, bHeith);
-    set_tableWidget_header(ui_tableWidget);
-    */
 }

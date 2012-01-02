@@ -62,15 +62,18 @@ public:
     ~cengen();
     void writeSettings();
     void readSettings();
-    void resizeEvent(QResizeEvent *);
 
 protected:
     void changeEvent(QEvent *e);
 
 private:
     Ui::cengen *ui;
+    QWidget *tab1;
+    QGridLayout *layTab1,
+                *layBox1, *layBox5, *layBox6;
+
     QSettings m_settings;
-    QList<qreal> mainTableTabs;
+    QList<int> mainTableTabs;
     int mainTableWidth, mainTableHeith;
 
     editor* shablon_editor;
@@ -93,8 +96,11 @@ private:
     //контролы SQL и DBF
     QGroupBox *ui_groupDBF, *ui_groupSQL;
 
-    QRadioButton* ui_radioButton_3, *ui_radioButton, *ui_radioButton_4,
+    QRadioButton  *ui_radioButton_1,
+                  *ui_radioButton_2,
+                  *ui_radioButton_3, *ui_radioButton, *ui_radioButton_4,
                     *ui_radioButton_5;
+    QGroupBox *ui_groupBox, *ui_groupBox_5, *ui_groupBox_6;
     QTableWidget* ui_tableWidget;
     int sizeDeltaX;  //разница в ширине между основным окном и таблицей
     int sizeDeltaY;
@@ -108,7 +114,8 @@ private:
     //QPrinter *printer;
     QComboBox* ui_comboBox, *ui_comboTbList;
     QGraphicsView* view;    //используется для отображения превью
-    QPushButton *ui_zoomInButton, *ui_zoomOutButton, *ui_save_db_config_button;
+    QPushButton *ui_zoomInButton, *ui_zoomOutButton, *ui_save_db_config_button,
+                *ui_pushButton, *ui_maxButton;
 
     QString method; //метод поиска товара - номер, штрихкод или название
     int db_source;  //источник данных: MySQL(1) или DBF(0)
@@ -156,6 +163,7 @@ private:
     QAction* ui_action4; //выход
     QAction* ui_action; //сохранить
     QAction* ui_action2; //загрузить список
+    QAction* ui_actionMake; //сформировать ценники
 
 private slots:
     //void on_tabWidget_selected(QString );
