@@ -242,8 +242,8 @@ void cengen::load_tovar_list_into_cengen(QList<Tovar> tovarList) {
 
             QTableWidgetItem* itemDel = new QTableWidgetItem("x");
             ui_tableWidget->setItem(position, 6, itemDel);
-            ui_tableWidget->item(position, 6)->setToolTip("DELETE");
-            ui_tableWidget->item(position, 6)->setWhatsThis("Delete line from table");
+            ui_tableWidget->item(position, 6)->setToolTip(tr("DELETE"));
+            ui_tableWidget->item(position, 6)->setWhatsThis(tr("Delete line from table"));
 
             //ui_tableWidget->scrollToItem(itemDel);
             ui_tableWidget->scrollToBottom();
@@ -430,7 +430,7 @@ QRectF cengen::get_shablon_rect(const QDomNode &node) {
            if(!domElement.isNull()) {
                if (domElement.tagName() == "base") {
                    //описание размера шаблона
-                   qDebug() << "We read rect of shablon";
+                   //qDebug() << "We read rect of shablon";
                    QString width = domElement.attribute("width", "");
                    rect.setWidth(width.toFloat());
                    QString heith = domElement.attribute("heith", "");
@@ -843,7 +843,7 @@ void cengen::readSettings() {
     } else {
         //значит, db_source = 0
         //и мы используем DBF-файлы
-        qDebug() << "we read DBF settings";
+        //qDebug() << "we read DBF settings";
         my_informer->prepare(dbf);
         ui_radioButton->setChecked(false);
         ui_radioButton_4->setChecked(true);
@@ -856,7 +856,7 @@ void cengen::readSettings() {
         //m_settings.beginGroup("/Settings/dbf");
         this->dbf->fileName = m_settings.value("/Settings/dbf/filename", "").toString();
         //m_settings.endGroup();
-        qDebug() << "we read DBF settings. File name " << this->dbf->fileName;
+        //qDebug() << "we read DBF settings. File name " << this->dbf->fileName;
 
         if (dbf->fileName != "") {
             //если имя файла не пусто - продолжаем
@@ -864,7 +864,7 @@ void cengen::readSettings() {
             ui_labelDBFname->setText(dbf->fileName);
             this->opisateli.clear();
             opisateli = my_informer->tb_describe("DBF");
-            qDebug() << "we read DBF settings. Count opisateli " << opisateli.count();
+            //qDebug() << "we read DBF settings. Count opisateli " << opisateli.count();
 
             //вызываем функцию выбора и установки описателей
             this->set_opisateli_from_settings();

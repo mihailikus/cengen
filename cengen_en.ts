@@ -34,44 +34,54 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="260"/>
+        <location filename="cengen.cpp" line="245"/>
+        <source>DELETE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="246"/>
+        <source>Delete line from table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="262"/>
         <source>NOT FOUND</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="361"/>
+        <location filename="cengen.cpp" line="363"/>
         <source>Select shablon file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="361"/>
+        <location filename="cengen.cpp" line="363"/>
         <source>CEN-files (*.cen)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="450"/>
+        <location filename="cengen.cpp" line="452"/>
         <source>Select proper file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1319"/>
+        <location filename="cengen.cpp" line="1321"/>
         <source>Save tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1319"/>
-        <location filename="cengen.cpp" line="1340"/>
-        <location filename="cengen.cpp" line="1479"/>
+        <location filename="cengen.cpp" line="1321"/>
+        <location filename="cengen.cpp" line="1342"/>
+        <location filename="cengen.cpp" line="1481"/>
         <source>Tovar lists (*.tov)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1340"/>
+        <location filename="cengen.cpp" line="1342"/>
         <source>Open tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1479"/>
+        <location filename="cengen.cpp" line="1481"/>
         <source>Select tovar list for minus</source>
         <translation type="unfinished"></translation>
     </message>
