@@ -19,6 +19,7 @@
 #include <QGroupBox>
 #include <QSpinBox>
 #include <QToolBar>
+#include <QStandardItemModel>
 #include <QAction>
 #include "tinformer.h"
 #include "barcode.h"
@@ -62,12 +63,16 @@ public:
     ~cengen();
     void writeSettings();
     void readSettings();
-   // void translate();
+    void make_actions();
+    void make_search_tab();
 
 protected:
     void changeEvent(QEvent *e);
 
 private:
+    QHeaderView* tableHeader;
+
+
     Ui::cengen *ui;
     QWidget *tab1;
     QGridLayout *layTab1,
@@ -168,7 +173,7 @@ private:
 
 private slots:
     //void on_tabWidget_selected(QString );
-    void on_tableWidget_itemClicked(QTableWidgetItem* item);
+    //void on_tableWidget_itemClicked(QTableWidgetItem* item);
     void on_tableWidget_cellClicked(int row, int column);
     void on_radioButton_4_clicked();
     void on_radioButton_clicked();
@@ -186,7 +191,7 @@ private slots:
     void on_pushButton_4_clicked();
     void on_tabWidget_currentChanged(int index);
     void on_pushButton_3_clicked();
-    void on_pushButton_2_clicked();
+    void action_create();
     void on_lineEdit_returnPressed();
     void on_pushButton_clicked();
     void tovar_search();

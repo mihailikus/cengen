@@ -30,22 +30,6 @@
      <attribute name="title">
       <string>Поиск</string>
      </attribute>
-     <widget class="QLineEdit" name="lineEdit">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>20</y>
-        <width>371</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Введите штрих-код</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
      <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
@@ -120,69 +104,6 @@
         </item>
        </layout>
       </widget>
-     </widget>
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="geometry">
-       <rect>
-        <x>490</x>
-        <y>20</y>
-        <width>111</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Сформировать</string>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="tableWidget">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>110</y>
-        <width>900</width>
-        <height>301</height>
-       </rect>
-      </property>
-      <property name="rowCount">
-       <number>0</number>
-      </property>
-      <property name="columnCount">
-       <number>7</number>
-      </property>
-      <column>
-       <property name="text">
-        <string>№</string>
-       </property>
-       <property name="whatsThis">
-        <string extracomment="Номер по порядку"/>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Название</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Штрих-код</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Тов. номер</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Цена</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Цена2</string>
-       </property>
-      </column>
-      <column/>
      </widget>
      <widget class="QGroupBox" name="groupBox_6">
       <property name="geometry">
@@ -1248,9 +1169,7 @@
   <tabstop>linePass</tabstop>
   <tabstop>connectMySQLButton</tabstop>
   <tabstop>comboTbList</tabstop>
-  <tabstop>lineEdit</tabstop>
   <tabstop>pushButton</tabstop>
-  <tabstop>pushButton_2</tabstop>
   <tabstop>radioButton_1</tabstop>
   <tabstop>lineH_2</tabstop>
   <tabstop>lineW_2</tabstop>
@@ -1263,7 +1182,6 @@
   <tabstop>pushButton_3</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>comboBox</tabstop>
-  <tabstop>tableWidget</tabstop>
   <tabstop>lineH</tabstop>
   <tabstop>comboTnomer</tabstop>
   <tabstop>comboTname</tabstop>

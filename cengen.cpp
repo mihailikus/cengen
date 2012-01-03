@@ -12,44 +12,9 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 {
     ui->setupUi(this);
 
-    ui_mainToolBar = qFindChild<QToolBar*>(this, "mainToolBar");
+    this->make_actions();
 
-    //создание нового списка товаров
-    ui_action3 = qFindChild<QAction*>(this, "action_3");
-    ui_action3->setIcon(QIcon(":/share/images/resources/window_new.png"));
-    ui_action3->setToolTip(tr("New tovar list"));
-    ui_mainToolBar->addAction(ui_action3);
-
-    //загрузить
-    ui_action2 = qFindChild<QAction*>(this, "action_2");
-    ui_action2->setIcon(QIcon(":/share/images/resources/folder_blue_open.png"));
-    ui_action2->setToolTip(tr("Load and append tovar list"));
-    ui_mainToolBar->addAction(ui_action2);
-
-    //сохранить
-    ui_action = qFindChild<QAction*>(this, "action");
-    ui_action->setIcon(QIcon(":/share/images/resources/save.png"));
-    ui_action->setToolTip(tr("Save current tovar list"));
-    ui_mainToolBar->addAction(ui_action);
-
-    ui_mainToolBar->addSeparator();
-
-    //сформировать ценники
-    ui_actionMake = new QAction(QIcon(":/share/images/resources/apply.png"),
-                                tr("MakeUp cennic"), this);
-    ui_actionMake->setToolTip(tr("Make up cennic for tovar list"));
-    ui_mainToolBar->addAction(ui_actionMake);
-    connect(ui_actionMake, SIGNAL(triggered()), SLOT(on_pushButton_2_clicked()));
-
-    ui_mainToolBar->addSeparator();
-
-    //выход из программы
-    ui_action4 = qFindChild<QAction*>(this, "action_4");
-    ui_action4->setIcon(QIcon(":/share/images/resources/button_cancel.png"));
-    ui_mainToolBar->addAction(ui_action4);
-    connect(ui_action4, SIGNAL(triggered()), SLOT(close()));
-
-    ui_lineEdit = qFindChild<QLineEdit*>(this,"lineEdit");
+    //ui_lineEdit = qFindChild<QLineEdit*>(this,"lineEdit");
     ui_lineW = qFindChild<QLineEdit*>(this,"lineW");
     ui_lineH = qFindChild<QLineEdit*>(this,"lineH");
     ui_lineW_2 = qFindChild<QLineEdit*>(this,"lineW_2");
@@ -87,10 +52,14 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 
     ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
 
+    //--------------------------------
+    //попытка сделать нормальную форму
     this->setCentralWidget(ui_tabWidget);
+    qDebug() << "Making TAB";
+    this->make_search_tab();
+    qDebug() << "Maked TAB";
 
 
-    ui_tableWidget = qFindChild<QTableWidget*>(this, "tableWidget");
     ui_scrollArea = qFindChild<QScrollArea*>(this,"scrollArea");
     ui_comboBox = qFindChild<QComboBox*>(this,"comboBox");
     ui_comboTbList = qFindChild<QComboBox*>(this,"comboTbList");
@@ -120,12 +89,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 
     this->paperOrientation = "portrate";
 
-    //устанавливаем валидатор (первый вход в программу - поиск через баркод)
-    ui_bvalidator = new BarcodeValidator(this);
-    ui_nvalidator = new QIntValidator(this);
-    ui_svalidator = new SqlValidator(this);
-    ui_lineEdit->setValidator(ui_bvalidator);
-
     //конфигурим фильтр
     ui_filterBox = qFindChild<QGroupBox*>(this, "filterBox");
     filter_is_on = false;
@@ -149,11 +112,100 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     shablon_editor = new editor(this);
     connect(shablon_editor, SIGNAL(shablon_is_ready(QDomDocument)), SLOT(describe_shablon(QDomDocument)));
 
-    //--------------------------------
-    //попытка сделать нормальную форму
-    this->setCentralWidget(ui_tabWidget);
+    //После создания всех форм - читаем настройки из конфига
+    this->readSettings();
+
+}
+
+cengen::~cengen()
+{
+    writeSettings();
+    delete ui;
+}
+
+void cengen::make_actions() {
+
+    ui_mainToolBar = qFindChild<QToolBar*>(this, "mainToolBar");
+
+    //создание нового списка товаров
+    ui_action3 = qFindChild<QAction*>(this, "action_3");
+    ui_action3->setIcon(QIcon(":/share/images/resources/window_new.png"));
+    ui_action3->setToolTip(tr("New tovar list"));
+    ui_mainToolBar->addAction(ui_action3);
+
+    //загрузить
+    ui_action2 = qFindChild<QAction*>(this, "action_2");
+    ui_action2->setIcon(QIcon(":/share/images/resources/folder_blue_open.png"));
+    ui_action2->setToolTip(tr("Load and append tovar list"));
+    ui_mainToolBar->addAction(ui_action2);
+
+    //сохранить
+    ui_action = qFindChild<QAction*>(this, "action");
+    ui_action->setIcon(QIcon(":/share/images/resources/save.png"));
+    ui_action->setToolTip(tr("Save current tovar list"));
+    ui_mainToolBar->addAction(ui_action);
+
+    ui_mainToolBar->addSeparator();
+
+    //сформировать ценники
+    ui_actionMake = new QAction(QIcon(":/share/images/resources/apply.png"),
+                                tr("MakeUp cennic"), this);
+    ui_actionMake->setToolTip(tr("Make up cennic for tovar list"));
+    ui_mainToolBar->addAction(ui_actionMake);
+    connect(ui_actionMake, SIGNAL(triggered()), SLOT(action_create()));
+
+    ui_mainToolBar->addSeparator();
+
+    //выход из программы
+    ui_action4 = qFindChild<QAction*>(this, "action_4");
+    ui_action4->setIcon(QIcon(":/share/images/resources/button_cancel.png"));
+    ui_mainToolBar->addAction(ui_action4);
+    connect(ui_action4, SIGNAL(triggered()), SLOT(close()));
+
+}
+
+void cengen::make_search_tab() {
+
     tab1 = new QWidget;
     layTab1 = new QGridLayout;
+
+    //ui_tableWidget = qFindChild<QTableWidget*>(this, "tableWidget");
+    ui_tableWidget = new QTableWidget(0,7,this);
+
+    //устанавливаем заголовки главной таблицы
+    QStandardItemModel *model = new QStandardItemModel(5,5, this);
+    QTableView *tableView = new QTableView;
+    tableView->setModel(model);
+    tableHeader = new QHeaderView(Qt::Horizontal, tableView);
+    QStandardItemModel *header_model_1 = new QStandardItemModel(0,0, tableHeader);
+    header_model_1->setHorizontalHeaderLabels(QStringList()
+                                              <<tr("#")
+                                              <<tr("Name", "Name of tovar")
+                                              <<tr("Barcode")
+                                              <<tr("Tnomer")
+                                              <<tr("Price1")
+                                              <<tr("Price2")
+                                              <<tr("x", "Symbol for DELETE action")
+                                              );
+    tableHeader->setModel(header_model_1);
+    ui_tableWidget->setHorizontalHeader(tableHeader);
+    ui_tableWidget->verticalHeader()->hide();
+    //подключаем слоты к сигналам
+    connect(ui_tableWidget, SIGNAL(cellClicked(int,int)), SLOT(on_tableWidget_cellChanged(int,int)));
+    connect(ui_tableWidget, SIGNAL(cellChanged(int,int)), SLOT(on_tableWidget_cellChanged(int,int)));
+    connect(ui_tableWidget, SIGNAL(itemEntered(QTableWidgetItem*)), SLOT(on_tableWidget_itemEntered(QTableWidgetItem*)));
+
+    //готовим lineEdit - строку для ввода поисковой фразы
+    ui_lineEdit = new QLineEdit;
+    ui_lineEdit->setAlignment(Qt::AlignCenter);
+    connect (ui_lineEdit, SIGNAL(returnPressed()), SLOT(on_lineEdit_returnPressed()));
+    //устанавливаем валидатор (первый вход в программу - поиск через баркод)
+    ui_bvalidator = new BarcodeValidator(this);
+    ui_nvalidator = new QIntValidator(this);
+    ui_svalidator = new SqlValidator(this);
+    ui_lineEdit->setValidator(ui_bvalidator);
+
+
     layTab1->addWidget(ui_lineEdit, 0, 0, 1, 3);
 
     layBox1 = new QGridLayout;
@@ -181,15 +233,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui_tabWidget->addTab(tab1, tr("SEARCH"));
 
 
-    //После создания всех форм - читаем настройки из конфига
-    this->readSettings();
-
-}
-
-cengen::~cengen()
-{
-    writeSettings();
-    delete ui;
 }
 
 void cengen::changeEvent(QEvent *e)
@@ -315,16 +358,11 @@ void cengen::new_line_ready() {
     ui_lineEdit->setFocus();
 }
 
-void cengen::on_pushButton_2_clicked()
+void cengen::action_create()
 {
     //функция для формирования ценников
-
-    //первым делом - получить из таблицы все поля в QList
-    //qDebug() << "SFORM";
-    //ui_tabWidget->setMovable(true);
     ui_tabWidget->setCurrentIndex(2);
     this->generate_preview();
-
 }
 
 QList<Tovar> cengen::get_tovar_list(QTableWidget *table, QString priznak) {
@@ -1120,11 +1158,6 @@ void cengen::on_tableWidget_cellClicked(int row, int column)
     if (column == 6) {
         this->delete_line_from_table(row);
     }
-
-}
-
-void cengen::on_tableWidget_itemClicked(QTableWidgetItem* item)
-{
 
 }
 
