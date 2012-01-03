@@ -273,8 +273,8 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList, QString method) {
 
             QTableWidgetItem* itemCheck = new QTableWidgetItem(" ");
             table->setItem(i, 6, itemCheck);
-            table->item(i, 6)->setToolTip("SELECT");
-            table->item(i, 6)->setWhatsThis("Select item to list");
+            table->item(i, 6)->setToolTip(tr("SELECT"));
+            table->item(i, 6)->setWhatsThis(tr("Select item to list"));
         }
         dlg->setTable(&table);
     }
@@ -365,7 +365,7 @@ void cengen::on_pushButton_3_clicked()
     if (file_is_ready && str == "") return;
 
     if (str == "") {
-        ui_label->setText("Please select file");
+        ui_label->setText(tr("Please select file", "If no file selected"));
         //this->file_is_ready = false;
     } else {
         file.setFileName(str);
@@ -532,7 +532,7 @@ void cengen::update_values() {
 void cengen::generate_preview() {
     if (!file_is_ready) {
         qDebug() << "File is not ready";
-        ui_statusLabel->setText("File is not ready");
+        ui_statusLabel->setText(tr("File is not ready", "If file shablon is not ready"));
         return;
     }
 
