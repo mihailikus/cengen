@@ -72,6 +72,10 @@ protected:
 private:
     QHeaderView* tableHeader;
 
+    //статусбар
+    QStatusBar* statusBar;
+    QLabel *ui_statusLabel, *labBar;
+
 
     Ui::cengen *ui;
     QWidget *tab1;
@@ -110,7 +114,7 @@ private:
     QTableWidget* ui_tableWidget;
     int sizeDeltaX;  //разница в ширине между основным окном и таблицей
     int sizeDeltaY;
-    QLabel* ui_label, *ui_statusLabel, *ui_countLabel, *ui_labelDBFname;
+    QLabel* ui_label, *ui_countLabel, *ui_labelDBFname;
     QScrollArea* ui_scrollArea;
     QTabWidget* ui_tabWidget;
     QVBoxLayout* previewLayout;

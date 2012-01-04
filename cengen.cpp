@@ -14,7 +14,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 
     this->make_actions();
 
-    //ui_lineEdit = qFindChild<QLineEdit*>(this,"lineEdit");
     ui_lineW = qFindChild<QLineEdit*>(this,"lineW");
     ui_lineH = qFindChild<QLineEdit*>(this,"lineH");
     ui_lineW_2 = qFindChild<QLineEdit*>(this,"lineW_2");
@@ -29,8 +28,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui_groupDBF = qFindChild<QGroupBox*>(this, "groupDBF");
     ui_groupSQL = qFindChild<QGroupBox*>(this, "groupSQL");
 
-    ui_spinLimit = qFindChild<QSpinBox*>(this, "spinLimit");
-
     ui_radioButton = qFindChild<QRadioButton*>(this,"radioButton");
     ui_radioButton_1 = qFindChild<QRadioButton*>(this,"radioButton_1");
     ui_radioButton_2 = qFindChild<QRadioButton*>(this,"radioButton_2");
@@ -39,15 +36,12 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui_radioButton_5 = qFindChild<QRadioButton*>(this, "radioButton_5");
 
     ui_pushButton = qFindChild<QPushButton*>(this,"pushButton");
-    ui_maxButton = qFindChild<QPushButton*>(this,"maxButton");
 
     ui_groupBox =qFindChild<QGroupBox*>(this, "groupBox");
     ui_groupBox_5 =qFindChild<QGroupBox*>(this, "groupBox_5");
-    ui_groupBox_6 =qFindChild<QGroupBox*>(this, "groupBox_6");
 
     ui_label = qFindChild<QLabel*>(this, "label");
     ui_statusLabel = qFindChild<QLabel*>(this, "statusLabel");
-    ui_countLabel = qFindChild<QLabel*>(this, "countLabel");
     ui_labelDBFname = qFindChild<QLabel*>(this, "labelDBFname");
 
     ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
@@ -59,6 +53,13 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     this->make_search_tab();
     qDebug() << "Maked TAB";
 
+    //создаем строку состояния
+    statusBar = new QStatusBar(this);
+    ui_countLabel = new QLabel(tr("0", "Start count - zero"));
+    labBar = new QLabel(tr("Count: ", "ITOGO: "));
+    statusBar->addWidget(labBar);
+    statusBar->addWidget(ui_countLabel);
+    setStatusBar(statusBar);
 
     ui_scrollArea = qFindChild<QScrollArea*>(this,"scrollArea");
     ui_comboBox = qFindChild<QComboBox*>(this,"comboBox");
@@ -100,7 +101,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui_filterLineText = qFindChild<QLineEdit*>(this, "filterLineText");
 
     ui_tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    //sizeDeltaX = this->size().width() - ui_tableWidget->size().width();
 
     //подготовка сцены для рендеринга ценников
     currentScene = new QGraphicsScene;
@@ -216,23 +216,23 @@ void cengen::make_search_tab() {
     ui_groupBox->setLayout(layBox1);
 
     layBox6 = new QGridLayout;
+    ui_spinLimit = new QSpinBox(this);
+    ui_spinLimit->setMinimum(0);
+    ui_spinLimit->setMaximum(1000);
+    ui_spinLimit->setValue(10);
+    ui_maxButton = new QPushButton(tr("max"), this);
+    connect(ui_maxButton, SIGNAL(clicked()), SLOT(on_maxButton_clicked()));
     layBox6->addWidget(ui_spinLimit, 0, 0, 2, 2);
     layBox6->addWidget(ui_maxButton, 0, 2, 2, 1);
+    ui_groupBox_6 = new QGroupBox(tr("Search limit"));
     ui_groupBox_6->setLayout(layBox6);
-
-    layBox5 = new QGridLayout;
-    layBox5->addWidget(ui_countLabel, 0, 0);
-    ui_groupBox_5->setLayout(layBox5);
 
     layTab1->addWidget(ui_pushButton, 0, 3);
     layTab1->addWidget(ui_groupBox, 1, 0, 1, 4);
-    layTab1->addWidget(ui_groupBox_5, 0, 5, 2, 1);
     layTab1->addWidget(ui_groupBox_6, 0, 4, 2, 1);
     layTab1->addWidget(ui_tableWidget, 2, 0, 1, 6);
     tab1->setLayout(layTab1);
     ui_tabWidget->addTab(tab1, tr("SEARCH"));
-
-
 }
 
 void cengen::changeEvent(QEvent *e)
