@@ -239,6 +239,7 @@ void cengen::make_search_tab() {
     ui_spinLimit->setValue(10);
     ui_maxButton = new QPushButton(tr("max"), this);
     connect(ui_maxButton, SIGNAL(clicked()), SLOT(on_maxButton_clicked()));
+    connect(ui_spinLimit, SIGNAL(valueChanged(int)), SLOT(on_spinLimit_valueChanged(int)));
     layBox6->addWidget(ui_spinLimit, 0, 0, 2, 2);
     layBox6->addWidget(ui_maxButton, 0, 2, 2, 1);
     ui_groupBox_6 = new QGroupBox(tr("Search limit"));
@@ -701,13 +702,11 @@ void cengen::on_printButton_clicked()
         printer.setOrientation(QPrinter::Portrait);
     }
 
-
     printer.setFullPage(true);
 
     printer.setNumCopies(1);
 
     printer.setColorMode(QPrinter::GrayScale);
-
 
     QPrintDialog dlg (&printer, this);
     dlg.setMinMax(1, pages.count());
@@ -726,9 +725,6 @@ void cengen::on_printButton_clicked()
         if (min > pages.count()) {
             min--;
         }
-
-
-        qDebug() << "min max pages " << min << max;
 
         for (int i = min; i< max; i++) {
             QRect current = pages.at(i).toRect();
@@ -1302,7 +1298,7 @@ void cengen::add_table_item(QTableWidget *table, int position, Tovar tovar) {
 
 void cengen::on_spinLimit_valueChanged(int number)
 {
-    qDebug() << "limit = " << number;
+    //qDebug() << "limit = " << number;
     my_informer->set_limit_search(number);
 }
 
