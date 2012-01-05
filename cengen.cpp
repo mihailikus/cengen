@@ -29,16 +29,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui_groupSQL = qFindChild<QGroupBox*>(this, "groupSQL");
 
     ui_radioButton = qFindChild<QRadioButton*>(this,"radioButton");
-    ui_radioButton_1 = qFindChild<QRadioButton*>(this,"radioButton_1");
-    ui_radioButton_2 = qFindChild<QRadioButton*>(this,"radioButton_2");
-    ui_radioButton_3 = qFindChild<QRadioButton*>(this,"radioButton_3");
     ui_radioButton_4 = qFindChild<QRadioButton*>(this,"radioButton_4");
-    ui_radioButton_5 = qFindChild<QRadioButton*>(this, "radioButton_5");
-
-    ui_pushButton = qFindChild<QPushButton*>(this,"pushButton");
-
-    ui_groupBox =qFindChild<QGroupBox*>(this, "groupBox");
-    ui_groupBox_5 =qFindChild<QGroupBox*>(this, "groupBox_5");
 
     ui_label = qFindChild<QLabel*>(this, "label");
     ui_statusLabel = qFindChild<QLabel*>(this, "statusLabel");
@@ -49,15 +40,11 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     //--------------------------------
     //попытка сделать нормальную форму
     this->setCentralWidget(ui_tabWidget);
-    qDebug() << "Making TAB";
     this->make_search_tab();
-    qDebug() << "Maked TAB";
 
     //создаем строку состояния
     statusBar = new QStatusBar(this);
-    ui_countLabel = new QLabel(tr("0", "Start count - zero"));
-    labBar = new QLabel(tr("Count: ", "ITOGO: "));
-    statusBar->addWidget(labBar);
+    ui_countLabel = new QLabel(tr("COUNT: ", "ITOGO") +"0");
     statusBar->addWidget(ui_countLabel);
     setStatusBar(statusBar);
 
@@ -169,7 +156,6 @@ void cengen::make_search_tab() {
     tab1 = new QWidget;
     layTab1 = new QGridLayout;
 
-    //ui_tableWidget = qFindChild<QTableWidget*>(this, "tableWidget");
     ui_tableWidget = new QTableWidget(0,7,this);
 
     //устанавливаем заголовки главной таблицы
@@ -191,7 +177,7 @@ void cengen::make_search_tab() {
     ui_tableWidget->setHorizontalHeader(tableHeader);
     ui_tableWidget->verticalHeader()->hide();
     //подключаем слоты к сигналам
-    connect(ui_tableWidget, SIGNAL(cellClicked(int,int)), SLOT(on_tableWidget_cellChanged(int,int)));
+    connect(ui_tableWidget, SIGNAL(cellClicked(int,int)), SLOT(on_tableWidget_cellClicked(int,int)));
     connect(ui_tableWidget, SIGNAL(cellChanged(int,int)), SLOT(on_tableWidget_cellChanged(int,int)));
     connect(ui_tableWidget, SIGNAL(itemEntered(QTableWidgetItem*)), SLOT(on_tableWidget_itemEntered(QTableWidgetItem*)));
 
@@ -204,11 +190,25 @@ void cengen::make_search_tab() {
     ui_nvalidator = new QIntValidator(this);
     ui_svalidator = new SqlValidator(this);
     ui_lineEdit->setValidator(ui_bvalidator);
-
-
     layTab1->addWidget(ui_lineEdit, 0, 0, 1, 3);
 
+    ui_pushButton = new QPushButton(tr("Search", "Button for search"));
+    connect (ui_pushButton, SIGNAL(clicked()), SLOT(on_lineEdit_returnPressed()));
+    layTab1->addWidget(ui_pushButton, 0, 3);
+
+    //готовим групбокс - выбор метода поиска (штрих-код, название и т.п.)
+    ui_radioButton_1 = new QRadioButton(tr("Barcode"));
+    ui_radioButton_2 = new QRadioButton(tr("Tnomer"));
+    ui_radioButton_3 = new QRadioButton(tr("Name"));
+    ui_radioButton_5 = new QRadioButton(tr("FREE", "uses for NULL search"));
+    connect (ui_radioButton_1, SIGNAL(clicked()), SLOT(get_method_from_ui()));
+    connect (ui_radioButton_2, SIGNAL(clicked()), SLOT(get_method_from_ui()));
+    connect (ui_radioButton_3, SIGNAL(clicked()), SLOT(get_method_from_ui()));
+    connect (ui_radioButton_5, SIGNAL(clicked()), SLOT(get_method_from_ui()));
+    ui_radioButton_1->setChecked(true);
     layBox1 = new QGridLayout;
+    ui_groupBox = new QGroupBox(tr("Method for tovar search"));
+    connect (ui_groupBox, SIGNAL(toggled(bool)), SLOT(get_method_from_ui()));
     layBox1->addWidget(ui_radioButton_1, 0, 0);
     layBox1->addWidget(ui_radioButton_2, 0, 1);
     layBox1->addWidget(ui_radioButton_3, 0, 2);
@@ -227,12 +227,11 @@ void cengen::make_search_tab() {
     ui_groupBox_6 = new QGroupBox(tr("Search limit"));
     ui_groupBox_6->setLayout(layBox6);
 
-    layTab1->addWidget(ui_pushButton, 0, 3);
     layTab1->addWidget(ui_groupBox, 1, 0, 1, 4);
     layTab1->addWidget(ui_groupBox_6, 0, 4, 2, 1);
     layTab1->addWidget(ui_tableWidget, 2, 0, 1, 6);
     tab1->setLayout(layTab1);
-    ui_tabWidget->addTab(tab1, tr("SEARCH"));
+    ui_tabWidget->insertTab(0, tab1, tr("SEARCH"));
 }
 
 void cengen::changeEvent(QEvent *e)
@@ -249,7 +248,6 @@ void cengen::changeEvent(QEvent *e)
 }
 
 void cengen::tovar_search() {
-    Tovar tovar;
     QList<Tovar> tovarListFull;
     tovarListFull = my_informer->info(ui_lineEdit->text(), this->method);
 
@@ -279,7 +277,7 @@ void cengen::load_tovar_list_into_cengen(QList<Tovar> tovarList) {
         int position = ui_tableWidget->rowCount();
         //qDebug() << "position=" << position;
         ui_tableWidget->setRowCount(position + 1);
-        ui_countLabel->setText(QString::number(ui_tableWidget->rowCount()));
+        ui_countLabel->setText(tr("COUNT: ", "ITOGO") + QString::number(ui_tableWidget->rowCount()));
 
         add_table_item(ui_tableWidget, position, tovar);
 
@@ -1074,32 +1072,25 @@ void cengen::update_ui_connection_established() {
 
 }
 
-void cengen::on_radioButton_1_clicked()
+void cengen::get_method_from_ui()
 {
-    this->method = "tbarcode";
-    ui_lineEdit->setValidator(ui_bvalidator);
-    this->new_line_ready();
-}
-
-void cengen::on_radioButton_2_clicked()
-{
-    this->method = "tnomer";
-    ui_lineEdit->setValidator(ui_nvalidator);
-    this->new_line_ready();
-}
-
-void cengen::on_radioButton_3_clicked()
-{
-    this->method = "tname";
-    ui_lineEdit->setValidator(ui_svalidator);
-    this->new_line_ready();
-}
-
-void cengen::on_radioButton_5_clicked()
-{
-    this->method = "any";
-    ui_lineEdit->setValidator(ui_svalidator);
-    this->new_line_ready();
+    if (ui_radioButton_1->isChecked()) {
+        method= "tbarcode";
+        ui_lineEdit->setValidator(ui_bvalidator);
+    }
+    if (ui_radioButton_2->isChecked()) {
+        method= "tnomer";
+        ui_lineEdit->setValidator(ui_nvalidator);
+    }
+    if (ui_radioButton_3->isChecked()) {
+        method= "tname";
+        ui_lineEdit->setValidator(ui_svalidator);
+    }
+    if (ui_radioButton_5->isChecked()) {
+        method= "any";
+        ui_lineEdit->setValidator(ui_svalidator);
+    }
+    new_line_ready();
 }
 
 void cengen::delete_line_from_table(int pos) {
@@ -1110,7 +1101,7 @@ void cengen::delete_line_from_table(int pos) {
         //int nomer = ui_tableWidget->item(i, 0)->text().toInt();
         ui_tableWidget->item(i, 0)->setText(QString::number(i+1));        
     }
-    ui_countLabel->setText(QString::number(num));
+    ui_countLabel->setText(tr("COUNT: ", "ITOGO") + QString::number(num));
 
     //тут бы еще сами кнопки перенумеровать
 
@@ -1497,10 +1488,8 @@ QDomDocument cengen::convert_tovar_list_into_xml(QList<Tovar> spisok) {
 
 void cengen::on_action_3_activated()
 {
-    qDebug() << "new spisok selected";
-
+    ui_countLabel->setText(tr("COUNT: ") + "0");
     ui_tableWidget->setRowCount(0);
-
 }
 
 void cengen::on_action_8_activated()

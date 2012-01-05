@@ -26,126 +26,6 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="tab1">
-     <attribute name="title">
-      <string>Поиск</string>
-     </attribute>
-     <widget class="QPushButton" name="pushButton">
-      <property name="geometry">
-       <rect>
-        <x>380</x>
-        <y>20</y>
-        <width>105</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Поиск</string>
-      </property>
-     </widget>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>50</y>
-        <width>601</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Метод поиска товара</string>
-      </property>
-      <widget class="QWidget" name="horizontalLayoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>20</y>
-         <width>581</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QRadioButton" name="radioButton_1">
-          <property name="text">
-           <string>Штрих-код</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_2">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string>Товарный номер</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_3">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string>Название</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_5">
-          <property name="text">
-           <string>Пустой</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_5">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>120</y>
-        <width>91</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="title">
-       <string>ИТОГО</string>
-      </property>
-      <widget class="QLabel" name="countLabel">
-       <property name="geometry">
-        <rect>
-         <x>17</x>
-         <y>27</y>
-         <width>57</width>
-         <height>15</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </widget>
-    </widget>
     <widget class="QWidget" name="tab2">
      <attribute name="title">
       <string>Шаблон</string>
@@ -1130,8 +1010,6 @@
   <tabstop>linePass</tabstop>
   <tabstop>connectMySQLButton</tabstop>
   <tabstop>comboTbList</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>radioButton_1</tabstop>
   <tabstop>lineH_2</tabstop>
   <tabstop>lineW_2</tabstop>
   <tabstop>scrollArea</tabstop>

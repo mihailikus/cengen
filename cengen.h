@@ -74,7 +74,7 @@ private:
 
     //статусбар
     QStatusBar* statusBar;
-    QLabel *ui_statusLabel, *labBar;
+    QLabel *ui_statusLabel;
 
 
     Ui::cengen *ui;
@@ -110,7 +110,7 @@ private:
                   *ui_radioButton_2,
                   *ui_radioButton_3, *ui_radioButton, *ui_radioButton_4,
                     *ui_radioButton_5;
-    QGroupBox *ui_groupBox, *ui_groupBox_5, *ui_groupBox_6;
+    QGroupBox *ui_groupBox, *ui_groupBox_6;
     QTableWidget* ui_tableWidget;
     int sizeDeltaX;  //разница в ширине между основным окном и таблицей
     int sizeDeltaY;
@@ -179,12 +179,10 @@ private slots:
     //void on_tabWidget_selected(QString );
     //void on_tableWidget_itemClicked(QTableWidgetItem* item);
     void on_tableWidget_cellClicked(int row, int column);
+    void get_method_from_ui();
+
     void on_radioButton_4_clicked();
     void on_radioButton_clicked();
-    void on_radioButton_3_clicked();
-    void on_radioButton_2_clicked();
-    void on_radioButton_1_clicked();
-    void on_radioButton_5_clicked();
     void on_save_db_config_button_clicked();
     void on_comboTbList_activated(QString );
     void on_connectMySQLButton_clicked();
