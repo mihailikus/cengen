@@ -5,5 +5,8 @@
         <file>resources/window_new.png</file>
         <file>resources/save.png</file>
         <file>resources/apply.png</file>
+        <file>resources/print.png</file>
+        <file>resources/down.png</file>
+        <file>resources/up.png</file>
     </qresource>
 </RCC>

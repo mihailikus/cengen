@@ -65,22 +65,44 @@ public:
     void readSettings();
     void make_actions();
     void make_search_tab();
+    void make_preview_tab();
+
+    //порядок вкладок
+    struct TabsOrder
+    {
+        static int const Search = 0;
+        static int const Shablon = 1;
+        static int const Preview = 2;
+        static int const Source = 3;
+        static int const Filter = 4;
+    };
 
 protected:
     void changeEvent(QEvent *e);
 
 private:
     QHeaderView* tableHeader;
+    TabsOrder order;
 
     //статусбар
     QStatusBar* statusBar;
     QLabel *ui_statusLabel;
 
-
-    Ui::cengen *ui;
+    //виджеты вкладки поиска
     QWidget *tab1;
     QGridLayout *layTab1,
                 *layBox1, *layBox5, *layBox6;
+    QLineEdit* ui_lineEdit;
+
+
+    //виджеты вкладки предварительного просмотра
+    QWidget *tab3;
+    QGridLayout *layTab3;
+    QGraphicsScene* currentScene;
+    QGraphicsView* view;    //используется для отображения превью
+
+
+    Ui::cengen *ui;
 
     QSettings m_settings;
     QList<int> mainTableTabs;
@@ -89,7 +111,7 @@ private:
     editor* shablon_editor;
 
     //поля для размера шаблона:
-    QLineEdit* ui_lineEdit, *ui_lineH, *ui_lineW, *ui_lineH_2, *ui_lineW_2;
+    QLineEdit *ui_lineH, *ui_lineW, *ui_lineH_2, *ui_lineW_2;
 
     //валидаторы для штрих-кода, номера и текста
     BarcodeValidator* ui_bvalidator;
@@ -115,16 +137,15 @@ private:
     int sizeDeltaX;  //разница в ширине между основным окном и таблицей
     int sizeDeltaY;
     QLabel* ui_label, *ui_countLabel, *ui_labelDBFname;
-    QScrollArea* ui_scrollArea;
+    //QScrollArea* ui_scrollArea;
     QTabWidget* ui_tabWidget;
-    QVBoxLayout* previewLayout;
+    //QVBoxLayout* previewLayout;
     QFile file;
     QDomDocument domDoc;
     QDomElement shablonElement;
     //QPrinter *printer;
     QComboBox* ui_comboBox, *ui_comboTbList;
-    QGraphicsView* view;    //используется для отображения превью
-    QPushButton *ui_zoomInButton, *ui_zoomOutButton, *ui_save_db_config_button,
+    QPushButton *ui_save_db_config_button,
                 *ui_pushButton, *ui_maxButton;
 
     QString method; //метод поиска товара - номер, штрихкод или название
@@ -159,7 +180,6 @@ private:
     float zoom;         //масштаб предпросмотра
     QRectF rectCen;     //размер одного ценника из шаблона
     QList<QRectF> pages;    //области для постраничной печати
-    QGraphicsScene* currentScene;
     QStringList opisateli;
 
     //QGraphicsLineItem* point;
@@ -174,6 +194,9 @@ private:
     QAction* ui_action; //сохранить
     QAction* ui_action2; //загрузить список
     QAction* ui_actionMake; //сформировать ценники
+    QAction* action_scale_up;
+    QAction* action_scale_down;    //масштаб - меньше и больше
+    QAction* action_print;
 
 private slots:
     //void on_tabWidget_selected(QString );
@@ -202,7 +225,7 @@ private slots:
     void read_file_shablon();    //прочитать шаблон
     void describe_shablon(QDomDocument shablon);
     void generate_preview();
-    void switch_zoom_buttons_enabled(bool state);
+    //void switch_zoom_buttons_enabled(bool state);
     void update_ui_tb_fields(QStringList list);
     void update_ui_db_controls();
     void update_ui_connection_established();

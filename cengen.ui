@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab2">
      <attribute name="title">
@@ -278,121 +278,6 @@
         </property>
        </widget>
       </widget>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>Предпросмотр</string>
-     </attribute>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>60</y>
-        <width>871</width>
-        <height>351</height>
-       </rect>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>867</width>
-         <height>347</height>
-        </rect>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QPushButton" name="pushButton_4">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>20</y>
-        <width>105</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Показать</string>
-      </property>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_4">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>71</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Масштаб</string>
-      </property>
-      <widget class="QPushButton" name="zoomOutButton">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>35</x>
-         <y>20</y>
-         <width>21</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>-</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="zoomInButton">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="geometry">
-        <rect>
-         <x>15</x>
-         <y>20</y>
-         <width>21</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>+</string>
-       </property>
-       <property name="flat">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QLabel" name="statusLabel">
-      <property name="geometry">
-       <rect>
-        <x>310</x>
-        <y>27</y>
-        <width>151</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="printButton">
-      <property name="geometry">
-       <rect>
-        <x>200</x>
-        <y>20</y>
-        <width>105</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Print</string>
-      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
@@ -1012,11 +897,6 @@
   <tabstop>comboTbList</tabstop>
   <tabstop>lineH_2</tabstop>
   <tabstop>lineW_2</tabstop>
-  <tabstop>scrollArea</tabstop>
-  <tabstop>pushButton_4</tabstop>
-  <tabstop>zoomOutButton</tabstop>
-  <tabstop>zoomInButton</tabstop>
-  <tabstop>printButton</tabstop>
   <tabstop>lineW</tabstop>
   <tabstop>pushButton_3</tabstop>
   <tabstop>tabWidget</tabstop>

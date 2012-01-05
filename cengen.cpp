@@ -41,6 +41,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     //попытка сделать нормальную форму
     this->setCentralWidget(ui_tabWidget);
     this->make_search_tab();
+    this->make_preview_tab();
 
     //создаем строку состояния
     statusBar = new QStatusBar(this);
@@ -48,7 +49,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     statusBar->addWidget(ui_countLabel);
     setStatusBar(statusBar);
 
-    ui_scrollArea = qFindChild<QScrollArea*>(this,"scrollArea");
+    //ui_scrollArea = qFindChild<QScrollArea*>(this,"scrollArea");
     ui_comboBox = qFindChild<QComboBox*>(this,"comboBox");
     ui_comboTbList = qFindChild<QComboBox*>(this,"comboTbList");
 
@@ -57,11 +58,9 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui_comboTbarcode = qFindChild<QComboBox*>(this, "comboTbarcode");
     ui_comboTprice = qFindChild<QComboBox*>(this, "comboTprice");
 
-    ui_zoomInButton = qFindChild<QPushButton*>(this,"zoomInButton");
-    ui_zoomOutButton = qFindChild<QPushButton*>(this,"zoomOutButton");
     ui_save_db_config_button = qFindChild<QPushButton*>(this,"save_db_config_button");
 
-    previewLayout = new QVBoxLayout(ui_scrollArea);
+    //previewLayout = new QVBoxLayout(ui_scrollArea);
 
 
     this->ui_comboTbList->setEnabled(false);
@@ -88,12 +87,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui_filterLineText = qFindChild<QLineEdit*>(this, "filterLineText");
 
     ui_tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-    //подготовка сцены для рендеринга ценников
-    currentScene = new QGraphicsScene;
-    view = new QGraphicsView();
-    view->setScene(currentScene);
-    previewLayout->addWidget(view);
 
     //подготовка редактора шаблонов
     shablon_editor = new editor(this);
@@ -140,6 +133,30 @@ void cengen::make_actions() {
     ui_actionMake->setToolTip(tr("Make up cennic for tovar list"));
     ui_mainToolBar->addAction(ui_actionMake);
     connect(ui_actionMake, SIGNAL(triggered()), SLOT(action_create()));
+
+    ui_mainToolBar->addSeparator();
+
+    //вывод на печать
+    action_print = new QAction(QIcon(":/share/images/resources/print.png"),
+                               tr("Print"), this);
+    action_print->setToolTip(tr("Send previewed to printer"));
+    ui_mainToolBar->addAction(action_print);
+    connect(action_print, SIGNAL(triggered()), SLOT(on_printButton_clicked()));
+    action_print->setEnabled(false);
+
+    //масштаб - больше и меньше
+    action_scale_up = new QAction(QIcon(":/share/images/resources/up.png"),
+                                  tr("Scale UP"), this);
+    ui_mainToolBar->addAction(action_scale_up);
+    connect(action_scale_up, SIGNAL(triggered()), SLOT(on_zoomInButton_clicked()));
+
+    action_scale_down = new QAction(QIcon(":/share/images/resources/down.png"),
+                                  tr("Scale DOWN"), this);
+    ui_mainToolBar->addAction(action_scale_down);
+    connect(action_scale_down, SIGNAL(triggered()), SLOT(on_zoomOutButton_clicked()));
+
+    action_scale_up->setEnabled(false);
+    action_scale_down->setEnabled(false);
 
     ui_mainToolBar->addSeparator();
 
@@ -231,7 +248,22 @@ void cengen::make_search_tab() {
     layTab1->addWidget(ui_groupBox_6, 0, 4, 2, 1);
     layTab1->addWidget(ui_tableWidget, 2, 0, 1, 6);
     tab1->setLayout(layTab1);
-    ui_tabWidget->insertTab(0, tab1, tr("SEARCH"));
+    ui_tabWidget->insertTab(TabsOrder::Search, tab1, tr("SEARCH"));
+    //order = this->TabsOrder
+
+}
+
+void cengen::make_preview_tab() {
+    tab3 = new QWidget;
+    layTab3 = new QGridLayout;
+
+    //подготовка сцены для рендеринга ценников
+    currentScene = new QGraphicsScene;
+    view = new QGraphicsView();
+    view->setScene(currentScene);
+    layTab3->addWidget(view, 0, 0);
+    tab3->setLayout(layTab3);
+    ui_tabWidget->insertTab(TabsOrder::Preview, tab3, tr("PREVIEW"));
 }
 
 void cengen::changeEvent(QEvent *e)
@@ -359,8 +391,9 @@ void cengen::new_line_ready() {
 void cengen::action_create()
 {
     //функция для формирования ценников
-    ui_tabWidget->setCurrentIndex(2);
+    ui_tabWidget->setCurrentIndex(TabsOrder::Preview);
     this->generate_preview();
+    action_print->setEnabled(true);
 }
 
 QList<Tovar> cengen::get_tovar_list(QTableWidget *table, QString priznak) {
@@ -437,12 +470,19 @@ void cengen::describe_shablon(QDomDocument shablon) {
 
 void cengen::on_tabWidget_currentChanged(int index)
 {
-    if (!index) {
+    if (index == TabsOrder::Preview) {
+        action_scale_up->setEnabled(true);
+        action_scale_down->setEnabled(true);
+    } else {
+        action_scale_up->setEnabled(false);
+        action_scale_down->setEnabled(false);
+    }
+
+    if (index == TabsOrder::Search) {
         this->new_line_ready();
         return;
     }
     update_values();
-
 }
 
 void cengen::on_pushButton_4_clicked()
@@ -572,7 +612,7 @@ void cengen::generate_preview() {
         return;
     }
 
-    this->switch_zoom_buttons_enabled(true);
+    //this->switch_zoom_buttons_enabled(true);
 
     currentScene->clear();
 
@@ -639,11 +679,6 @@ void cengen::on_zoomOutButton_clicked()
 {
     view->scale(0.5, 0.5);
     zoom = zoom/2.0;
-}
-
-void cengen::switch_zoom_buttons_enabled(bool state = false) {
-    ui_zoomInButton->setEnabled(state);
-    ui_zoomOutButton->setEnabled(state);
 }
 
 void cengen::on_printButton_clicked()
@@ -1490,6 +1525,10 @@ void cengen::on_action_3_activated()
 {
     ui_countLabel->setText(tr("COUNT: ") + "0");
     ui_tableWidget->setRowCount(0);
+    action_print->setEnabled(false);
+    currentScene->clear();
+    ui_tabWidget->setCurrentIndex(TabsOrder::Search);
+
 }
 
 void cengen::on_action_8_activated()
