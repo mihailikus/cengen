@@ -164,6 +164,7 @@ private:
     bool describer_is_ready;
 
     bool editing_price2;
+    bool tovar_searched;
 
     //переменные для работы фильтра
     QGroupBox* ui_filterBox;

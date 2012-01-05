@@ -68,6 +68,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     this->new_line_ready();
 
     editing_price2 = false;
+    tovar_searched = false;
 
     my_informer = new Tinformer();
     zoom = 1.0;
@@ -302,7 +303,7 @@ void cengen::tovar_search() {
 void cengen::load_tovar_list_into_cengen(QList<Tovar> tovarList) {
     //загружаем список товаров в таблицу генератора ценников
     add_flag = true;
-
+    if (tovarList.count()) tovar_searched = true;
     for (int i = 0; i<tovarList.count(); i++) {
         //qDebug() << "i=" << i;
         Tovar tovar = tovarList.at(i);
@@ -367,7 +368,7 @@ void cengen::on_pushButton_clicked()
 
 void cengen::on_lineEdit_returnPressed()
 {
-    if (ui_lineEdit->text() != "") {
+    if (ui_lineEdit->text() != "" || tovar_searched == false) {
         this->tovar_search();
         this->new_line_ready();
     } else {
@@ -1121,6 +1122,7 @@ void cengen::get_method_from_ui()
         method= "any";
         ui_lineEdit->setValidator(ui_svalidator);
     }
+    tovar_searched = false;
     new_line_ready();
 }
 
