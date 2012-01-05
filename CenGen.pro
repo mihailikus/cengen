@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     editor.cpp \
     graph.cpp \
     addlinemaster.cpp \
-    imagebox.cpp
+    imagebox.cpp \
+    about.cpp
 HEADERS += cengen.h \
     tinformer.h \
     tovar.h \
@@ -39,7 +40,8 @@ HEADERS += cengen.h \
     editor.h \
     graph.h \
     addlinemaster.h \
-    imagebox.h
+    imagebox.h \
+    about.h
 FORMS += cengen.ui \
     dialog.ui \
     editor.ui \

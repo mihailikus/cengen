@@ -1779,3 +1779,24 @@ void cengen::update_mainTableTabs(QTableWidget *table) {
         mainTableTabs << table->horizontalHeader()->sectionSize(i);
     }
 }
+
+void cengen::on_action_6_triggered()
+{
+    About d (this);
+
+    d.setAuthor(tr("Michael Volkov"));
+    d.setMail("miha@mihol.ru");
+    d.setAuthorPhoto(QIcon(":/share/images/resources/my.png"));
+    d.setPhone("+7-960-88-44-777");
+    d.setLicense("GNU GPL v3");
+
+    {
+            QFile file("LICENSE.GPL3");
+            if (file.open(QFile::ReadOnly)) {
+                    d.setLicenseText(QString(file.readAll()));
+                    file.close();
+            }
+    }
+    d.addThanks(tr("UG_Dvor_34"), "", tr ("Encouragement"));
+    d.exec();
+}

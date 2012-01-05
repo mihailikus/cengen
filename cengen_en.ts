@@ -216,5 +216,20 @@
         <source>Select tovar list for minus</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="cengen.cpp" line="1787"/>
+        <source>Michael Volkov</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="1800"/>
+        <source>UG_Dvor_34</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="1800"/>
+        <source>Encouragement</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

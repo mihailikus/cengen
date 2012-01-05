@@ -8,5 +8,6 @@
         <file>resources/print.png</file>
         <file>resources/down.png</file>
         <file>resources/up.png</file>
+        <file>resources/my.png</file>
     </qresource>
 </RCC>

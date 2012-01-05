@@ -216,5 +216,20 @@
         <source>Select tovar list for minus</source>
         <translation>Выберите список товаров для минусовки</translation>
     </message>
+    <message>
+        <location filename="cengen.cpp" line="1787"/>
+        <source>Michael Volkov</source>
+        <translation>Михаил Волков</translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="1800"/>
+        <source>UG_Dvor_34</source>
+        <translation>Южный Двор 34</translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="1800"/>
+        <source>Encouragement</source>
+        <translation>Моральная поддержка</translation>
+    </message>
 </context>
 </TS>

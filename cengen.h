@@ -28,6 +28,7 @@
 #include "sql_validator.h"
 #include "dialog.h"
 #include "editor.h"
+#include "about.h"
 
 QT_BEGIN_NAMESPACE
 class QLineEdit;
@@ -275,6 +276,7 @@ private slots:
     void on_comboTname_currentIndexChanged(int index);
     void on_comboTbarcode_currentIndexChanged(int index);
     void on_comboTprice_currentIndexChanged(int index);
+    void on_action_6_triggered();
 };
 
 #endif // CENGEN_H
