@@ -14,10 +14,10 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 
     this->make_actions();
 
-    ui_lineW = qFindChild<QLineEdit*>(this,"lineW");
-    ui_lineH = qFindChild<QLineEdit*>(this,"lineH");
-    ui_lineW_2 = qFindChild<QLineEdit*>(this,"lineW_2");
-    ui_lineH_2 = qFindChild<QLineEdit*>(this,"lineH_2");
+//    ui_lineW = qFindChild<QLineEdit*>(this,"lineW");
+//    ui_lineH = qFindChild<QLineEdit*>(this,"lineH");
+//    ui_lineW_2 = qFindChild<QLineEdit*>(this,"lineW_2");
+//    ui_lineH_2 = qFindChild<QLineEdit*>(this,"lineH_2");
 
     ui_lineHost = qFindChild<QLineEdit*>(this,"lineHost");
     ui_lineName = qFindChild<QLineEdit*>(this,"lineName");
@@ -31,7 +31,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui_radioButton = qFindChild<QRadioButton*>(this,"radioButton");
     ui_radioButton_4 = qFindChild<QRadioButton*>(this,"radioButton_4");
 
-    ui_label = qFindChild<QLabel*>(this, "label");
+    //ui_label = qFindChild<QLabel*>(this, "label");
     ui_statusLabel = qFindChild<QLabel*>(this, "statusLabel");
     ui_labelDBFname = qFindChild<QLabel*>(this, "labelDBFname");
 
@@ -41,6 +41,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     //попытка сделать нормальную форму
     this->setCentralWidget(ui_tabWidget);
     this->make_search_tab();
+    this->make_shablon_tab();
     this->make_preview_tab();
 
     //создаем строку состояния
@@ -50,7 +51,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     setStatusBar(statusBar);
 
     //ui_scrollArea = qFindChild<QScrollArea*>(this,"scrollArea");
-    ui_comboBox = qFindChild<QComboBox*>(this,"comboBox");
+    //ui_comboBox = qFindChild<QComboBox*>(this,"comboBox");
     ui_comboTbList = qFindChild<QComboBox*>(this,"comboTbList");
 
     ui_comboTnomer = qFindChild<QComboBox*>(this, "comboTnomer");
@@ -266,6 +267,79 @@ void cengen::make_preview_tab() {
     layTab3->addWidget(view, 0, 0);
     tab3->setLayout(layTab3);
     ui_tabWidget->insertTab(TabsOrder::Preview, tab3, tr("PREVIEW"));
+}
+
+void cengen::make_shablon_tab() {
+    tab2 = new QWidget;
+    layTab2 = new QBoxLayout(QBoxLayout::LeftToRight);
+
+    ui_groupBox_2 = new QGroupBox(tr("Shablon"));
+    layBoxT2B2 = new QBoxLayout(QBoxLayout::TopToBottom);
+    ui_pushButton_3 = new QPushButton (tr("Select shablon file"));
+    connect(ui_pushButton_3, SIGNAL(clicked()), SLOT(on_pushButton_3_clicked()));
+    layBoxT2B2->addWidget(ui_pushButton_3);
+    ui_label = new QLabel(tr("Shablon"));
+    layBoxT2B2->addWidget(ui_label);
+    ui_show_editor_button = new QPushButton(tr("Open shablon in built-in editor"));
+    connect(ui_show_editor_button, SIGNAL(clicked()), SLOT(on_show_editor_button_clicked()));
+    layBoxT2B2->addWidget(ui_show_editor_button);
+    ui_groupBox_2->setLayout(layBoxT2B2);
+    layBoxT2B2->addStretch(1);
+
+    layTab2->addWidget(ui_groupBox_2);
+
+
+    ui_groupBox_3 = new QGroupBox(tr("Page setup"));
+    layBoxT2B3 = new QGridLayout();
+    comboBox = new QComboBox();
+    comboBox->addItem(tr("Paper A4"));
+    comboBox->addItem(tr("Paper A5"));
+    connect (comboBox, SIGNAL(activated(QString)), SLOT(on_comboBox_activated(QString)));
+    layBoxT2B3->addWidget(comboBox, 0, 0);
+    ui_lineW = new QLineEdit;
+    ui_lineH = new QLineEdit;
+    ui_lineW_2 = new QLineEdit;
+    ui_lineH_2 = new QLineEdit;
+    ui_lineW->setReadOnly(true);
+    ui_lineH->setReadOnly(true);
+    ui_lineW_2->setReadOnly(true);
+    ui_lineH_2->setReadOnly(true);
+    layBoxT2B3->addWidget(ui_lineW, 1, 0);
+    layBoxT2B3->addWidget(ui_lineH, 1, 2);
+    layBoxT2B3->addWidget(ui_lineW_2, 2, 0);
+    layBoxT2B3->addWidget(ui_lineH_2, 2, 2);
+    label2 = new QLabel(tr("x"));
+    label3 = new QLabel(tr("x"));
+    label4 = new QLabel(tr("in mkm", "Size in mikro-millimeters"));
+    label5 = new QLabel(tr("in cennic's"));
+    label6 = new QLabel(tr("Paper orientation:"));
+    label7 = new QLabel(tr(" ", "Zero label"));
+    layBoxT2B3->addWidget(label2, 1, 1);
+    layBoxT2B3->addWidget(label3, 2, 1);
+    layBoxT2B3->addWidget(label4, 1, 3);
+    layBoxT2B3->addWidget(label5, 2, 3);
+    layBoxT2B3->addWidget(label6, 3, 0, 1, 4);
+    layBoxT2B3->addWidget(label7, 6, 0, 2, 4);
+
+    ui_radioButton_6 = new QRadioButton(tr("orientation: portrate"));
+    ui_radioButton_7 = new QRadioButton(tr("orientation: landscape"));
+    ui_radioButton_6->setChecked(true);
+    layBoxT2B3->addWidget(ui_radioButton_6, 4, 0, 1, 3);
+    layBoxT2B3->addWidget(ui_radioButton_7, 5, 0, 1, 3);
+    connect(ui_radioButton_6, SIGNAL(clicked()), SLOT(on_radioButton_6_clicked()));
+    connect(ui_radioButton_7, SIGNAL(clicked()), SLOT(on_radioButton_7_clicked()));
+    totalCennicOnPage = new QLabel(" ");
+    layBoxT2B3->addWidget(totalCennicOnPage, 6, 0, 1, 4);
+
+    ui_groupBox_3->setLayout(layBoxT2B3);
+    layTab2->addWidget(ui_groupBox_3);
+
+    layTab2->addStretch(1);
+
+    tab2->setLayout(layTab2);
+    ui_tabWidget->insertTab(TabsOrder::Shablon, tab2, tr("Shablon"));
+
+
 }
 
 void cengen::changeEvent(QEvent *e)
@@ -564,7 +638,7 @@ void cengen::on_comboBox_activated(QString paper)
 }
 
 void cengen::update_values() {
-    switch (ui_comboBox->currentIndex()) {
+    switch (comboBox->currentIndex()) {
     case 0:
         //qDebug() << "paperA4";
         this->pageW = 2100;
@@ -602,9 +676,10 @@ void cengen::update_values() {
     ui_lineH->setText(QString::number(pageH));
     ui_lineW_2->setText(QString::number(Ccols));
     ui_lineH_2->setText(QString::number(Crows));
-    //qDebug() << "/dated";
 
-
+    totalCennicOnPage->setText(tr("Total: ")
+                               +QString::number(Ccols*Crows)
+                               +tr(" cennic's on one page"));
 }
 
 void cengen::generate_preview() {

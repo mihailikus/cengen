@@ -21,6 +21,7 @@
 #include <QToolBar>
 #include <QStandardItemModel>
 #include <QAction>
+//#include <QSpacerItem>
 #include "tinformer.h"
 #include "barcode.h"
 #include "cen_viewer.h"
@@ -66,6 +67,7 @@ public:
     void readSettings();
     void make_actions();
     void make_search_tab();
+    void make_shablon_tab();
     void make_preview_tab();
 
     //порядок вкладок
@@ -103,6 +105,25 @@ private:
     QGraphicsView* view;    //используется для отображения превью
 
 
+    //виджеты вкладки выбора шаблона и параметров страницы
+    QWidget *tab2;
+    QBoxLayout *layTab2;
+    QGroupBox *ui_groupBox_2;
+    QGroupBox *ui_groupBox_3;
+    QBoxLayout *layBoxT2B2;
+    QPushButton *ui_pushButton_3;
+    QLabel *ui_label;
+    QPushButton *ui_show_editor_button;
+
+    QGridLayout *layBoxT2B3;
+    QComboBox *comboBox;
+    QLineEdit *ui_lineH, *ui_lineW, *ui_lineH_2, *ui_lineW_2;
+    QLabel *label2, *label3, *label4, *label5, *label6, *label7;
+    QLabel *totalCennicOnPage;
+    QRadioButton *ui_radioButton_6;
+    QRadioButton *ui_radioButton_7;
+
+
     Ui::cengen *ui;
 
     QSettings m_settings;
@@ -110,9 +131,6 @@ private:
     int mainTableWidth, mainTableHeith;
 
     editor* shablon_editor;
-
-    //поля для размера шаблона:
-    QLineEdit *ui_lineH, *ui_lineW, *ui_lineH_2, *ui_lineW_2;
 
     //валидаторы для штрих-кода, номера и текста
     BarcodeValidator* ui_bvalidator;
@@ -137,7 +155,7 @@ private:
     QTableWidget* ui_tableWidget;
     int sizeDeltaX;  //разница в ширине между основным окном и таблицей
     int sizeDeltaY;
-    QLabel* ui_label, *ui_countLabel, *ui_labelDBFname;
+    QLabel *ui_countLabel, *ui_labelDBFname;
     //QScrollArea* ui_scrollArea;
     QTabWidget* ui_tabWidget;
     //QVBoxLayout* previewLayout;
@@ -145,7 +163,7 @@ private:
     QDomDocument domDoc;
     QDomElement shablonElement;
     //QPrinter *printer;
-    QComboBox* ui_comboBox, *ui_comboTbList;
+    QComboBox *ui_comboTbList;
     QPushButton *ui_save_db_config_button,
                 *ui_pushButton, *ui_maxButton;
 
