@@ -14,7 +14,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 
     this->make_actions();
 
-    ui_statusLabel = qFindChild<QLabel*>(this, "statusLabel");
+    //ui_statusLabel = qFindChild<QLabel*>(this, "statusLabel");
 
     ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
 
@@ -30,6 +30,8 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     statusBar = new QStatusBar(this);
     ui_countLabel = new QLabel(tr("COUNT: ", "ITOGO") +"0");
     statusBar->addWidget(ui_countLabel);
+    ui_statusLabel = new QLabel(tr("OK"));
+    statusBar->addWidget(ui_statusLabel);
     setStatusBar(statusBar);
 
     //ui_save_db_config_button = qFindChild<QPushButton*>(this,"save_db_config_button");
@@ -103,6 +105,7 @@ void cengen::make_actions() {
     ui_actionMake = new QAction(QIcon(":/share/images/resources/apply.png"),
                                 tr("MakeUp cennic"), this);
     ui_actionMake->setToolTip(tr("Make up cennic for tovar list"));
+    ui_actionMake->setShortcut(QKeySequence("F12"));
     ui_mainToolBar->addAction(ui_actionMake);
     connect(ui_actionMake, SIGNAL(triggered()), SLOT(action_create()));
 
@@ -583,6 +586,8 @@ void cengen::on_pushButton_3_clicked()
         file.setFileName(str);
         this->read_file_shablon();
         file_is_ready = true;
+        ui_statusLabel->setText(tr("Shablon OK"));
+
     }
 }
 
@@ -595,6 +600,8 @@ void cengen::read_file_shablon() {
         }
     } else {
         file_is_ready = false;
+        ui_statusLabel->setText(tr("Wrong shablon"));
+
     }
     this->describe_shablon(domDoc);
 
@@ -756,8 +763,6 @@ void cengen::generate_preview() {
         return;
     }
 
-    //this->switch_zoom_buttons_enabled(true);
-
     currentScene->clear();
 
     pages.clear();
@@ -806,11 +811,6 @@ void cengen::generate_preview() {
 
 
     }
-
-    view->scale(0.9, 0.9);
-
-    qDebug() <<  "There is pages: " << pages.count();
-
 }
 
 void cengen::on_zoomInButton_clicked()
@@ -1033,7 +1033,6 @@ void cengen::readSettings() {
                 this->opisateli.clear();
                 opisateli = my_informer->tb_describe(sql->tbName);
 
-                this->set_opisateli_from_settings();
                 this->update_ui_db_controls();
 
             } else {
@@ -1075,7 +1074,6 @@ void cengen::readSettings() {
             //qDebug() << "we read DBF settings. Count opisateli " << opisateli.count();
 
             //вызываем функцию выбора и установки описателей
-            this->set_opisateli_from_settings();
             this->update_ui_db_controls();
 
         } else {
@@ -1090,6 +1088,8 @@ void cengen::readSettings() {
 
 
     }
+
+    this->set_opisateli_from_settings();
 
     //qDebug() << "Closing group settings. Count " << i;
 
@@ -1117,6 +1117,7 @@ void cengen::read_filter_settings() {
     filterDbf.fileName = m_settings.value("/Settings/filter/FileName", "").toString();
     if (filterDbf.fileName == "") {
         this->file_is_ready = false;
+        ui_statusLabel->setText(tr("Wrong shablon"));
         return;
     }
 
@@ -1895,7 +1896,6 @@ void cengen::on_radioButton_7_clicked()
 
 void cengen::on_action_4_activated()
 {
-    this->writeSettings();
     close();
 }
 

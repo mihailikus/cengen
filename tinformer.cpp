@@ -203,7 +203,7 @@ bool Tinformer::set_fields(dbTranslator *rows) {
         }
 
         //qDebug() << "Offset for barcode = " << dbf_info->dbf_fields[names.at(0)].offset;
-        qDebug() << "Length for barcode = " << dbf_info->dbf_fields[names.at(0)].length;
+        //qDebug() << "Length for barcode = " << dbf_info->dbf_fields[names.at(0)].length;
 
         this->tb_is_ready = true;
         return true;
