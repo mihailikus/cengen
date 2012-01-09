@@ -1033,7 +1033,6 @@ void cengen::readSettings() {
                 this->opisateli.clear();
                 opisateli = my_informer->tb_describe(sql->tbName);
 
-                this->update_ui_db_controls();
 
             } else {
                 //устанавливаем фокус на выборе таблицы
@@ -1090,6 +1089,7 @@ void cengen::readSettings() {
     }
 
     this->set_opisateli_from_settings();
+    this->update_ui_db_controls();
 
     //qDebug() << "Closing group settings. Count " << i;
 
