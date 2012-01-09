@@ -14,26 +14,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 
     this->make_actions();
 
-//    ui_lineW = qFindChild<QLineEdit*>(this,"lineW");
-//    ui_lineH = qFindChild<QLineEdit*>(this,"lineH");
-//    ui_lineW_2 = qFindChild<QLineEdit*>(this,"lineW_2");
-//    ui_lineH_2 = qFindChild<QLineEdit*>(this,"lineH_2");
-
-    ui_lineHost = qFindChild<QLineEdit*>(this,"lineHost");
-    ui_lineName = qFindChild<QLineEdit*>(this,"lineName");
-    ui_linePort = qFindChild<QLineEdit*>(this,"linePort");
-    ui_lineUser = qFindChild<QLineEdit*>(this,"lineUser");
-    ui_linePass = qFindChild<QLineEdit*>(this,"linePass");
-
-    ui_groupDBF = qFindChild<QGroupBox*>(this, "groupDBF");
-    ui_groupSQL = qFindChild<QGroupBox*>(this, "groupSQL");
-
-    ui_radioButton = qFindChild<QRadioButton*>(this,"radioButton");
-    ui_radioButton_4 = qFindChild<QRadioButton*>(this,"radioButton_4");
-
-    //ui_label = qFindChild<QLabel*>(this, "label");
     ui_statusLabel = qFindChild<QLabel*>(this, "statusLabel");
-    ui_labelDBFname = qFindChild<QLabel*>(this, "labelDBFname");
 
     ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
 
@@ -43,6 +24,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     this->make_search_tab();
     this->make_shablon_tab();
     this->make_preview_tab();
+    this->make_source_tab();
 
     //создаем строку состояния
     statusBar = new QStatusBar(this);
@@ -50,19 +32,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     statusBar->addWidget(ui_countLabel);
     setStatusBar(statusBar);
 
-    //ui_scrollArea = qFindChild<QScrollArea*>(this,"scrollArea");
-    //ui_comboBox = qFindChild<QComboBox*>(this,"comboBox");
-    ui_comboTbList = qFindChild<QComboBox*>(this,"comboTbList");
-
-    ui_comboTnomer = qFindChild<QComboBox*>(this, "comboTnomer");
-    ui_comboTname = qFindChild<QComboBox*>(this, "comboTname");
-    ui_comboTbarcode = qFindChild<QComboBox*>(this, "comboTbarcode");
-    ui_comboTprice = qFindChild<QComboBox*>(this, "comboTprice");
-
-    ui_save_db_config_button = qFindChild<QPushButton*>(this,"save_db_config_button");
-
-    //previewLayout = new QVBoxLayout(ui_scrollArea);
-
+    //ui_save_db_config_button = qFindChild<QPushButton*>(this,"save_db_config_button");
 
     this->ui_comboTbList->setEnabled(false);
 
@@ -269,6 +239,103 @@ void cengen::make_preview_tab() {
     ui_tabWidget->insertTab(TabsOrder::Preview, tab3, tr("PREVIEW"));
 }
 
+void cengen::make_source_tab() {
+    tab4 = new QWidget;
+    layTab4 = new QGridLayout;
+
+    laySQL = new QGridLayout;
+    ui_groupSQL = new QGroupBox(tr("MySQL config"));
+    ui_groupSQL->setCheckable(true);
+    ui_groupSQL->setChecked(false);
+    connect (ui_groupSQL, SIGNAL(toggled(bool)), SLOT(on_radioButton_clicked()));
+
+    ui_lineHost = new QLineEdit;
+    ui_lineName = new QLineEdit;
+    ui_linePort = new QLineEdit(tr("Not used yet"));
+    ui_lineUser = new QLineEdit;
+    ui_linePass = new QLineEdit;
+    ui_linePort->setEnabled(false);
+    label6 = new QLabel(tr("DB Host"));
+    label10= new QLabel(tr("DB port"));
+    label9 = new QLabel(tr("DB name"));
+    label7 = new QLabel(tr("User name"));
+    label8 = new QLabel(tr("User password"));
+    label11 = new QLabel(tr("Select table from MySQL"));
+    laySQL->addWidget(ui_lineHost, 0, 1);
+    laySQL->addWidget(label6, 0, 0);
+    laySQL->addWidget(ui_linePort, 0, 3);
+    laySQL->addWidget(label10, 0, 2);
+    laySQL->addWidget(label9, 1, 0);
+    laySQL->addWidget(ui_lineName, 1, 1, 1, 3);
+    laySQL->addWidget(label7, 2, 0);
+    laySQL->addWidget(ui_lineUser, 2, 1);
+    laySQL->addWidget(label8, 2, 2);
+    laySQL->addWidget(ui_linePass, 2, 3);
+
+    ui_connectMySQLButton = new QPushButton (tr("Connect to MySQL"));
+    connect(ui_connectMySQLButton, SIGNAL(clicked()), SLOT(on_connectMySQLButton_clicked()));
+    laySQL->addWidget(ui_connectMySQLButton, 3, 2, 1, 2);
+
+    laySQL->addWidget(label11, 4, 0, 1, 2);
+
+    ui_comboTbList = new QComboBox;
+    connect(ui_comboTbList, SIGNAL(activated(QString)), SLOT(on_comboTbList_activated(QString)));
+    laySQL->addWidget(ui_comboTbList, 4, 2, 1, 2);
+
+    ui_groupSQL->setLayout(laySQL);
+    layTab4->addWidget(ui_groupSQL, 0, 0);
+
+    ui_groupDBF = new QGroupBox(tr("DBF file config"));
+    ui_groupDBF->setCheckable(true);
+    ui_groupDBF->setChecked(true);
+    connect(ui_groupDBF, SIGNAL(toggled(bool)), SLOT(on_radioButton_4_clicked()));
+    layDBF = new QGridLayout;
+    label16 = new QLabel(tr("DBF file selected is:"));
+    labelDBFname = new QLabel;
+    ui_pushButton_5 = new QPushButton("Select DBF file");
+    connect(ui_pushButton_5, SIGNAL(clicked()), SLOT(on_pushButton_5_clicked()));
+    layDBF->addWidget(ui_pushButton_5, 0, 0);
+    layDBF->addWidget(label16, 1, 0, 1, 3);
+    layDBF->addWidget(labelDBFname, 2, 0, 1, 3);
+    ui_groupDBF->setLayout(layDBF);
+    layTab4->addWidget(ui_groupDBF, 1, 0);
+
+
+    ui_groupOpisateli = new QGroupBox(tr("Placement of DBF fields"));
+    layOpisateli = new QGridLayout;
+
+    label12 = new QLabel(tr("Tnomer"));
+    label13 = new QLabel(tr("Name of tovar"));
+    label14 = new QLabel(tr("Barcode"));
+    label15 = new QLabel(tr("Price"));
+    layOpisateli->addWidget(label12, 0, 0);
+    layOpisateli->addWidget(label13, 1, 0);
+    layOpisateli->addWidget(label14, 2, 0);
+    layOpisateli->addWidget(label15, 3, 0);
+
+    ui_comboTnomer = new QComboBox;
+    ui_comboTname = new QComboBox;
+    ui_comboTbarcode = new QComboBox;
+    ui_comboTprice = new QComboBox;
+    connect(ui_comboTnomer, SIGNAL(activated(int)), SLOT(on_save_db_config_button_clicked()));
+    connect(ui_comboTname, SIGNAL(activated(int)), SLOT(on_save_db_config_button_clicked()));
+    connect(ui_comboTbarcode, SIGNAL(activated(int)), SLOT(on_save_db_config_button_clicked()));
+    connect(ui_comboTprice, SIGNAL(activated(int)), SLOT(on_save_db_config_button_clicked()));
+    layOpisateli->addWidget(ui_comboTnomer, 0, 1);
+    layOpisateli->addWidget(ui_comboTname, 1, 1);
+    layOpisateli->addWidget(ui_comboTbarcode, 2, 1);
+    layOpisateli->addWidget(ui_comboTprice, 3, 1);
+
+    ui_groupOpisateli->setLayout(layOpisateli);
+
+    layTab4->addWidget(ui_groupOpisateli, 0, 1, 2, 1);
+
+    tab4->setLayout(layTab4);
+    ui_tabWidget->insertTab(TabsOrder::Source, tab4, tr("Data source"));
+
+
+}
+
 void cengen::make_shablon_tab() {
     tab2 = new QWidget;
     layTab2 = new QBoxLayout(QBoxLayout::LeftToRight);
@@ -312,14 +379,14 @@ void cengen::make_shablon_tab() {
     label3 = new QLabel(tr("x"));
     label4 = new QLabel(tr("in mkm", "Size in mikro-millimeters"));
     label5 = new QLabel(tr("in cennic's"));
-    label6 = new QLabel(tr("Paper orientation:"));
-    label7 = new QLabel(tr(" ", "Zero label"));
+    labelOrient = new QLabel(tr("Paper orientation:"));
+    labelZero = new QLabel(tr(" ", "Zero label"));
     layBoxT2B3->addWidget(label2, 1, 1);
     layBoxT2B3->addWidget(label3, 2, 1);
     layBoxT2B3->addWidget(label4, 1, 3);
     layBoxT2B3->addWidget(label5, 2, 3);
-    layBoxT2B3->addWidget(label6, 3, 0, 1, 4);
-    layBoxT2B3->addWidget(label7, 6, 0, 2, 4);
+    layBoxT2B3->addWidget(labelOrient, 3, 0, 1, 4);
+    layBoxT2B3->addWidget(labelZero, 6, 0, 2, 4);
 
     ui_radioButton_6 = new QRadioButton(tr("orientation: portrate"));
     ui_radioButton_7 = new QRadioButton(tr("orientation: landscape"));
@@ -936,12 +1003,11 @@ void cengen::readSettings() {
 
     if (db_source) {
         //если 1 - ищем в мускуле
-        ui_radioButton->setChecked(true);
+        //ui_radioButton->setChecked(true);
         //ui_radioButton_4->setChecked(true);
 
         //блокируем блок выбора файла DBF и включаем блок настроек MySQL
-        ui_groupSQL->setEnabled(true);
-        ui_groupDBF->setEnabled(false);
+        trigger_source_selection(false);
 
         //читаем настройки базы данных
         //m_settings.beginGroup("/Settings/sql");
@@ -988,12 +1054,11 @@ void cengen::readSettings() {
         //и мы используем DBF-файлы
         //qDebug() << "we read DBF settings";
         my_informer->prepare(dbf);
-        ui_radioButton->setChecked(false);
-        ui_radioButton_4->setChecked(true);
+        trigger_source_selection(true);
 
         //блокируем блок настроек MySQL и включаем блок выбора файла DBF
-        ui_groupSQL->setEnabled(false);
-        ui_groupDBF->setEnabled(true);
+        //ui_groupSQL->setEnabled(false);
+        //ui_groupDBF->setEnabled(true);
 
         //читаем имя файла DBF-базы данных
         //m_settings.beginGroup("/Settings/dbf");
@@ -1004,7 +1069,7 @@ void cengen::readSettings() {
         if (dbf->fileName != "") {
             //если имя файла не пусто - продолжаем
             my_informer->set_tb_name(dbf->fileName);
-            ui_labelDBFname->setText(dbf->fileName);
+            labelDBFname->setText(dbf->fileName);
             this->opisateli.clear();
             opisateli = my_informer->tb_describe("DBF");
             //qDebug() << "we read DBF settings. Count opisateli " << opisateli.count();
@@ -1092,7 +1157,7 @@ void cengen::on_comboTbList_activated(QString tbName)
     this->update_ui_tb_fields(list);
 
     my_informer->set_tb_name(tbName);
-    ui_save_db_config_button->setEnabled(true);
+    //ui_save_db_config_button->setEnabled(true);
     this->sql->tbName = tbName;
     this->db_is_ready = true;
 
@@ -1111,7 +1176,7 @@ void cengen::update_ui_tb_fields(QStringList list) {
     ui_comboTbarcode->addItems(list);
     ui_comboTprice->addItems(list);
 
-    ui_save_db_config_button->setEnabled(true);
+    //ui_save_db_config_button->setEnabled(true);
 }
 
 void cengen::on_save_db_config_button_clicked()
@@ -1166,7 +1231,7 @@ void cengen::update_ui_db_controls() {
         ui_comboTprice->blockSignals(false);
 
         this->on_save_db_config_button_clicked();
-        ui_save_db_config_button->setEnabled(true);
+        //ui_save_db_config_button->setEnabled(true);
     }
 //qDebug() << "updating";
 }
@@ -1233,8 +1298,8 @@ void cengen::on_radioButton_clicked()
     ui_radioButton_3->setEnabled(true);
     //db_is_ready = my_informer->prepare(sql);
     //qDebug() << "set read sql 777";
-    ui_groupDBF->setEnabled(false);
-    ui_groupSQL->setEnabled(true);
+
+    trigger_source_selection(false);
 }
 
 void cengen::on_radioButton_4_clicked()
@@ -1247,8 +1312,17 @@ void cengen::on_radioButton_4_clicked()
     this->readSettings();
 
     //ui_radioButton_3->setEnabled(false);
-    ui_groupDBF->setEnabled(true);
-    ui_groupSQL->setEnabled(false);
+    trigger_source_selection(true);
+}
+
+void cengen::trigger_source_selection(bool state) {
+    ui_groupDBF->blockSignals(true);
+    ui_groupSQL->blockSignals(true);
+    ui_groupDBF->setChecked(state);
+    ui_groupSQL->setChecked(!state);
+    ui_groupDBF->blockSignals(false);
+    ui_groupSQL->blockSignals(false);
+
 }
 
 void cengen::on_tableWidget_cellClicked(int row, int column)
@@ -1265,7 +1339,7 @@ void cengen::on_pushButton_5_clicked()
     //выбор DBF-файла
     QString str = QFileDialog::getOpenFileName(0, "Open Dialog", "", "DBF-files (*.dbf)");
     if (str == "") return;
-    ui_labelDBFname->setText(str);
+    labelDBFname->setText(str);
     //this->dbf = new DbfConfig;
     dbf->fileName = str;
     my_informer->set_tb_name(str);

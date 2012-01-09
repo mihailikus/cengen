@@ -18,6 +18,7 @@
 #include <QSettings>
 #include <QGroupBox>
 #include <QSpinBox>
+#include <QRadioButton>
 #include <QToolBar>
 #include <QStandardItemModel>
 #include <QAction>
@@ -34,7 +35,7 @@
 QT_BEGIN_NAMESPACE
 class QLineEdit;
 class QPushButton;
-class QRadioButton;
+//class QRadioButton;
 class QTableWidget;
 class QLabel;
 class QFile;
@@ -69,6 +70,9 @@ public:
     void make_search_tab();
     void make_shablon_tab();
     void make_preview_tab();
+    void make_source_tab();
+
+    void trigger_source_selection(bool state);
 
     //порядок вкладок
     struct TabsOrder
@@ -118,10 +122,29 @@ private:
     QGridLayout *layBoxT2B3;
     QComboBox *comboBox;
     QLineEdit *ui_lineH, *ui_lineW, *ui_lineH_2, *ui_lineW_2;
-    QLabel *label2, *label3, *label4, *label5, *label6, *label7;
+    QLabel *label2, *label3, *label4, *label5, *labelOrient, *labelZero;
     QLabel *totalCennicOnPage;
     QRadioButton *ui_radioButton_6;
     QRadioButton *ui_radioButton_7;
+
+
+    //виджеты вкладки источника данных
+    QWidget *tab4;
+    QGroupBox *ui_groupDBF, *ui_groupSQL, *ui_groupOpisateli;
+    QGridLayout *layTab4;
+    QGridLayout *laySQL, *layDBF, *layOpisateli;
+    //поля для параметров MySQL-базы данных
+    QLineEdit *ui_lineHost, *ui_lineName, *ui_lineUser, *ui_linePort, *ui_linePass;
+    QLabel *label6, *label10, *label9, *label7, *label8, *label11;
+    QPushButton *ui_connectMySQLButton;
+    QComboBox *ui_comboTbList;
+
+    QLabel *label16, *labelDBFname;
+    QPushButton *ui_pushButton_5;
+
+    //а эти для определения, где в таблице какое поле
+    QComboBox *ui_comboTnomer, *ui_comboTname, *ui_comboTbarcode, *ui_comboTprice;
+    QLabel *label12, *label13, *label14, *label15;
 
 
     Ui::cengen *ui;
@@ -138,34 +161,23 @@ private:
     SqlValidator* ui_svalidator;
 
 
-    //поля для параметров MySQL-базы данных
-    QLineEdit *ui_lineHost, *ui_lineName, *ui_lineUser, *ui_linePort, *ui_linePass;
-
-    //а эти для определения, где в таблице какое поле
-    QComboBox *ui_comboTnomer, *ui_comboTname, *ui_comboTbarcode, *ui_comboTprice;
 
     //контролы SQL и DBF
-    QGroupBox *ui_groupDBF, *ui_groupSQL;
 
     QRadioButton  *ui_radioButton_1,
                   *ui_radioButton_2,
-                  *ui_radioButton_3, *ui_radioButton, *ui_radioButton_4,
+                  *ui_radioButton_3,
                     *ui_radioButton_5;
     QGroupBox *ui_groupBox, *ui_groupBox_6;
     QTableWidget* ui_tableWidget;
     int sizeDeltaX;  //разница в ширине между основным окном и таблицей
     int sizeDeltaY;
-    QLabel *ui_countLabel, *ui_labelDBFname;
-    //QScrollArea* ui_scrollArea;
+    QLabel *ui_countLabel;
     QTabWidget* ui_tabWidget;
-    //QVBoxLayout* previewLayout;
     QFile file;
     QDomDocument domDoc;
     QDomElement shablonElement;
-    //QPrinter *printer;
-    QComboBox *ui_comboTbList;
-    QPushButton *ui_save_db_config_button,
-                *ui_pushButton, *ui_maxButton;
+    QPushButton *ui_pushButton, *ui_maxButton;
 
     QString method; //метод поиска товара - номер, штрихкод или название
     int db_source;  //источник данных: MySQL(1) или DBF(0)
