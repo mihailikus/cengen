@@ -295,7 +295,7 @@ void cengen::make_source_tab() {
     layDBF = new QGridLayout;
     label16 = new QLabel(tr("DBF file selected is:"));
     labelDBFname = new QLabel;
-    ui_pushButton_5 = new QPushButton("Select DBF file");
+    ui_pushButton_5 = new QPushButton(tr("Select DBF file"));
     connect(ui_pushButton_5, SIGNAL(clicked()), SLOT(on_pushButton_5_clicked()));
     layDBF->addWidget(ui_pushButton_5, 0, 0);
     layDBF->addWidget(label16, 1, 0, 1, 3);
