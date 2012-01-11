@@ -13,6 +13,8 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     ui->setupUi(this);
 
     this->make_actions();
+    this->make_toolBar();
+    this->make_mainMenu();
 
     ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
 
@@ -51,13 +53,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     filter_is_on = false;
     filterInformer = new Tinformer();
 
-//    ui_filterBox = qFindChild<QGroupBox*>(this, "filterBox");
-//    ui_filterWhatBox = qFindChild<QComboBox*>(this, "filterWhatBox");
-//    ui_filterWhereBox = qFindChild<QComboBox*>(this, "filterWhereBox");
-//    ui_filterWhatToFoundBox = qFindChild<QComboBox*>(this, "filterWhatToFoundBox");
-//    ui_filterMethodBox = qFindChild<QComboBox*>(this, "filterMethodBox");
-//    ui_filterLineText = qFindChild<QLineEdit*>(this, "filterLineText");
-
     //подготовка редактора шаблонов
     shablon_editor = new editor(this);
     connect(shablon_editor, SIGNAL(shablon_is_ready(QDomDocument)), SLOT(describe_shablon(QDomDocument)));
@@ -75,68 +70,95 @@ cengen::~cengen()
 
 void cengen::make_actions() {
 
-    ui_mainToolBar = qFindChild<QToolBar*>(this, "mainToolBar");
-
     //создание нового списка товаров
-    ui_action3 = qFindChild<QAction*>(this, "action_3");
-    ui_action3->setIcon(QIcon(":/share/images/resources/window_new.png"));
-    ui_action3->setToolTip(tr("New tovar list"));
-    ui_mainToolBar->addAction(ui_action3);
+    ui_action3 = new QAction(QIcon(":/share/images/resources/window_new.png"),
+                             tr("New tovar list"), this);
+    ui_action3->setShortcut(QKeySequence("Ctrl+N"));
+    ui_action3->setToolTip(tr("Create new tovar list"));
+    connect(ui_action3, SIGNAL(triggered()), SLOT(on_action_3_activated()));
 
     //загрузить
-    ui_action2 = qFindChild<QAction*>(this, "action_2");
-    ui_action2->setIcon(QIcon(":/share/images/resources/folder_blue_open.png"));
+    ui_action2 = new QAction(QIcon(":/share/images/resources/folder_blue_open.png"),
+                             tr("Load new list"), this);
+    ui_action2->setShortcut(QKeySequence("Ctrl+L"));
     ui_action2->setToolTip(tr("Load and append tovar list"));
-    ui_mainToolBar->addAction(ui_action2);
+    connect(ui_action2, SIGNAL(triggered()), SLOT(on_action_2_triggered()));
 
     //сохранить
-    ui_action = qFindChild<QAction*>(this, "action");
-    ui_action->setIcon(QIcon(":/share/images/resources/save.png"));
+    ui_action = new QAction(QIcon(":/share/images/resources/save.png"),
+                            tr("Save current list"), this);
+    ui_action->setShortcut(QKeySequence("Ctrl+S"));
     ui_action->setToolTip(tr("Save current tovar list"));
-    ui_mainToolBar->addAction(ui_action);
-
-    ui_mainToolBar->addSeparator();
+    connect(ui_action, SIGNAL(triggered()), SLOT(on_action_activated()));
 
     //сформировать ценники
     ui_actionMake = new QAction(QIcon(":/share/images/resources/apply.png"),
                                 tr("MakeUp cennic"), this);
     ui_actionMake->setToolTip(tr("Make up cennic for tovar list"));
     ui_actionMake->setShortcut(QKeySequence("F12"));
-    ui_mainToolBar->addAction(ui_actionMake);
     connect(ui_actionMake, SIGNAL(triggered()), SLOT(action_create()));
 
-    ui_mainToolBar->addSeparator();
 
     //вывод на печать
     action_print = new QAction(QIcon(":/share/images/resources/print.png"),
                                tr("Print"), this);
     action_print->setToolTip(tr("Send previewed to printer"));
-    ui_mainToolBar->addAction(action_print);
+    action_print->setShortcut(QKeySequence("Ctrl+P"));
     connect(action_print, SIGNAL(triggered()), SLOT(on_printButton_clicked()));
     action_print->setEnabled(false);
 
     //масштаб - больше и меньше
     action_scale_up = new QAction(QIcon(":/share/images/resources/up.png"),
                                   tr("Scale UP"), this);
-    ui_mainToolBar->addAction(action_scale_up);
     connect(action_scale_up, SIGNAL(triggered()), SLOT(on_zoomInButton_clicked()));
 
     action_scale_down = new QAction(QIcon(":/share/images/resources/down.png"),
                                   tr("Scale DOWN"), this);
-    ui_mainToolBar->addAction(action_scale_down);
     connect(action_scale_down, SIGNAL(triggered()), SLOT(on_zoomOutButton_clicked()));
 
     action_scale_up->setEnabled(false);
     action_scale_down->setEnabled(false);
 
-    ui_mainToolBar->addSeparator();
 
     //выход из программы
-    ui_action4 = qFindChild<QAction*>(this, "action_4");
-    ui_action4->setIcon(QIcon(":/share/images/resources/button_cancel.png"));
-    ui_mainToolBar->addAction(ui_action4);
+    ui_action4 = new QAction(QIcon(":/share/images/resources/button_cancel.png"),
+                             tr("Exit"), this);
+    ui_action4->setShortcut(QKeySequence("Ctrl+Q"));
     connect(ui_action4, SIGNAL(triggered()), SLOT(close()));
 
+    //о программе
+    action_about = new QAction(tr("About"), this);
+    connect(action_about, SIGNAL(triggered()), SLOT(on_action_6_triggered()));
+
+}
+
+void cengen::make_toolBar() {
+    ui_mainToolBar = new QToolBar(tr("Main toolbar"));
+
+    ui_mainToolBar->addAction(ui_action3);
+    ui_mainToolBar->addAction(ui_action2);
+    ui_mainToolBar->addAction(ui_action);
+    ui_mainToolBar->addSeparator();
+    ui_mainToolBar->addAction(ui_actionMake);
+    ui_mainToolBar->addSeparator();
+    ui_mainToolBar->addAction(action_print);
+    ui_mainToolBar->addAction(action_scale_up);
+    ui_mainToolBar->addAction(action_scale_down);
+    ui_mainToolBar->addSeparator();
+    ui_mainToolBar->addAction(ui_action4);
+
+    addToolBar(ui_mainToolBar);
+}
+
+void cengen::make_mainMenu() {
+    mainMenu = new QMenuBar;
+    menuFile = mainMenu->addMenu(tr("File"));
+    menuFile->addAction(ui_action2);
+
+    menuHelp = mainMenu->addMenu(tr("About"));
+    menuHelp->addAction(action_about);
+
+    this->setMenuBar(mainMenu);
 }
 
 void cengen::make_search_tab() {

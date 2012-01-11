@@ -21,6 +21,7 @@
 #include <QRadioButton>
 #include <QLineEdit>
 #include <QToolBar>
+#include <QMenuBar>
 #include <QStandardItemModel>
 #include <QAction>
 //#include <QSpacerItem>
@@ -68,6 +69,8 @@ public:
     void writeSettings();
     void readSettings();
     void make_actions();
+    void make_toolBar();
+    void make_mainMenu();
     void make_search_tab();
     void make_shablon_tab();
     void make_preview_tab();
@@ -231,6 +234,9 @@ private:
     bool add_flag;
 
     QToolBar* ui_mainToolBar;
+    QMenuBar* mainMenu;
+    QMenu *menuFile, *menuHelp;
+
     QAction* ui_action3; //новый файл
     QAction* ui_action4; //выход
     QAction* ui_action; //сохранить
@@ -239,10 +245,9 @@ private:
     QAction* action_scale_up;
     QAction* action_scale_down;    //масштаб - меньше и больше
     QAction* action_print;
+    QAction* action_about;
 
 private slots:
-    //void on_tabWidget_selected(QString );
-    //void on_tableWidget_itemClicked(QTableWidgetItem* item);
     void on_tableWidget_cellClicked(int row, int column);
     void get_method_from_ui();
 
