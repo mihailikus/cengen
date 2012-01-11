@@ -14,8 +14,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 
     this->make_actions();
 
-    //ui_statusLabel = qFindChild<QLabel*>(this, "statusLabel");
-
     ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
 
     //--------------------------------
@@ -25,6 +23,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     this->make_shablon_tab();
     this->make_preview_tab();
     this->make_source_tab();
+    this->make_filter_tab();
 
     //создаем строку состояния
     statusBar = new QStatusBar(this);
@@ -34,9 +33,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     statusBar->addWidget(ui_statusLabel);
     setStatusBar(statusBar);
 
-    //ui_save_db_config_button = qFindChild<QPushButton*>(this,"save_db_config_button");
-
-    this->ui_comboTbList->setEnabled(false);
+    //this->ui_comboTbList->setEnabled(false);
 
     this->new_line_ready();
 
@@ -51,16 +48,15 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
     this->paperOrientation = "portrate";
 
     //конфигурим фильтр
-    ui_filterBox = qFindChild<QGroupBox*>(this, "filterBox");
     filter_is_on = false;
     filterInformer = new Tinformer();
-    ui_filterWhatBox = qFindChild<QComboBox*>(this, "filterWhatBox");
-    ui_filterWhereBox = qFindChild<QComboBox*>(this, "filterWhereBox");
-    ui_filterWhatToFoundBox = qFindChild<QComboBox*>(this, "filterWhatToFoundBox");
-    ui_filterMethodBox = qFindChild<QComboBox*>(this, "filterMethodBox");
-    ui_filterLineText = qFindChild<QLineEdit*>(this, "filterLineText");
 
-    ui_tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+//    ui_filterBox = qFindChild<QGroupBox*>(this, "filterBox");
+//    ui_filterWhatBox = qFindChild<QComboBox*>(this, "filterWhatBox");
+//    ui_filterWhereBox = qFindChild<QComboBox*>(this, "filterWhereBox");
+//    ui_filterWhatToFoundBox = qFindChild<QComboBox*>(this, "filterWhatToFoundBox");
+//    ui_filterMethodBox = qFindChild<QComboBox*>(this, "filterMethodBox");
+//    ui_filterLineText = qFindChild<QLineEdit*>(this, "filterLineText");
 
     //подготовка редактора шаблонов
     shablon_editor = new editor(this);
@@ -149,6 +145,7 @@ void cengen::make_search_tab() {
     layTab1 = new QGridLayout;
 
     ui_tableWidget = new QTableWidget(0,7,this);
+    ui_tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     //устанавливаем заголовки главной таблицы
     QStandardItemModel *model = new QStandardItemModel(5,5, this);
@@ -283,6 +280,7 @@ void cengen::make_source_tab() {
 
     ui_comboTbList = new QComboBox;
     connect(ui_comboTbList, SIGNAL(activated(QString)), SLOT(on_comboTbList_activated(QString)));
+    this->ui_comboTbList->setEnabled(false);
     laySQL->addWidget(ui_comboTbList, 4, 2, 1, 2);
 
     ui_groupSQL->setLayout(laySQL);
@@ -408,6 +406,74 @@ void cengen::make_shablon_tab() {
 
     tab2->setLayout(layTab2);
     ui_tabWidget->insertTab(TabsOrder::Shablon, tab2, tr("Shablon"));
+
+
+}
+
+void cengen::make_filter_tab() {
+    tab5 = new QWidget;
+    layTab5 = new QBoxLayout(QBoxLayout::TopToBottom);
+
+
+    laytab5g1 = new QGridLayout;
+    label18 = new QLabel(tr("File"));
+    label19 = new QLabel(tr("What to find2"));
+    label20 = new QLabel(tr("Where is it"));
+    label21 = new QLabel(tr("Column for compare"));
+    label22 = new QLabel(tr("Method of compare"));
+    label23 = new QLabel(tr("value"));
+    label23a = new QLabel(" ");
+
+    ui_filterFileSelectButton = new QPushButton (tr("Select file"));
+    connect (ui_filterFileSelectButton, SIGNAL(clicked()), SLOT(on_filterFileSelectButton_clicked()));
+
+    ui_filterWhatBox = new QComboBox();
+    ui_filterWhereBox = new QComboBox();
+    ui_filterWhatToFoundBox = new QComboBox();
+    ui_filterMethodBox = new QComboBox();
+
+    ui_filterWhatToFoundBox->insertItems(0, QStringList()
+                                         <<tr("Tnomer")
+                                         <<tr("barcode")
+                                         <<tr("name")
+                                         <<tr("Price"));
+
+    ui_filterMethodBox->insertItems(0, QStringList()
+                                    << tr("==")
+                                    << tr("<>")
+                                    << tr(">")
+                                    << tr("<")
+                                    << tr("LIKE"));
+
+    laytab5g1->addWidget(label18, 0, 0);
+    laytab5g1->addWidget(ui_filterFileSelectButton, 0, 1);
+    laytab5g1->addWidget(label21, 1, 0);
+    laytab5g1->addWidget(ui_filterWhatBox, 1, 1);
+    laytab5g1->addWidget(label19, 1, 2);
+    laytab5g1->addWidget(ui_filterWhatToFoundBox, 1, 3);
+    laytab5g1->addWidget(label20, 2, 0);
+    laytab5g1->addWidget(ui_filterWhereBox, 2, 1);
+    laytab5g1->addWidget(label22, 2, 2);
+    laytab5g1->addWidget(ui_filterMethodBox, 2, 3);
+    laytab5g1->addWidget(label23, 3, 0);
+    laytab5g1->addWidget(label23a, 4, 0);
+
+    ui_filterLineText = new QLineEdit;
+    laytab5g1->addWidget(ui_filterLineText, 3, 1, 1, 3);
+
+
+
+    ui_filterBox = new QGroupBox(tr("Filter") + tr(" - version alpha, just DBF"));
+    ui_filterBox->setCheckable(true);
+    connect(ui_filterBox, SIGNAL(toggled(bool)), SLOT(on_filterBox_toggled(bool)));
+    ui_filterBox->setLayout(laytab5g1);
+
+    layTab5->addWidget(ui_filterBox);
+    layTab5->addSpacing(100);
+
+    tab5->setLayout(layTab5);
+    ui_tabWidget->insertTab(TabsOrder::Filter, tab5, tr("Filter"));
+
 
 
 }
@@ -1897,27 +1963,6 @@ void cengen::on_radioButton_7_clicked()
 void cengen::on_action_4_activated()
 {
     close();
-}
-
-void cengen::on_comboTnomer_currentIndexChanged(int index)
-{
-    //при изменении комбобоксов из списка соответствий - сохраняем
-    on_save_db_config_button_clicked();
-}
-
-void cengen::on_comboTname_currentIndexChanged(int index)
-{
-    on_save_db_config_button_clicked();
-}
-
-void cengen::on_comboTbarcode_currentIndexChanged(int index)
-{
-    on_save_db_config_button_clicked();
-}
-
-void cengen::on_comboTprice_currentIndexChanged(int index)
-{
-    on_save_db_config_button_clicked();
 }
 
 void cengen::update_mainTableTabs(QTableWidget *table) {

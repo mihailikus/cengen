@@ -19,6 +19,7 @@
 #include <QGroupBox>
 #include <QSpinBox>
 #include <QRadioButton>
+#include <QLineEdit>
 #include <QToolBar>
 #include <QStandardItemModel>
 #include <QAction>
@@ -33,7 +34,7 @@
 #include "about.h"
 
 QT_BEGIN_NAMESPACE
-class QLineEdit;
+//class QLineEdit;
 class QPushButton;
 //class QRadioButton;
 class QTableWidget;
@@ -71,6 +72,7 @@ public:
     void make_shablon_tab();
     void make_preview_tab();
     void make_source_tab();
+    void make_filter_tab();
 
     void trigger_source_selection(bool state);
 
@@ -147,6 +149,18 @@ private:
     QLabel *label12, *label13, *label14, *label15;
 
 
+    //виджеты вкладки фильтра
+    QWidget *tab5;
+    QBoxLayout *layTab5;
+    QGroupBox* ui_filterBox;
+    QGridLayout *laytab5g1;
+    QPushButton *ui_filterFileSelectButton;
+    QComboBox   *ui_filterWhatBox, *ui_filterWhereBox,
+                *ui_filterWhatToFoundBox, *ui_filterMethodBox;
+    QLineEdit* ui_filterLineText;
+    QLabel *label18, *label19, *label20, *label21, *label22, *label23, *label23a;
+
+
     Ui::cengen *ui;
 
     QSettings m_settings;
@@ -197,13 +211,9 @@ private:
     bool tovar_searched;
 
     //переменные для работы фильтра
-    QGroupBox* ui_filterBox;
     bool filter_is_on;
     DbfConfig filterDbf;
     Tinformer* filterInformer;
-    QComboBox* ui_filterWhatBox, *ui_filterWhereBox, *ui_filterWhatToFoundBox,
-                *ui_filterMethodBox;
-    QLineEdit* ui_filterLineText;
 
     QString pageSize;   //формат бумаги - А4, А5
     QString paperOrientation;   // книжная или альбомная
@@ -303,10 +313,10 @@ private slots:
     void on_radioButton_7_clicked();
 
     void on_action_4_activated();
-    void on_comboTnomer_currentIndexChanged(int index);
-    void on_comboTname_currentIndexChanged(int index);
-    void on_comboTbarcode_currentIndexChanged(int index);
-    void on_comboTprice_currentIndexChanged(int index);
+//    void on_comboTnomer_currentIndexChanged(int index);
+//    void on_comboTname_currentIndexChanged(int index);
+//    void on_comboTbarcode_currentIndexChanged(int index);
+//    void on_comboTprice_currentIndexChanged(int index);
     void on_action_6_triggered();
 };
 
