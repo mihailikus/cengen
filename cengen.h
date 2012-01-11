@@ -6,6 +6,7 @@
 #include <QPrintDialog>
 #include <QTableWidget>
 #include <QTabWidget>
+#include <QHeaderView>
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QFile>
@@ -21,6 +22,7 @@
 #include <QRadioButton>
 #include <QLineEdit>
 #include <QToolBar>
+#include <QStatusBar>
 #include <QMenuBar>
 #include <QStandardItemModel>
 #include <QAction>
@@ -164,7 +166,7 @@ private:
     QLabel *label18, *label19, *label20, *label21, *label22, *label23, *label23a;
 
 
-    Ui::cengen *ui;
+    //Ui::cengen *ui;
 
     QSettings m_settings;
     QList<int> mainTableTabs;
@@ -237,15 +239,16 @@ private:
     QMenuBar* mainMenu;
     QMenu *menuFile, *menuHelp;
 
-    QAction* ui_action3; //новый файл
-    QAction* ui_action4; //выход
-    QAction* ui_action; //сохранить
-    QAction* ui_action2; //загрузить список
+    QAction* action_new; //новый файл
+    QAction* action_exit; //выход
+    QAction* action_save; //сохранить
+    QAction* action_open; //загрузить список
     QAction* ui_actionMake; //сформировать ценники
     QAction* action_scale_up;
     QAction* action_scale_down;    //масштаб - меньше и больше
     QAction* action_print;
     QAction* action_about;
+    QAction* action_minus;
 
 private slots:
     void on_tableWidget_cellClicked(int row, int column);
@@ -256,14 +259,14 @@ private slots:
     void on_save_db_config_button_clicked();
     void on_comboTbList_activated(QString );
     void on_connectMySQLButton_clicked();
-    void on_printButton_clicked();
-    void on_zoomOutButton_clicked();
-    void on_zoomInButton_clicked();
+    void on_action_print_triggered();
+    void on_action_scaleDown_triggered();
+    void on_action_scaleUp_triggered();
     void on_comboBox_activated(QString );
     void on_pushButton_4_clicked();
     void on_tabWidget_currentChanged(int index);
     void on_pushButton_3_clicked();
-    void action_create();
+    void on_action_make_triggered();
     void on_lineEdit_returnPressed();
     void on_pushButton_clicked();
     void tovar_search();
@@ -298,9 +301,9 @@ private slots:
 
 
     void on_show_editor_button_clicked();
-    void on_action_activated();
-    void on_action_2_triggered();
-    void on_action_3_activated();
+    void on_action_save_triggered();
+    void on_action_open_triggered();
+    void on_action_new_triggered();
 
     void load_tovar_list_into_cengen(QList<Tovar> tovarList);
     QList<Tovar> convert_xml_into_tovar_list(QDomDocument doc);
@@ -308,7 +311,7 @@ private slots:
     QList<Tovar> minus(QList<Tovar> oldList, QList<Tovar> newList);
 
 
-    void on_action_8_activated();
+    void on_action_minus_triggered();
     void on_filterBox_toggled(bool arg1);
     void on_filterFileSelectButton_clicked();
     void on_filterFileName_changed();
@@ -317,12 +320,12 @@ private slots:
     void on_radioButton_6_clicked();
     void on_radioButton_7_clicked();
 
-    void on_action_4_activated();
+    //void on_action_4_activated();
 //    void on_comboTnomer_currentIndexChanged(int index);
 //    void on_comboTname_currentIndexChanged(int index);
 //    void on_comboTbarcode_currentIndexChanged(int index);
 //    void on_comboTprice_currentIndexChanged(int index);
-    void on_action_6_triggered();
+    void on_action_about_triggered();
 };
 
 #endif // CENGEN_H

@@ -42,7 +42,7 @@ HEADERS += cengen.h \
     addlinemaster.h \
     imagebox.h \
     about.h
-FORMS += cengen.ui \
+FORMS += \
     dialog.ui \
     editor.ui \
     addlinemaster.ui

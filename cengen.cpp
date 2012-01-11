@@ -1,5 +1,5 @@
 #include "cengen.h"
-#include "ui_cengen.h"
+//#include "ui_cengen.h"
 #include "tinformer.h"
 #include "barcode.h"
 #include <QDebug>
@@ -8,15 +8,16 @@
 #include "cen_viewer.h"
 
 
-cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
+cengen::cengen(QWidget *parent) : QMainWindow(parent)
 {
-    ui->setupUi(this);
+    //ui->setupUi(this);
 
     this->make_actions();
     this->make_toolBar();
     this->make_mainMenu();
 
-    ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
+    //ui_tabWidget = qFindChild<QTabWidget*>(this, "tabWidget");
+    ui_tabWidget = new QTabWidget;
 
     //--------------------------------
     //попытка сделать нормальную форму
@@ -65,38 +66,38 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent), ui(new Ui::cengen)
 cengen::~cengen()
 {
     writeSettings();
-    delete ui;
+    //delete ui;
 }
 
 void cengen::make_actions() {
 
     //создание нового списка товаров
-    ui_action3 = new QAction(QIcon(":/share/images/resources/window_new.png"),
+    action_new = new QAction(QIcon(":/share/images/resources/window_new.png"),
                              tr("New tovar list"), this);
-    ui_action3->setShortcut(QKeySequence("Ctrl+N"));
-    ui_action3->setToolTip(tr("Create new tovar list"));
-    connect(ui_action3, SIGNAL(triggered()), SLOT(on_action_3_activated()));
+    action_new->setShortcut(QKeySequence("Ctrl+N"));
+    action_new->setToolTip(tr("Create new tovar list"));
+    connect(action_new, SIGNAL(triggered()), SLOT(on_action_new_triggered()));
 
     //загрузить
-    ui_action2 = new QAction(QIcon(":/share/images/resources/folder_blue_open.png"),
+    action_open = new QAction(QIcon(":/share/images/resources/folder_blue_open.png"),
                              tr("Load new list"), this);
-    ui_action2->setShortcut(QKeySequence("Ctrl+L"));
-    ui_action2->setToolTip(tr("Load and append tovar list"));
-    connect(ui_action2, SIGNAL(triggered()), SLOT(on_action_2_triggered()));
+    action_open->setShortcut(QKeySequence("Ctrl+L"));
+    action_open->setToolTip(tr("Load and append tovar list"));
+    connect(action_open, SIGNAL(triggered()), SLOT(on_action_open_triggered()));
 
     //сохранить
-    ui_action = new QAction(QIcon(":/share/images/resources/save.png"),
+    action_save = new QAction(QIcon(":/share/images/resources/save.png"),
                             tr("Save current list"), this);
-    ui_action->setShortcut(QKeySequence("Ctrl+S"));
-    ui_action->setToolTip(tr("Save current tovar list"));
-    connect(ui_action, SIGNAL(triggered()), SLOT(on_action_activated()));
+    action_save->setShortcut(QKeySequence("Ctrl+S"));
+    action_save->setToolTip(tr("Save current tovar list"));
+    connect(action_save, SIGNAL(triggered()), SLOT(on_action_save_triggered()));
 
     //сформировать ценники
     ui_actionMake = new QAction(QIcon(":/share/images/resources/apply.png"),
                                 tr("MakeUp cennic"), this);
     ui_actionMake->setToolTip(tr("Make up cennic for tovar list"));
     ui_actionMake->setShortcut(QKeySequence("F12"));
-    connect(ui_actionMake, SIGNAL(triggered()), SLOT(action_create()));
+    connect(ui_actionMake, SIGNAL(triggered()), SLOT(on_action_make_triggered()));
 
 
     //вывод на печать
@@ -104,40 +105,45 @@ void cengen::make_actions() {
                                tr("Print"), this);
     action_print->setToolTip(tr("Send previewed to printer"));
     action_print->setShortcut(QKeySequence("Ctrl+P"));
-    connect(action_print, SIGNAL(triggered()), SLOT(on_printButton_clicked()));
+    connect(action_print, SIGNAL(triggered()), SLOT(on_action_print_triggered()));
     action_print->setEnabled(false);
 
     //масштаб - больше и меньше
     action_scale_up = new QAction(QIcon(":/share/images/resources/up.png"),
                                   tr("Scale UP"), this);
-    connect(action_scale_up, SIGNAL(triggered()), SLOT(on_zoomInButton_clicked()));
+    connect(action_scale_up, SIGNAL(triggered()), SLOT(on_action_scaleUp_triggered()));
 
     action_scale_down = new QAction(QIcon(":/share/images/resources/down.png"),
                                   tr("Scale DOWN"), this);
-    connect(action_scale_down, SIGNAL(triggered()), SLOT(on_zoomOutButton_clicked()));
+    connect(action_scale_down, SIGNAL(triggered()), SLOT(on_action_scaleDown_triggered()));
 
     action_scale_up->setEnabled(false);
     action_scale_down->setEnabled(false);
 
 
     //выход из программы
-    ui_action4 = new QAction(QIcon(":/share/images/resources/button_cancel.png"),
+    action_exit = new QAction(QIcon(":/share/images/resources/button_cancel.png"),
                              tr("Exit"), this);
-    ui_action4->setShortcut(QKeySequence("Ctrl+Q"));
-    connect(ui_action4, SIGNAL(triggered()), SLOT(close()));
+    action_exit->setShortcut(QKeySequence("Ctrl+Q"));
+    connect(action_exit, SIGNAL(triggered()), SLOT(close()));
 
     //о программе
-    action_about = new QAction(tr("About"), this);
-    connect(action_about, SIGNAL(triggered()), SLOT(on_action_6_triggered()));
+    action_about = new QAction(tr("About program"), this);
+    connect(action_about, SIGNAL(triggered()), SLOT(on_action_about_triggered()));
+
+    //вычитание списка товаров
+    action_minus = new QAction(tr("Minus tovar list"), this);
+    connect(action_minus, SIGNAL(triggered()), SLOT(on_action_minus_triggered()));
+
 
 }
 
 void cengen::make_toolBar() {
     ui_mainToolBar = new QToolBar(tr("Main toolbar"));
 
-    ui_mainToolBar->addAction(ui_action3);
-    ui_mainToolBar->addAction(ui_action2);
-    ui_mainToolBar->addAction(ui_action);
+    ui_mainToolBar->addAction(action_new);
+    ui_mainToolBar->addAction(action_open);
+    ui_mainToolBar->addAction(action_save);
     ui_mainToolBar->addSeparator();
     ui_mainToolBar->addAction(ui_actionMake);
     ui_mainToolBar->addSeparator();
@@ -145,7 +151,7 @@ void cengen::make_toolBar() {
     ui_mainToolBar->addAction(action_scale_up);
     ui_mainToolBar->addAction(action_scale_down);
     ui_mainToolBar->addSeparator();
-    ui_mainToolBar->addAction(ui_action4);
+    ui_mainToolBar->addAction(action_exit);
 
     addToolBar(ui_mainToolBar);
 }
@@ -153,7 +159,14 @@ void cengen::make_toolBar() {
 void cengen::make_mainMenu() {
     mainMenu = new QMenuBar;
     menuFile = mainMenu->addMenu(tr("File"));
-    menuFile->addAction(ui_action2);
+    menuFile->addAction(action_new);
+    menuFile->addAction(action_open);
+    menuFile->addAction(action_minus);
+    menuFile->addAction(action_save);
+    menuFile->addSeparator();
+    menuFile->addAction(action_print);
+    menuFile->addSeparator();
+    menuFile->addAction(action_exit);
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_about);
@@ -505,8 +518,8 @@ void cengen::changeEvent(QEvent *e)
     QMainWindow::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        qDebug() << "EVENT-----------";
+        //ui->retranslateUi(this);
+        qDebug() << "EVENT language change";
         break;
     default:
         break;
@@ -622,7 +635,7 @@ void cengen::new_line_ready() {
     ui_lineEdit->setFocus();
 }
 
-void cengen::action_create()
+void cengen::on_action_make_triggered()
 {
     //функция для формирования ценников
     ui_tabWidget->setCurrentIndex(TabsOrder::Preview);
@@ -901,19 +914,19 @@ void cengen::generate_preview() {
     }
 }
 
-void cengen::on_zoomInButton_clicked()
+void cengen::on_action_scaleUp_triggered()
 {
     view->scale(2, 2);
     zoom = zoom*2.0;
 }
 
-void cengen::on_zoomOutButton_clicked()
+void cengen::on_action_scaleDown_triggered()
 {
     view->scale(0.5, 0.5);
     zoom = zoom/2.0;
 }
 
-void cengen::on_printButton_clicked()
+void cengen::on_action_print_triggered()
 {
     //qDebug() << "Point X and Y is: " << pages.at(0).width() << "; " << pages.at(0).height();
 
@@ -1600,7 +1613,7 @@ void cengen::on_show_editor_button_clicked()
 
 }
 
-void cengen::on_action_activated()
+void cengen::on_action_save_triggered()
 {
     //Сохранение списка товаров
     qDebug() << "saving tovar list";
@@ -1631,7 +1644,7 @@ void cengen::on_action_activated()
 
 }
 
-void cengen::on_action_2_triggered()
+void cengen::on_action_open_triggered()
 {
     qDebug() << "Load tovar list selected";
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open tovar list"), "", tr("Tovar lists (*.tov)"));
@@ -1757,7 +1770,7 @@ QDomDocument cengen::convert_tovar_list_into_xml(QList<Tovar> spisok) {
     return doc;
 }
 
-void cengen::on_action_3_activated()
+void cengen::on_action_new_triggered()
 {
     ui_countLabel->setText(tr("COUNT: ") + "0");
     ui_tableWidget->setRowCount(0);
@@ -1767,7 +1780,7 @@ void cengen::on_action_3_activated()
 
 }
 
-void cengen::on_action_8_activated()
+void cengen::on_action_minus_triggered()
 {
     //функция вычитания списка
     //из существующего списка убираем позиции, которые есть в загружаемом списке
@@ -1982,11 +1995,6 @@ void cengen::on_radioButton_7_clicked()
     update_values();
 }
 
-void cengen::on_action_4_activated()
-{
-    close();
-}
-
 void cengen::update_mainTableTabs(QTableWidget *table) {
     mainTableTabs.clear();
     for (int i = 0; i<table->columnCount(); i++) {
@@ -1994,7 +2002,7 @@ void cengen::update_mainTableTabs(QTableWidget *table) {
     }
 }
 
-void cengen::on_action_6_triggered()
+void cengen::on_action_about_triggered()
 {
     About d (this);
 
