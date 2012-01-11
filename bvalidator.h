@@ -11,7 +11,7 @@ public:
 
     }
 
-    virtual State validate(QString& str, int& pos) const
+    virtual State validate(QString& str, int& ) const
     {
         //pos++;
         QRegExp rxp = QRegExp ("\\D");

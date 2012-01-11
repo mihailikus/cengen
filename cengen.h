@@ -78,6 +78,7 @@ public:
     void make_preview_tab();
     void make_source_tab();
     void make_filter_tab();
+    void make_status_bar();
 
     void trigger_source_selection(bool state);
 
@@ -122,7 +123,7 @@ private:
     QGroupBox *ui_groupBox_2;
     QGroupBox *ui_groupBox_3;
     QBoxLayout *layBoxT2B2;
-    QPushButton *ui_pushButton_3;
+    QPushButton *ui_selecctShablonButton;
     QLabel *ui_label;
     QPushButton *ui_show_editor_button;
 
@@ -144,10 +145,10 @@ private:
     QLineEdit *ui_lineHost, *ui_lineName, *ui_lineUser, *ui_linePort, *ui_linePass;
     QLabel *label6, *label10, *label9, *label7, *label8, *label11;
     QPushButton *ui_connectMySQLButton;
-    QComboBox *ui_comboTbList;
+    QComboBox *ui_mysql_table_selector_comboBox;
 
     QLabel *label16, *labelDBFname;
-    QPushButton *ui_pushButton_5;
+    QPushButton *ui_selectSourceDBF_file_button;
 
     //а эти для определения, где в таблице какое поле
     QComboBox *ui_comboTnomer, *ui_comboTname, *ui_comboTbarcode, *ui_comboTprice;
@@ -254,33 +255,30 @@ private slots:
     void on_tableWidget_cellClicked(int row, int column);
     void get_method_from_ui();
 
-    void on_radioButton_4_clicked();
-    void on_radioButton_clicked();
-    void on_save_db_config_button_clicked();
-    void on_comboTbList_activated(QString );
+    void on_source_changed_toDBF();
+    void on_source_changed_toMySQL();
+    void on_opisateli_updated();
+    void on_mysql_table_selector_comboBox_activated(QString );
     void on_connectMySQLButton_clicked();
     void on_action_print_triggered();
     void on_action_scaleDown_triggered();
     void on_action_scaleUp_triggered();
     void on_comboBox_activated(QString );
-    void on_pushButton_4_clicked();
     void on_tabWidget_currentChanged(int index);
-    void on_pushButton_3_clicked();
+    void on_selecctShablonButton_clicked();
     void on_action_make_triggered();
     void on_lineEdit_returnPressed();
-    void on_pushButton_clicked();
     void tovar_search();
     void new_line_ready();
     void update_values();   //обновить значеня шаблона в UI-форме
     void read_file_shablon();    //прочитать шаблон
     void describe_shablon(QDomDocument shablon);
     void generate_preview();
-    //void switch_zoom_buttons_enabled(bool state);
     void update_ui_tb_fields(QStringList list);
     void update_ui_db_controls();
     void update_ui_connection_established();
     void delete_line_from_table(int pos);
-    QList<Tovar> show_found_items(QList<Tovar> inputList, QString method);
+    QList<Tovar> show_found_items(QList<Tovar> inputList);
     QList<Tovar> get_tovar_list(QTableWidget* table, QString priznak);
     QList<Tovar> apply_filter(QList<Tovar> inputList);
     QRectF get_shablon_rect(const QDomNode& node);
@@ -291,10 +289,9 @@ private slots:
     void set_tableWidget_header(QTableWidget* table);
     void add_table_item(QTableWidget* table, int position, Tovar tovar);
 
-    void on_pushButton_5_clicked();
+    void on_selectSourceDBF_file_button_clicked();
     void on_spinLimit_valueChanged(int );
     void on_maxButton_clicked();
-    //void on_tableWidget_cellEntered(int row, int column);
     void on_tableWidget_cellChanged(int row, int column);
     void on_tableWidget_itemEntered(QTableWidgetItem* item);
     void update_mainTableTabs(QTableWidget * ui_tableWidget);
@@ -320,11 +317,6 @@ private slots:
     void on_radioButton_6_clicked();
     void on_radioButton_7_clicked();
 
-    //void on_action_4_activated();
-//    void on_comboTnomer_currentIndexChanged(int index);
-//    void on_comboTname_currentIndexChanged(int index);
-//    void on_comboTbarcode_currentIndexChanged(int index);
-//    void on_comboTprice_currentIndexChanged(int index);
     void on_action_about_triggered();
 };
 

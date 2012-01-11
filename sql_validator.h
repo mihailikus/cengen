@@ -10,12 +10,9 @@ public:
 
     }
 
-    virtual State validate(QString& str, int& pos) const
+    virtual State validate(QString& str, int& ) const
     {
-        //pos++;
-        QRegExp rxp = QRegExp ("SELECT");
-        if (str.contains(rxp)) {
-            str = "NAFIG-NAFIG";
+        if (str.contains("SELECT", Qt::CaseInsensitive)) {
             return Invalid;
         }
         return Acceptable;
