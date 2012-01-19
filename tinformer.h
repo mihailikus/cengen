@@ -27,6 +27,7 @@ public:
     bool prepare(DbfConfig *dbf);
     bool set_fields(dbTranslator *rows);
     bool set_tb_name(QString tbName);
+    int get_maximum();
 
     QList<Tovar> info (QString text, QString method);
     QStringList db_describe();

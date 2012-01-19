@@ -1200,6 +1200,8 @@ void cengen::readSettings() {
         ind = 0;
     }
     ui_tabWidget->setCurrentIndex(ind);
+
+    ui_spinLimit->setMaximum(my_informer->get_maximum());
 }
 
 void cengen::read_filter_settings() {
@@ -1239,6 +1241,7 @@ void cengen::on_connectMySQLButton_clicked()
         update_ui_connection_established();
         //my_informer->tb_describe("test");
     }
+    ui_spinLimit->setMaximum(my_informer->get_maximum());
 }
 
 void cengen::on_mysql_table_selector_comboBox_activated(QString tbName)
@@ -1536,7 +1539,7 @@ void cengen::on_spinLimit_valueChanged(int number)
 void cengen::on_maxButton_clicked()
 {
     //нажата кнопка выбора лимита поиска без ограничений
-    ui_spinLimit->setValue(0);
+    ui_spinLimit->setValue(ui_spinLimit->maximum());
 }
 
 void cengen::on_tableWidget_cellChanged(int row, int column)

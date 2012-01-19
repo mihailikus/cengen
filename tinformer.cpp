@@ -231,6 +231,21 @@ void Tinformer::set_limit_search(int number) {
     if (number) {
         limit_search = number;
     } else {
-        limit_search = 1000;
+        limit_search = get_maximum();
+    }
+}
+
+int Tinformer::get_maximum() {
+    if (!db_is_ready) return -1;
+    switch (datasource) {
+    case MySQL:
+        return 1000;
+        break;
+    case DBF:
+        return this->dbf_info->number_of_records;
+        break;
+    default:
+        return -1;
+        break;
     }
 }
