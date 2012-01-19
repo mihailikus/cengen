@@ -13,6 +13,7 @@
 #include <QRectF>
 #include <QStringList>
 #include <QComboBox>
+#include <QProgressBar>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTabWidget>
@@ -102,6 +103,7 @@ private:
     //статусбар
     QStatusBar* statusBar;
     QLabel *ui_statusLabel;
+    QProgressBar *progressBar;
 
     //виджеты вкладки поиска
     QWidget *tab1;

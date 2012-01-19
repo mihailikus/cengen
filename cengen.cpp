@@ -509,6 +509,9 @@ void cengen::make_status_bar() {
     statusBar->addWidget(ui_countLabel);
     ui_statusLabel = new QLabel(tr("OK"));
     statusBar->addWidget(ui_statusLabel);
+
+    progressBar = new QProgressBar;
+
     setStatusBar(statusBar);
 }
 
@@ -868,9 +871,15 @@ void cengen::generate_preview() {
     //заносим этот угол в список страниц
     QRectF page(0, 0, pageW, pageH);
     pages << page;
-    //currentScene->addRect(pages.at(0));
+
+    int cenCount = spisok.count();
+
+    progressBar->setMaximum(cenCount);
+    statusBar->addWidget(progressBar);
+    progressBar->show();
 
     for (int i = 0; i<spisok.count(); i++) {
+        progressBar->setValue(i);
 
         //получаем из списка очередной товар и рисуем на него ценник
         currentTovar = spisok.at(i);
@@ -899,6 +908,8 @@ void cengen::generate_preview() {
 
 
     }
+
+    statusBar->removeWidget(progressBar);
 }
 
 void cengen::on_action_scaleUp_triggered()
