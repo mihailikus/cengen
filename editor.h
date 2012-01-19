@@ -34,12 +34,14 @@ class QSpinBox;
 class QPushButton;
 QT_END_NAMESPACE
 
-class editor : public QMainWindow
+class editor : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit editor(QWidget *parent = 0);
+    explicit editor(QWidget *parent = 0, Qt::WFlags f = Qt::WindowSystemMenuHint);
+//    About(QWidget *parent = 0, Qt::WFlags f = Qt::WindowSystemMenuHint);
+
     ~editor();
 
     void load_xml_data_into_editor(QDomElement* domElement);

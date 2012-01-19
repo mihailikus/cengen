@@ -1572,10 +1572,10 @@ void cengen::on_show_editor_button_clicked()
         shablonElement = domDoc.documentElement();
         shablon_editor->load_xml_data_into_editor(&shablonElement);
         shablon_editor->set_file_name(this->file.fileName());
-        shablon_editor->showFullScreen();
 
+        shablon_editor->resize(this->size());
 
-        shablon_editor->show();
+        shablon_editor->exec();
     }
 
 }

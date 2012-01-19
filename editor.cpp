@@ -1,9 +1,11 @@
 #include "editor.h"
 
-editor::editor(QWidget *parent) :
-    QMainWindow(parent)
+editor::editor(QWidget *parent, Qt::WFlags f) :
+    QDialog(parent, f)
 {
-    mainWidget = new QWidget;
+//    , Qt::WFlags f)
+//            :QDialog(parent, f)
+    //mainWidget = new QWidget;
 
     mainLayout = new QGridLayout;
 
@@ -150,9 +152,10 @@ editor::editor(QWidget *parent) :
 
 
 
-    mainWidget->setLayout(mainLayout);
+    //mainWidget->setLayout(mainLayout);
+    this->setLayout(mainLayout);
 
-    this->setCentralWidget(mainWidget);
+    //this->setCentralWidget(mainWidget);
 
 
 
