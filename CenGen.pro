@@ -43,7 +43,6 @@ HEADERS += cengen.h \
     imagebox.h \
     about.h
 FORMS += \
-    editor.ui \
     addlinemaster.ui
 
 OTHER_FILES += \
@@ -55,3 +54,4 @@ TRANSLATIONS = cengen_ru.ts\
 
 RESOURCES += \
     resource.qrc
+

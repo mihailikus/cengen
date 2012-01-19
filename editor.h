@@ -12,6 +12,9 @@
 #include <QGroupBox>
 #include <QSpinBox>
 #include <QPushButton>
+#include <QLabel>
+#include <QLineEdit>
+#include <QGridLayout>
 #include <QtXml>
 #include <QFontDialog>
 #include <QFileDialog>
@@ -30,10 +33,6 @@ class QGraphicsScene;
 class QSpinBox;
 class QPushButton;
 QT_END_NAMESPACE
-
-namespace Ui {
-    class editor;
-}
 
 class editor : public QMainWindow
 {
@@ -122,16 +121,54 @@ private slots:
 
     void on_lineButton_clicked();
 
-private:
-    Ui::editor *ui;
-    QSpinBox* ui_widthSpin, *ui_heithSpin;
-    QSpinBox* ui_pwidthSpin, *ui_pheithSpin, *ui_fontSizeSpin;
-    QGroupBox* ui_propertBox;
-    QPushButton* ui_nameButton;
-    QGraphicsView* ui_view, * ui_preView;
-    QGraphicsScene* ui_scene, * ui_preScene;
-    QLineEdit* ui_shalon_nameEdit, * ui_textEdit;
     void delete_item(QGraphicsItem* item);
+
+
+private:
+    //элементы формы
+    QWidget *mainWidget;
+    QGridLayout *mainLayout;
+    QLabel *label5;
+    QLineEdit* ui_shalon_nameEdit;
+    QLabel *label, *label2;
+    QSpinBox* ui_widthSpin, *ui_heithSpin;
+    QGraphicsScene* ui_scene;
+    QGraphicsView*  ui_view;
+
+    QPushButton *loadButton, *saveButton, *exitButton, *clearButton;
+
+    QPushButton *barcodeButton, *barTextButton,  *nomerButton,
+                *priceButton,   *oldpriceButton, *lineButton,
+                *dateButton,    *nameButton,     *addRectButton;
+
+    QGraphicsScene *ui_preScene;
+    QGraphicsView  *ui_preView;
+
+    //элементы бокса выбора свойств элемента
+    QGroupBox *ui_propertBox;
+    QGridLayout *propertLay;
+    QLabel *label3, *label4;
+    QPushButton *fontSelectbutton;
+    QPushButton *delButton;
+    QSpinBox *ui_fontSizeSpin;
+    QSpinBox* ui_pwidthSpin, *ui_pheithSpin;
+    QLineEdit* ui_textEdit;
+
+    //элементы бокса позиционирования элемента
+    QGroupBox *posBox;
+    QGridLayout *posLay;
+    QPushButton *setTopButton,  *setButtomButton,
+                *setLeftButton, *setRightButton,
+                *setCenterButton;
+
+    //элементы группы управления масштабом поля редактора
+    QGroupBox *zoomBox;
+    QGridLayout *zoomLay;
+    QPushButton *zoomInButton, *zoomOutButton;
+
+
+
+
 
     QDomDocument doc;
     QString fileName;
@@ -149,7 +186,6 @@ private:
     };
     QMap<QString, cennicTextItmes> c_text_items;
 
-    //QMap<QGraphicsRectItem* , cennicTextItmes> t_items; //текстовые элементы
 
 signals:
     void shablon_is_ready(QDomDocument );

@@ -1,65 +1,212 @@
 #include "editor.h"
-#include "ui_editor.h"
 
 editor::editor(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::editor)
+    QMainWindow(parent)
 {
-    ui->setupUi(this);
+    mainWidget = new QWidget;
 
-    line_number = 0;
+    mainLayout = new QGridLayout;
 
-    codec_utf8 = QTextCodec::codecForName("UTF-8");
+    label5 = new QLabel(tr("Title"));
+    mainLayout->addWidget(label5, 0, 0);
 
-    ui_view = qFindChild<QGraphicsView*>(this, "view");
+    ui_shalon_nameEdit = new QLineEdit;
+    mainLayout->addWidget(ui_shalon_nameEdit, 0, 1, 1, 3);
+
+    label = new QLabel(tr("Width"));
+    label2 = new QLabel(tr("Height"));
+
+    mainLayout->addWidget(label, 1, 0);
+    mainLayout->addWidget(label2, 1, 2);
+
+    ui_widthSpin = new QSpinBox;
+    ui_heithSpin = new QSpinBox;
+    ui_widthSpin->setMaximum(2000);
+    ui_heithSpin->setMaximum(2000);
+    ui_widthSpin->setValue(640);
+    ui_heithSpin->setValue(450);
+
+    mainLayout->addWidget(ui_widthSpin, 1, 1);
+    mainLayout->addWidget(ui_heithSpin, 1, 3);
+
+    ui_view = new QGraphicsView;
     ui_scene = new QGraphicsScene;
     ui_view->setScene(ui_scene);
-    connect(ui_scene, SIGNAL(selectionChanged()), SLOT(on_scene_selected()));
 
-    ui_preView = qFindChild<QGraphicsView*>(this, "preView");
-    ui_preScene = new QGraphicsScene;
-    ui_preView->setScene(ui_preScene);
-    ui_preView->scale(0.2, 0.2);
+    mainLayout->addWidget(ui_view, 2, 0, 10, 4);
+
+    loadButton = new QPushButton(tr("LOAD"));
+    saveButton = new QPushButton(tr("SAVE"));
+    clearButton = new QPushButton(tr("CLEAR"));
+    exitButton = new QPushButton(tr("EXIT"));
+
+    mainLayout->addWidget(loadButton, 0, 4);
+    mainLayout->addWidget(saveButton, 0, 5);
+    mainLayout->addWidget(clearButton, 0, 6);
+    mainLayout->addWidget(exitButton, 0, 7);
+
+    barcodeButton = new QPushButton(tr("Barcode"));
+    barTextButton = new QPushButton(tr("Bar. as Text", "Barcode as text"));
+    nomerButton = new QPushButton(tr("Tnomer"));
+    priceButton = new QPushButton(tr("Price"));
+    oldpriceButton = new QPushButton(tr("Old price"));
+    lineButton = new QPushButton(tr("Line"));
+    dateButton = new QPushButton(tr("Date"));
+    nameButton = new QPushButton(tr("Name"));
+    addRectButton = new QPushButton(tr("Simple text"));
+
+    mainLayout->addWidget(barcodeButton,    3, 4);
+    mainLayout->addWidget(barTextButton,    3, 5);
+    mainLayout->addWidget(nomerButton,      3, 6);
+    mainLayout->addWidget(dateButton,       3, 7);
+
+    mainLayout->addWidget(priceButton,      4, 4);
+    mainLayout->addWidget(oldpriceButton,   4, 5);
+    mainLayout->addWidget(nameButton,       4, 6);
+    mainLayout->addWidget(addRectButton,    4, 7);
+
+    mainLayout->addWidget(lineButton,       5, 4);
 
 
-    ui_propertBox = qFindChild<QGroupBox*>(this, "propertBox");
+    //группа свойств выбранного элемента
+    ui_propertBox = new QGroupBox(tr("Propert of element"));
     ui_propertBox->setVisible(false);
 
-    ui_shalon_nameEdit = qFindChild<QLineEdit*>(this, "shablon_nameEdit");
-    ui_textEdit = qFindChild<QLineEdit*>(this, "textEdit");
+    propertLay = new QGridLayout;
 
-    ui_nameButton = qFindChild<QPushButton*>(this,"nameButton");
+    label3 = new QLabel(tr("Width"));
+    label4 = new QLabel(tr("Height"));
+    ui_pwidthSpin = new QSpinBox;
+    ui_pheithSpin = new QSpinBox;
+    ui_fontSizeSpin = new QSpinBox;
+    fontSelectbutton = new QPushButton(tr("FONT"));
+    ui_textEdit = new QLineEdit(tr("Belizna electra 1000 ml", "Some example text"));
+    delButton = new QPushButton(tr("Delete"));
 
-
-    ui_widthSpin = qFindChild<QSpinBox*>(this, "widthSpin");
-    ui_heithSpin = qFindChild<QSpinBox*>(this, "heithSpin");
-
-    ui_fontSizeSpin = qFindChild<QSpinBox*>(this, "fontSizeSpin");
-
-    //спинбоксы для управления свойствами выделенного объекта
-    ui_pwidthSpin = qFindChild<QSpinBox*>(this, "pwidthSpin");
-    ui_pheithSpin = qFindChild<QSpinBox*>(this, "pheithSpin");
     ui_pwidthSpin->setMaximum(2000);
-    ui_pheithSpin->setMaximum(2000);
-    ui_fontSizeSpin->setMaximum(500);
-    ui_pwidthSpin->setMinimum(1);
-    ui_pheithSpin->setMinimum(1);
-    ui_fontSizeSpin->setMinimum(0);
+    ui_pheithSpin->setMaximum(1000);
+
+    propertLay->addWidget(label3, 0, 0);
+    propertLay->addWidget(ui_pwidthSpin, 0, 1);
+    propertLay->addWidget(label4, 1, 0);
+    propertLay->addWidget(ui_pheithSpin, 1, 1);
+    propertLay->addWidget(fontSelectbutton, 2, 0);
+    propertLay->addWidget(ui_fontSizeSpin, 2, 1);
+    propertLay->addWidget(ui_textEdit, 4, 0, 1, 4);
+    propertLay->addWidget(delButton, 3, 0);
+
+    ui_propertBox->setLayout(propertLay);
+    mainLayout->addWidget(ui_propertBox, 7, 5, 5, 3);
+
+
+    posBox = new QGroupBox(tr("Location"));
+    posLay = new QGridLayout;
+    setTopButton = new QPushButton(tr("^", "Up button"));
+    setButtomButton = new QPushButton(tr("\\/", "Down button"));
+    setLeftButton = new QPushButton(tr("<", "Up button"));
+    setRightButton = new QPushButton(tr(">", "Up button"));
+    setCenterButton = new QPushButton(tr(".", "Center button"));
+
+    //int maxSize = setTopButton->height();
+    int maxSize = 25;
+    setTopButton->setMaximumWidth(maxSize);
+    setButtomButton->setMaximumWidth(maxSize);
+    setLeftButton->setMaximumWidth(maxSize);
+    setRightButton->setMaximumWidth(maxSize);
+    setCenterButton->setMaximumWidth(maxSize);
+
+    posLay->addWidget(setTopButton, 0, 1);
+    posLay->addWidget(setLeftButton, 1, 0);
+    posLay->addWidget(setCenterButton, 1, 1);
+    posLay->addWidget(setRightButton, 1, 2);
+    posLay->addWidget(setButtomButton, 2, 1);
+
+    posBox->setLayout(posLay);
+    mainLayout->addWidget(posBox, 7, 4, 5, 1);
+
+
+    zoomBox = new QGroupBox(tr("Zoom"));
+    zoomLay = new QGridLayout;
+    zoomOutButton = new QPushButton(tr("-", "Zoom --"));
+    zoomInButton = new QPushButton(tr("+", "Zoom ++"));
+
+    zoomInButton->setMaximumWidth(maxSize);
+    zoomOutButton->setMaximumWidth(maxSize);
+
+    zoomLay->addWidget(zoomOutButton, 0, 0);
+    zoomLay->addWidget(zoomInButton, 0, 1);
+
+    zoomBox->setLayout(zoomLay);
+    mainLayout->addWidget(zoomBox, 12, 0);
+
+
+    ui_preView = new QGraphicsView;
+    ui_preScene = new QGraphicsScene;
+    ui_preView->setScene(ui_preScene);
+    ui_preView->scale(0.5, 0.5);
+
+
+    mainLayout->addWidget(ui_preView, 13, 0, 1, 4);
+
+
+
+    mainWidget->setLayout(mainLayout);
+
+    this->setCentralWidget(mainWidget);
+
+
+
+    //подключаем сигналы к слотам
     connect (ui_pwidthSpin, SIGNAL(valueChanged(int)), SLOT(on_propert_spin_changed()));
     connect (ui_pheithSpin, SIGNAL(valueChanged(int)), SLOT(on_propert_spin_changed()));
     connect (ui_fontSizeSpin, SIGNAL(valueChanged(int)), SLOT(on_propert_spin_changed()));
 
-    c_items_initialize();
-    ui_view->scale(0.5, 0.5);
+    connect(ui_scene, SIGNAL(selectionChanged()), SLOT(on_scene_selected()));
+    connect(ui_scene, SIGNAL(changed(QList<QRectF>)), SLOT(on_previewButton_clicked()));
 
+    connect(zoomInButton, SIGNAL(clicked()), SLOT(on_zoomInButton_clicked()));
+    connect(zoomOutButton, SIGNAL(clicked()), SLOT(on_zoomOutButton_clicked()));
+
+    connect(loadButton, SIGNAL(clicked()), SLOT(on_loadButton_clicked()));
+    connect(saveButton, SIGNAL(clicked()), SLOT(on_saveButton_clicked()));
+    connect(clearButton, SIGNAL(clicked()), SLOT(on_clearButton_clicked()));
+    connect(exitButton, SIGNAL(clicked()), SLOT(on_exitButton_clicked()));
+
+    connect(barcodeButton, SIGNAL(clicked()), SLOT(on_barcodeButton_clicked()));
+    connect(barTextButton, SIGNAL(clicked()), SLOT(on_barTextButton_clicked()));
+    connect(nomerButton, SIGNAL(clicked()), SLOT(on_nomerButton_clicked()));
+    connect(priceButton, SIGNAL(clicked()), SLOT(on_priceButton_clicked()));
+    connect(oldpriceButton, SIGNAL(clicked()), SLOT(on_oldpriceButton_clicked()));
+    connect(lineButton, SIGNAL(clicked()), SLOT(on_lineButton_clicked()));
+    connect(dateButton, SIGNAL(clicked()), SLOT(on_dateButton_clicked()));
+    connect(nameButton, SIGNAL(clicked()), SLOT(on_nameButton_clicked()));
+    connect(addRectButton, SIGNAL(clicked()), SLOT(on_addRectButton_clicked()));
+
+    connect(setTopButton, SIGNAL(clicked()), SLOT(on_setTopButton_clicked()));
+    connect(setButtomButton, SIGNAL(clicked()), SLOT(on_setButtomButton_clicked()));
+    connect(setLeftButton, SIGNAL(clicked()), SLOT(on_setLeftButton_clicked()));
+    connect(setRightButton, SIGNAL(clicked()), SLOT(on_setRightButton_clicked()));
+    //connect(setCenterButton, SIGNAL(clicked()), SLOT(on_setCenterButton_clicked()));
+
+    connect(ui_textEdit, SIGNAL(textChanged(QString)), SLOT(on_textEdit_textChanged(QString)));
+
+
+    //установка начальных переменных
+    line_number = 0;
+
+    codec_utf8 = QTextCodec::codecForName("UTF-8");
     fileName = "template.cen";
+
+    c_items_initialize();
+
+    ui_view->scale(0.5, 0.5);
 
 
 }
 
 editor::~editor()
 {
-    delete ui;
+    //delete ui;
 }
 
 void editor::on_exitButton_clicked()
@@ -441,6 +588,7 @@ void editor::on_textEdit_textChanged(QString newText)
 {
     QString value = c_items.key(ui_scene->selectedItems().at(0));
     c_text_items[value].text = newText;
+    on_previewButton_clicked();
 }
 
 void editor::on_delButton_clicked()
