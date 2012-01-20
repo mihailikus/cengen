@@ -126,8 +126,8 @@
     <name>cengen</name>
     <message>
         <location filename="cengen.cpp" line="508"/>
-        <location filename="cengen.cpp" line="558"/>
-        <location filename="cengen.cpp" line="1366"/>
+        <location filename="cengen.cpp" line="561"/>
+        <location filename="cengen.cpp" line="1367"/>
         <source>COUNT: </source>
         <comment>ITOGO</comment>
         <translation type="unfinished"></translation>
@@ -535,118 +535,118 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="564"/>
+        <location filename="cengen.cpp" line="567"/>
         <source>DELETE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="565"/>
+        <location filename="cengen.cpp" line="568"/>
         <source>Delete line from table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="581"/>
+        <location filename="cengen.cpp" line="584"/>
         <source>NOT FOUND</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="595"/>
+        <location filename="cengen.cpp" line="598"/>
         <source>SELECT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="596"/>
+        <location filename="cengen.cpp" line="599"/>
         <source>Select item to list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cengen.cpp" line="370"/>
-        <location filename="cengen.cpp" line="672"/>
+        <location filename="cengen.cpp" line="675"/>
         <source>Select shablon file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="672"/>
+        <location filename="cengen.cpp" line="675"/>
         <source>CEN-files (*.cen)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="677"/>
+        <location filename="cengen.cpp" line="680"/>
         <source>Please select file</source>
         <comment>If no file selected</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="683"/>
+        <location filename="cengen.cpp" line="686"/>
         <source>Shablon OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="697"/>
-        <location filename="cengen.cpp" line="1208"/>
+        <location filename="cengen.cpp" line="700"/>
+        <location filename="cengen.cpp" line="1212"/>
         <source>Wrong shablon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="766"/>
+        <location filename="cengen.cpp" line="769"/>
         <source>Select proper file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="842"/>
+        <location filename="cengen.cpp" line="845"/>
         <source>Total: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="844"/>
+        <location filename="cengen.cpp" line="847"/>
         <source> cennic&apos;s on one page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="850"/>
+        <location filename="cengen.cpp" line="853"/>
         <source>File is not ready</source>
         <comment>If file shablon is not ready</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1609"/>
+        <location filename="cengen.cpp" line="1610"/>
         <source>Save tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1609"/>
-        <location filename="cengen.cpp" line="1630"/>
-        <location filename="cengen.cpp" line="1771"/>
+        <location filename="cengen.cpp" line="1610"/>
+        <location filename="cengen.cpp" line="1631"/>
+        <location filename="cengen.cpp" line="1772"/>
         <source>Tovar lists (*.tov)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1630"/>
+        <location filename="cengen.cpp" line="1631"/>
         <source>Open tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1755"/>
+        <location filename="cengen.cpp" line="1756"/>
         <source>COUNT: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1771"/>
+        <location filename="cengen.cpp" line="1772"/>
         <source>Select tovar list for minus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1989"/>
+        <location filename="cengen.cpp" line="1990"/>
         <source>Michael Volkov</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2002"/>
+        <location filename="cengen.cpp" line="2003"/>
         <source>UG_Dvor_34</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2002"/>
+        <location filename="cengen.cpp" line="2003"/>
         <source>Encouragement</source>
         <translation type="unfinished"></translation>
     </message>
@@ -654,170 +654,174 @@
 <context>
     <name>editor</name>
     <message>
-        <location filename="editor.ui" line="17"/>
-        <source>editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="40"/>
-        <source>add Rect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="53"/>
+        <location filename="editor.cpp" line="41"/>
         <source>SAVE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="66"/>
-        <source>Clear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="79"/>
-        <source>Exit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="92"/>
+        <location filename="editor.cpp" line="50"/>
         <source>Barcode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="105"/>
+        <location filename="editor.cpp" line="53"/>
         <source>Price</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="118"/>
-        <source>Old Price</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="131"/>
-        <source>Preview</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="144"/>
-        <source>tnomer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="157"/>
+        <location filename="editor.cpp" line="56"/>
         <source>Date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="170"/>
-        <source>NAME</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <location filename="editor.ui" line="221"/>
-        <location filename="editor.ui" line="262"/>
-        <source>Ширина</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <location filename="editor.ui" line="234"/>
-        <location filename="editor.ui" line="269"/>
-        <source>Высота</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <location filename="editor.ui" line="247"/>
-        <source>Свойства</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <location filename="editor.ui" line="276"/>
-        <source>Шрифт</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <location filename="editor.ui" line="286"/>
-        <source>Удалить</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <location filename="editor.ui" line="328"/>
-        <source>Название шаблона</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <location filename="editor.ui" line="341"/>
-        <source>Шаблончик</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="367"/>
+        <location filename="editor.cpp" line="40"/>
         <source>LOAD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="380"/>
-        <source>Barc. as text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editor.ui" line="393"/>
+        <location filename="editor.cpp" line="55"/>
         <source>Line</source>
         <translation type="unfinished"></translation>
     </message>
-    <message utf8="true">
-        <location filename="editor.ui" line="406"/>
-        <source>Масштаб</source>
+    <message>
+        <location filename="editor.cpp" line="12"/>
+        <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="418"/>
-        <source>-</source>
+        <location filename="editor.cpp" line="18"/>
+        <location filename="editor.cpp" line="79"/>
+        <source>Width</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="431"/>
-        <source>+</source>
+        <location filename="editor.cpp" line="19"/>
+        <location filename="editor.cpp" line="80"/>
+        <source>Height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="448"/>
-        <source>/\</source>
+        <location filename="editor.cpp" line="42"/>
+        <source>CLEAR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="455"/>
-        <source>.</source>
+        <location filename="editor.cpp" line="43"/>
+        <source>EXIT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="462"/>
+        <location filename="editor.cpp" line="51"/>
+        <source>Bar. as Text</source>
+        <comment>Barcode as text</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="52"/>
+        <source>Tnomer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="54"/>
+        <source>Old price</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="57"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="58"/>
+        <source>Simple text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="74"/>
+        <source>Propert of element</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="84"/>
+        <source>FONT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="85"/>
+        <source>Belizna electra 1000 ml</source>
+        <comment>Some example text</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="86"/>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="104"/>
+        <source>Location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="106"/>
+        <source>^</source>
+        <comment>Up button</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="107"/>
         <source>\/</source>
+        <comment>Down button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="475"/>
+        <location filename="editor.cpp" line="108"/>
         <source>&lt;</source>
+        <comment>Up button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.ui" line="482"/>
+        <location filename="editor.cpp" line="109"/>
         <source>&gt;</source>
+        <comment>Up button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="95"/>
+        <location filename="editor.cpp" line="110"/>
+        <source>.</source>
+        <comment>Center button</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="130"/>
+        <source>Zoom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="132"/>
+        <source>-</source>
+        <comment>Zoom --</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="133"/>
+        <source>+</source>
+        <comment>Zoom ++</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="245"/>
         <source>Save template</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="95"/>
-        <location filename="editor.cpp" line="502"/>
+        <location filename="editor.cpp" line="245"/>
+        <location filename="editor.cpp" line="653"/>
         <source>Cennic templates (*.cen)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="502"/>
+        <location filename="editor.cpp" line="653"/>
         <source>Open cennic template</source>
         <translation type="unfinished"></translation>
     </message>
