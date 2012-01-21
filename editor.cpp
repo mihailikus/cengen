@@ -3,10 +3,6 @@
 editor::editor(QWidget *parent, Qt::WFlags f) :
     QDialog(parent, f)
 {
-//    , Qt::WFlags f)
-//            :QDialog(parent, f)
-    //mainWidget = new QWidget;
-
     mainLayout = new QGridLayout;
 
     label5 = new QLabel(tr("Title"));
@@ -72,7 +68,7 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
 
     //группа свойств выбранного элемента
     ui_propertBox = new QGroupBox(tr("Propert of element"));
-    ui_propertBox->setVisible(false);
+    ui_propertBox->setEnabled(false);
 
     propertLay = new QGridLayout;
 
@@ -102,6 +98,7 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
 
 
     posBox = new QGroupBox(tr("Location"));
+    posBox->setEnabled(false);
     posLay = new QGridLayout;
     setTopButton = new QPushButton(tr("^", "Up button"));
     setButtomButton = new QPushButton(tr("\\/", "Down button"));
@@ -377,7 +374,7 @@ void editor::on_previewButton_clicked()
     ui_preScene->clear();
     Tovar tovar;
     tovar.barcode = c_text_items["barcode"].text;
-    tovar.name_of_tovar = c_text_items["good"].text;
+    tovar.name_of_tovar = c_text_items["good"].text.toUtf8();
     tovar.nomer_of_tovar = c_text_items["nomer"].text.toInt();
     tovar.price1 = 299.90;
     tovar.price2 = 999.90;
@@ -411,48 +408,56 @@ void editor::set_spin_value(QSpinBox *widget, float value) {
 
 void editor::on_scene_selected() {
     QList<QGraphicsItem* > items = ui_scene->selectedItems();
-    if (items.count() == 1) {
-        ui_propertBox->setVisible(true);
-        //qDebug() << "Selected 1 object";
-        QGraphicsItem* item = items.at(0);
-        qreal width, heith;
-        QString text = c_items.key(item);
-        if (text.contains("line")) {
-            float angle = c_text_items[text].text.toFloat();
-            item->rotate(0-angle);
-            width = item->sceneBoundingRect().width();
-            heith = item->sceneBoundingRect().height();
-            if (angle<0) {
-                heith = 0-heith;
-            }
-            item->rotate(angle);
+    if (!items.count()) {
+        ui_propertBox->setEnabled(false);
+        posBox->setEnabled(false);
+        return;
+    }
 
+    posBox->setEnabled(true);
 
-        } else {
-            width = item->sceneBoundingRect().width();
-            heith = item->sceneBoundingRect().height();
+    if (items.count() != 1) {
+        ui_propertBox->setEnabled(false);
+        return;
+    }
+
+    ui_propertBox->setEnabled(true);
+    QGraphicsItem* item = items.at(0);
+    qreal width, heith;
+    QString text = c_items.key(item);
+    if (text.contains("line")) {
+        float angle = c_text_items[text].text.toFloat();
+        item->rotate(0-angle);
+        width = item->sceneBoundingRect().width();
+        heith = item->sceneBoundingRect().height();
+        if (angle<0) {
+            heith = 0-heith;
         }
-
-        //устанавливаем размеры прямоугольника
-        set_spin_value(ui_pwidthSpin, width);
-        set_spin_value(ui_pheithSpin, heith);
-
-        //устанавливаем размер шрифта в поле для его изменения
-        QFont font = c_text_items[text].font;
-        qDebug() << "FONT is " << font.pointSize();
-        set_spin_value(ui_fontSizeSpin, font.pointSize());
-
-
-        //устанавливаем текст
-        QString value = c_items.key(item);
-        ui_textEdit->blockSignals(true);
-        ui_textEdit->setText(c_text_items[value].text);
-        ui_textEdit->blockSignals(false);
+        item->rotate(angle);
 
 
     } else {
-        ui_propertBox->setVisible(false);
+        width = item->sceneBoundingRect().width();
+        heith = item->sceneBoundingRect().height();
     }
+
+    //устанавливаем размеры прямоугольника
+    set_spin_value(ui_pwidthSpin, width);
+    set_spin_value(ui_pheithSpin, heith);
+
+    //устанавливаем размер шрифта в поле для его изменения
+    QFont font = c_text_items[text].font;
+    qDebug() << "FONT is " << font.pointSize();
+    set_spin_value(ui_fontSizeSpin, font.pointSize());
+
+
+    //устанавливаем текст
+    QString value = c_items.key(item);
+    ui_textEdit->blockSignals(true);
+    ui_textEdit->setText(c_text_items[value].text);
+    ui_textEdit->blockSignals(false);
+
+
 }
 
 void editor::on_propert_spin_changed() {
@@ -734,7 +739,7 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
             if (element == "good") {
                 add_element_to_scene("good", startX, startY,
                                      width, heith, QBrush(Qt::green),
-                                     font, "Belizna electra", 0);
+                                     font, tr("Belizna electra 1000 ml"), 0);
             }
 
             if (element == "text") {
@@ -790,8 +795,30 @@ void editor::set_file_name(QString name) {
 
 void editor::on_setLeftButton_clicked()
 {
-    QGraphicsItem* item = ui_scene->selectedItems().at(0);
-    item->setX(0);
+    QList<QGraphicsItem* > items = ui_scene->selectedItems();
+    int count = items.count();
+    if (!count) return;
+
+    if (count == 1) {
+        items.at(0)->setX(0);
+        return;
+    }
+    int min_pos=items.at(0)->pos().x();
+
+    for (int i = 1; i<count; i++) {
+        int cur_pos = items.at(i)->pos().x();
+        qDebug() << "pos" << cur_pos;
+        if (min_pos > cur_pos) {
+            min_pos = cur_pos;
+            qDebug() << "min pos " << min_pos;
+        }
+    }
+    qDebug() << "min pos 77 " << min_pos;
+    for (int i = 0; i<count; i++) {
+        items.at(i)->setX(min_pos);
+    }
+
+
 }
 
 
