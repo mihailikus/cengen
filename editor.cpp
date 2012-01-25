@@ -190,6 +190,8 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
 
     connect(ui_textEdit, SIGNAL(textChanged(QString)), SLOT(on_textEdit_textChanged(QString)));
 
+    connect(fontSelectbutton, SIGNAL(clicked()), SLOT(on_fontSelectButton_clicked()));
+    connect(delButton, SIGNAL(clicked()), SLOT(on_delButton_clicked()));
 
     //установка начальных переменных
     line_number = 0;
