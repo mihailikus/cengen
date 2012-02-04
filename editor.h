@@ -46,6 +46,7 @@ public:
 
     void load_xml_data_into_editor(QDomElement* domElement);
     void set_file_name(QString name);
+    QDomDocument get_new_shablon();
 
 
 private slots:
@@ -57,7 +58,7 @@ private slots:
 
     void on_saveButton_clicked();
 
-    void on_previewButton_clicked();
+    void generate_preview();
 
     void on_widthSpin_valueChanged(int );
 
@@ -189,8 +190,8 @@ private:
     QMap<QString, cennicTextItmes> c_text_items;
 
 
-signals:
-    void shablon_is_ready(QDomDocument );
+//signals:
+//    void shablon_is_ready(QDomDocument );
 
 };
 

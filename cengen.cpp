@@ -46,7 +46,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
 
     //подготовка редактора шаблонов
     shablon_editor = new editor(this);
-    connect(shablon_editor, SIGNAL(shablon_is_ready(QDomDocument)), SLOT(describe_shablon(QDomDocument)));
+    //connect(shablon_editor, SIGNAL(shablon_is_ready(QDomDocument)), SLOT(describe_shablon(QDomDocument)));
 
     //После создания всех форм - читаем настройки из конфига
     this->readSettings();
@@ -686,33 +686,6 @@ void cengen::on_selecctShablonButton_clicked()
         ui_statusLabel->setText(tr("Shablon OK"));
 
     }
-}
-
-void cengen::read_file_shablon() {
-        QDomElement domElement;
-        if (file.open(QIODevice::ReadOnly)) {
-        if (domDoc.setContent(&file)) {
-            domElement = domDoc.documentElement();
-            file_is_ready = true;
-        }
-    } else {
-        file_is_ready = false;
-        ui_statusLabel->setText(tr("Wrong shablon"));
-
-    }
-    this->describe_shablon(domDoc);
-
-}
-
-void cengen::describe_shablon(QDomDocument shablon) {
-
-    domDoc = shablon;
-    this->shablonElement = domDoc.documentElement();
-    //qDebug() << "SHABLON\n" << domDoc.toString();
-    rectCen = this->get_shablon_rect(shablonElement);
-    ui_label->setText(get_shablon_name(shablonElement));
-    this->update_values();
-    //this->shablonElement = shablon;
 }
 
 void cengen::on_tabWidget_currentChanged(int index)
@@ -1590,7 +1563,38 @@ void cengen::on_show_editor_button_clicked()
         shablon_editor->resize(this->size());
 
         shablon_editor->exec();
+
+        domDoc.clear();
+        domDoc = shablon_editor->get_new_shablon();
+
+        this->describe_shablon(domDoc);
     }
+}
+
+void cengen::describe_shablon(QDomDocument shablon) {
+
+    domDoc = shablon;
+    this->shablonElement = domDoc.documentElement();
+    //qDebug() << "SHABLON\n" << domDoc.toString();
+    rectCen = this->get_shablon_rect(shablonElement);
+    ui_label->setText(get_shablon_name(shablonElement));
+    this->update_values();
+    //this->shablonElement = shablon;
+}
+
+void cengen::read_file_shablon() {
+    QDomElement domElement;
+    if (file.open(QIODevice::ReadOnly)) {
+        if (domDoc.setContent(&file)) {
+            domElement = domDoc.documentElement();
+            file_is_ready = true;
+        }
+    } else {
+        file_is_ready = false;
+        ui_statusLabel->setText(tr("Cannot open shablon"));
+
+    }
+    this->describe_shablon(domDoc);
 
 }
 

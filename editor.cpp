@@ -162,7 +162,7 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
     connect (ui_fontSizeSpin, SIGNAL(valueChanged(int)), SLOT(on_propert_spin_changed()));
 
     connect(ui_scene, SIGNAL(selectionChanged()), SLOT(on_scene_selected()));
-    connect(ui_scene, SIGNAL(changed(QList<QRectF>)), SLOT(on_previewButton_clicked()));
+    connect(ui_scene, SIGNAL(changed(QList<QRectF>)), SLOT(generate_preview()));
 
     connect(zoomInButton, SIGNAL(clicked()), SLOT(on_zoomInButton_clicked()));
     connect(zoomOutButton, SIGNAL(clicked()), SLOT(on_zoomOutButton_clicked()));
@@ -214,14 +214,19 @@ editor::~editor()
 void editor::on_exitButton_clicked()
 {
     if (this->parent()) {
-        on_previewButton_clicked();
+        generate_preview();
         //qDebug() << doc.toString() << "\n----------------------------\n";
 
         //int length = doc.toString().length();
-        emit shablon_is_ready(doc);
+        //emit shablon_is_ready(doc);
     }
 
     close();
+}
+
+QDomDocument editor::get_new_shablon() {
+    generate_preview();
+    return doc;
 }
 
 void editor::on_clearButton_clicked()
@@ -238,7 +243,7 @@ void editor::delete_item(QGraphicsItem *item) {
 void editor::on_saveButton_clicked()
 {
     //создаем превью (вместе с XML-документом)
-    this->on_previewButton_clicked();
+    this->generate_preview();
 
     //записываем все это дело в файл
     fileName = QFileDialog::getSaveFileName(this, tr("Save template"), fileName, tr("Cennic templates (*.cen)"));
@@ -261,7 +266,7 @@ void editor::on_saveButton_clicked()
 
 }
 
-void editor::on_previewButton_clicked()
+void editor::generate_preview()
 {
     ui_preView->setVisible(true);
     //создаем XML-документ
@@ -509,7 +514,7 @@ void editor::on_propert_spin_changed() {
 
     }
 
-    on_previewButton_clicked();
+    generate_preview();
 
 }
 
@@ -598,7 +603,7 @@ void editor::on_textEdit_textChanged(QString newText)
 {
     QString value = c_items.key(ui_scene->selectedItems().at(0));
     c_text_items[value].text = newText;
-    on_previewButton_clicked();
+    generate_preview();
 }
 
 void editor::on_delButton_clicked()
@@ -787,7 +792,7 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
         node = node.nextSibling();
     }
 
-    on_previewButton_clicked();
+    generate_preview();
 
 }
 
