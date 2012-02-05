@@ -9,5 +9,6 @@
         <file>resources/down.png</file>
         <file>resources/up.png</file>
         <file>resources/my.png</file>
+        <file>resources/filter.png</file>
     </qresource>
 </RCC>

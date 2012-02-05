@@ -126,6 +126,12 @@ void cengen::make_actions() {
     action_minus = new QAction(tr("Minus tovar list"), this);
     connect(action_minus, SIGNAL(triggered()), SLOT(on_action_minus_triggered()));
 
+    //применить фильтр к текущему списку товаров из главной таблицы
+    apply_filter_on_current_list = new QAction(QIcon(":/share/images/resources/filter.png"),
+                              tr("Apply filter"), this);
+    apply_filter_on_current_list->setToolTip(tr("Apply filter on current tovar list"));
+    connect(apply_filter_on_current_list, SIGNAL(triggered()),
+            SLOT(on_apply_filter_on_current_list_triggered()));
 
 }
 
@@ -136,6 +142,7 @@ void cengen::make_toolBar() {
     ui_mainToolBar->addAction(action_open);
     ui_mainToolBar->addAction(action_save);
     ui_mainToolBar->addSeparator();
+    ui_mainToolBar->addAction(apply_filter_on_current_list);
     ui_mainToolBar->addAction(ui_actionMake);
     ui_mainToolBar->addSeparator();
     ui_mainToolBar->addAction(action_print);
@@ -1829,6 +1836,7 @@ QList<Tovar> cengen::minus(QList<Tovar> oldList, QList<Tovar> newList) {
 void cengen::on_filterBox_toggled(bool arg1)
 {
     filter_is_on = arg1;
+    apply_filter_on_current_list->setEnabled(arg1);
     if (arg1) {
         qDebug() << "Enabled filter";
         this->read_filter_settings();
@@ -2008,4 +2016,11 @@ void cengen::on_action_about_triggered()
     }
     d.addThanks(tr("UG_Dvor_34"), "", tr ("Encouragement"));
     d.exec();
+}
+
+void cengen::on_apply_filter_on_current_list_triggered() {
+    QList<Tovar> oldList = this->get_tovar_list(ui_tableWidget, "x");
+    QList<Tovar> newList = apply_filter(oldList);
+    this->on_action_new_triggered();
+    this->load_tovar_list_into_cengen(newList);
 }

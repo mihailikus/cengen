@@ -252,6 +252,7 @@ private:
     QAction* action_print;
     QAction* action_about;
     QAction* action_minus;
+    QAction* apply_filter_on_current_list;
 
 private slots:
     void on_tableWidget_cellClicked(int row, int column);
@@ -269,6 +270,7 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     void on_selecctShablonButton_clicked();
     void on_action_make_triggered();
+    void on_apply_filter_on_current_list_triggered();
     void on_lineEdit_returnPressed();
     void tovar_search();
     void new_line_ready();
