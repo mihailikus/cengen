@@ -47,6 +47,7 @@ public:
     void load_xml_data_into_editor(QDomElement* domElement);
     void set_file_name(QString name);
     QDomDocument get_new_shablon();
+    QString get_new_fileName();
 
 
 private slots:
@@ -188,6 +189,8 @@ private:
         QFont font;
     };
     QMap<QString, cennicTextItmes> c_text_items;
+
+    bool isSaved;
 
 
 //signals:

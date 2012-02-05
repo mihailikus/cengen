@@ -3,6 +3,8 @@
 editor::editor(QWidget *parent, Qt::WFlags f) :
     QDialog(parent, f)
 {
+    isSaved = false;
+
     mainLayout = new QGridLayout;
 
     label5 = new QLabel(tr("Title"));
@@ -229,11 +231,19 @@ QDomDocument editor::get_new_shablon() {
     return doc;
 }
 
+QString editor::get_new_fileName() {
+    if (isSaved) {
+        return fileName;
+    }
+    return "";
+}
+
 void editor::on_clearButton_clicked()
 {
+    isSaved = false;
+    fileName = "template.cen";
     ui_scene->clear();
     c_items_initialize();
-    //buttons_initialize();
 }
 
 void editor::delete_item(QGraphicsItem *item) {
@@ -242,6 +252,8 @@ void editor::delete_item(QGraphicsItem *item) {
 
 void editor::on_saveButton_clicked()
 {
+    isSaved = true;
+
     //создаем превью (вместе с XML-документом)
     this->generate_preview();
 
@@ -362,21 +374,15 @@ void editor::generate_preview()
                 elem.setAttribute("font-size", QString::number(font_size));
             }
 
-
-
             elem.setAttribute("startX", startX);
             elem.setAttribute("startY", startY);
             elem.setAttribute("width", width);
             elem.setAttribute("heith", heith);
 
-            //qDebug() << "LINE startX etc " << startX << startY << width << heith;
-
-
             cennic.appendChild(elem);
         }
     }
     doc.appendChild(cennic);
-
 
     ui_preScene->clear();
     Tovar tovar;
@@ -389,7 +395,6 @@ void editor::generate_preview()
     QPoint pos = preview_cennic->render(ui_preScene, 0, 0);
 
     ui_preView->fitInView(0, 0, pos.x(), pos.y(), Qt::KeepAspectRatio);
-
 
 }
 
@@ -454,7 +459,7 @@ void editor::on_scene_selected() {
 
     //устанавливаем размер шрифта в поле для его изменения
     QFont font = c_text_items[text].font;
-    qDebug() << "FONT is " << font.pointSize();
+    //qDebug() << "FONT is " << font.pointSize();
     set_spin_value(ui_fontSizeSpin, font.pointSize());
 
 
@@ -715,11 +720,9 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
             QString rubSymbol = domElement->attribute("rub", "RUR");
             QString kopSymbol = domElement->attribute("kop", "KOP");
             QString text = domElement->text();
-            //text = codec_utf8->toUnicode(text.toAscii());
 
             if (element == "name") {
                 ui_shalon_nameEdit->setText(text);
-                qDebug() << "Shablon name is " << text;
             }
 
             if (element == "base" ) {
@@ -791,12 +794,11 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
         }
         node = node.nextSibling();
     }
-
     generate_preview();
-
 }
 
 void editor::set_file_name(QString name) {
+    isSaved = true;
     this->fileName = name;
 }
 

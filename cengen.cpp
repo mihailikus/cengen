@@ -1566,6 +1566,8 @@ void cengen::on_show_editor_button_clicked()
 
         domDoc.clear();
         domDoc = shablon_editor->get_new_shablon();
+        QString str = shablon_editor->get_new_fileName();
+        file.setFileName(str);
 
         this->describe_shablon(domDoc);
     }
