@@ -50,9 +50,15 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
             float startX = domElement.attribute("startX", "0").toFloat();
             float startY = domElement.attribute("startY", "0").toFloat();
             int font_size = domElement.attribute("font-size", "10").toInt();
+            bool font_bold = domElement.attribute("font-bold", "0").toInt();
+            bool font_italic = domElement.attribute("font-italic", "0").toInt();
+
             float linethick = domElement.attribute("linethick", "3").toFloat();
             QString font_family = domElement.attribute("font-family", "sans");
             QFont font = QFont(font_family, font_size);
+            font.setBold(font_bold);
+            font.setItalic(font_italic);
+
             QString rubSymbol = domElement.attribute("rub", "");
             QString kopSymbol = domElement.attribute("kop", "");
 

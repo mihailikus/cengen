@@ -374,6 +374,8 @@ void editor::generate_preview()
                 elem.setAttribute("font-family", font_family);
                 int font_size = c_text_items[value].font.pointSize();
                 elem.setAttribute("font-size", QString::number(font_size));
+                elem.setAttribute("font-bold", c_text_items[value].font.bold());
+                elem.setAttribute("font-italic", c_text_items[value].font.italic());
             }
 
             elem.setAttribute("startX", startX);
@@ -725,9 +727,14 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
             float startX = domElement->attribute("startX", "0").toFloat();
             float startY = domElement->attribute("startY", "0").toFloat();
             int font_size = domElement->attribute("font-size", "10").toInt();
+            bool font_bold = domElement->attribute("font-bold", "0").toInt();
+            bool font_italic = domElement->attribute("font-italic", "0").toInt();
+
             QString linethick = domElement->attribute("linethick", "3");
             QString font_family = domElement->attribute("font-family", "sans");
             QFont font(font_family, font_size);
+            font.setBold(font_bold);
+            font.setItalic(font_italic);
             QString rubSymbol = domElement->attribute("rub", "RUR");
             QString kopSymbol = domElement->attribute("kop", "KOP");
             QString text = domElement->text();
