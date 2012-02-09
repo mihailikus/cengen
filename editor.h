@@ -178,7 +178,7 @@ private:
     QString fileName;
     QTextCodec *codec_utf8;
 
-    int line_number;
+    int number;
 
     QGraphicsRectItem* baseRect;
 

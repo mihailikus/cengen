@@ -164,7 +164,7 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
     connect (ui_fontSizeSpin, SIGNAL(valueChanged(int)), SLOT(on_propert_spin_changed()));
 
     connect(ui_scene, SIGNAL(selectionChanged()), SLOT(on_scene_selected()));
-    connect(ui_scene, SIGNAL(changed(QList<QRectF>)), SLOT(generate_preview()));
+    //connect(ui_scene, SIGNAL(changed(QList<QRectF>)), SLOT(generate_preview()));
 
     connect(zoomInButton, SIGNAL(clicked()), SLOT(on_zoomInButton_clicked()));
     connect(zoomOutButton, SIGNAL(clicked()), SLOT(on_zoomOutButton_clicked()));
@@ -196,7 +196,7 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
     connect(delButton, SIGNAL(clicked()), SLOT(on_delButton_clicked()));
 
     //установка начальных переменных
-    line_number = 0;
+    number = 0;
 
     codec_utf8 = QTextCodec::codecForName("UTF-8");
     fileName = "template.cen";
@@ -280,13 +280,13 @@ void editor::on_saveButton_clicked()
 
 void editor::generate_preview()
 {
+    qDebug() << "Preview started";
     ui_preView->setVisible(true);
     //создаем XML-документ
     doc.clear();
     QDomNode xmlNode = doc.createProcessingInstruction("xml",
                                     "version=\"1.0\" encoding=\"UTF-8\"");
     doc.insertBefore(xmlNode, doc.firstChild());
-    //doc.createElement("cennic");
 
     QDomElement cennic = doc.createElement("cennic");
 
@@ -298,51 +298,53 @@ void editor::generate_preview()
 
     //устанавливаем базовый размер - ширину и высоту
     QDomElement domElement = doc.createElement("base");
-    //QDomAttr domAttr = doc.createAttribute("width");
-    //domAttr.setValue(QString::number(ui_widthSpin->value()));
     domElement.setAttribute("width", QString::number(ui_widthSpin->value()));
     domElement.setAttribute("heith", QString::number(ui_heithSpin->value()));
-    //doc.appendChild(domElement);
     cennic.appendChild(domElement);
 
+//    qDebug() << "STARTED------------";
 
     foreach(QGraphicsItem* item, c_items) {
-        //qDebug() << "Item type is " << item->acceptDrops()
-        QString value = c_items.key(item);
-        QString item_value = value;
-        QGraphicsItem* item = c_items[value];
         if (item->scene() == ui_scene) {
+            QString value = c_items.key(item);
+//            qDebug() << "c_items = " << value;
+            QString item_value = value.split(QRegExp("[0-9]")).at(0);
+            //QString item_value = value;
+            QString text = c_text_items[value].text;
+//            qDebug() << "text is = " << text;
+//            qDebug() << "text is = " << c_text_items[value].font;
+
             QDomElement elem;
-            if (value.contains("line")) {
-                value = "line";
-            }
 
             //устанавливаем атрибуты для поля названия товара
-            if (value == "barcode" || value == "good" || value == "line") {
-                elem = doc.createElement(value);
+            if (item_value == "barcode"
+                    || item_value == "good"
+                    || item_value == "line") {
+                elem = doc.createElement(item_value);
             } else {
                 elem = doc.createElement("text");
                 QString method;
-                if (value.contains("text") || value == "date") {
-                    if (value == "date") {
+                if (item_value == "text" || item_value == "date") {
+                    if (item_value == "date") {
                         method = "date";
                     } else {
                         method = "textInBox";
                     }
-                    QDomText dm = doc.createTextNode(c_text_items[item_value].text);
+                    QDomText dm = doc.createTextNode(c_text_items[value].text);
+//                    qDebug() << "Item text" << c_text_items[value].text;
                     elem.appendChild(dm);
                 } else {
-                    method = value;
+                    method = item_value;
                 }
                 elem.setAttribute("method", method);
 
             }
 
-            if (value == "price" || value == "priceOld") {
+            if (item_value == "price" || item_value == "priceOld") {
                 //устанавливаем дополнительные параметры для рублей и копеек
-                QStringList rub_kop = c_text_items[item_value].text.split("::");
+                QStringList rub_kop = c_text_items[value].text.split("::");
                 if (rub_kop.count()<2) {
-                    rub_kop << "kop";
+                    rub_kop << tr("kop");
                 }
                 elem.setAttribute("rub", rub_kop.at(0));
                 elem.setAttribute("kop", rub_kop.at(1));
@@ -355,9 +357,9 @@ void editor::generate_preview()
             width = QString::number(item->sceneBoundingRect().width());
             heith = QString::number(item->sceneBoundingRect().height());
 
-            if (value == "line") {
+            if (item_value == "line") {
                 //вычисляем параметры линии
-                float rotation = c_text_items[item_value].text.toFloat();
+                float rotation = c_text_items[value].text.toFloat();
                 item->rotate(0-rotation);
                 float linethick = item->sceneBoundingRect().height();
                 float len = item->sceneBoundingRect().width();
@@ -380,9 +382,13 @@ void editor::generate_preview()
             elem.setAttribute("heith", heith);
 
             cennic.appendChild(elem);
-        }
+
     }
+}
     doc.appendChild(cennic);
+
+
+//    qDebug() << "--------------------" << doc.toString() << "------------";
 
     ui_preScene->clear();
     Tovar tovar;
@@ -395,6 +401,7 @@ void editor::generate_preview()
     QPoint pos = preview_cennic->render(ui_preScene, 0, 0);
 
     ui_preView->fitInView(0, 0, pos.x(), pos.y(), Qt::KeepAspectRatio);
+    qDebug() << "Preview finished";
 
 }
 
@@ -419,6 +426,7 @@ void editor::set_spin_value(QSpinBox *widget, float value) {
 }
 
 void editor::on_scene_selected() {
+    this->generate_preview();
     QList<QGraphicsItem* > items = ui_scene->selectedItems();
     if (!items.count()) {
         ui_propertBox->setEnabled(false);
@@ -532,7 +540,7 @@ void editor::c_items_initialize() {
     c_text_items.clear();
 
     //базовый размер
-    baseRect = ui_scene->addRect(0, 0, ui_widthSpin->value(), ui_heithSpin->value());
+    //baseRect = ui_scene->addRect(0, 0, ui_widthSpin->value(), ui_heithSpin->value());
 
     //добавляем основные элементы ценника - название товара, штрих-код, цену и т.п.
     add_element_to_scene("barcode", 100, 200, 300, 70, QBrush(Qt::darkBlue), QFont("Arial", 7), "216975");
@@ -541,9 +549,9 @@ void editor::c_items_initialize() {
 
     add_element_to_scene("nomer", 0, 0, 200, 20, QBrush(Qt::blue), QFont("Arial", 20), "74124");
 
-    add_element_to_scene("price", 0, 0, 300, 70, QBrush(Qt::red), QFont("Arial", 50), "r::k");
+    add_element_to_scene("price", 0, 0, 300, 70, QBrush(Qt::red), QFont("Arial", 50), tr("r::k"));
 
-    add_element_to_scene("priceOld", 0, 0, 300, 70, QBrush(Qt::lightGray), QFont("Arial", 50), "rub::kop");
+    add_element_to_scene("priceOld", 0, 0, 300, 70, QBrush(Qt::lightGray), QFont("Arial", 50), tr("r::k"));
 
     add_element_to_scene("date", 0, 0, 200, 20, QBrush(Qt::magenta), QFont("Arial", 20), "dd.MM.yy");
 
@@ -552,13 +560,15 @@ void editor::c_items_initialize() {
 }
 
 void editor::switch_cennic_element(QGraphicsItem *item) {
-    if (item->scene() == ui_scene) {
-        ui_scene->removeItem(item);
-        //ui_nameButton->setText(tr("ADD NAME"));
-    } else {
-        ui_scene->addItem(item);
-        //ui_nameButton->setText(tr("DEL NAME"));
-    }
+    QString type = c_items.key(item);
+    add_element_to_scene(type,
+                         0,
+                         0,
+                         item->sceneBoundingRect().width(),
+                         item->sceneBoundingRect().height(), QBrush(Qt::green),
+                         c_text_items[type].font,
+                         c_text_items[type].text, false);
+    //ui_scene->addItem(item);
 }
 
 void editor::on_nameButton_clicked()
@@ -616,7 +626,11 @@ void editor::on_delButton_clicked()
     ui_scene->removeItem(ui_scene->selectedItems().at(0));
 }
 
-void editor::add_element_to_scene(QString type, float startX, float startY, float width, float heith, QBrush brush, QFont font, QString text, bool to_removal   ) {
+void editor::add_element_to_scene(QString mainType, float startX, float startY, float width, float heith, QBrush brush, QFont font, QString text, bool to_removal   ) {
+    QString type = mainType;
+    if (!to_removal) {
+        type = mainType + QString::number(number++);
+    }
     if (type.contains("line")) {
         ui_scene->removeItem(c_items[type]);
         //переводим прямоугольные координаты в полярные
@@ -628,17 +642,13 @@ void editor::add_element_to_scene(QString type, float startX, float startY, floa
             angl = 90;
         }
 
-        //c_items[type] = imagelinethick(ui_scene, 0, 0, len, 0, 5);
         c_items[type] = ui_scene->addRect(0, 0, len, text.toFloat());
 
-
-        //qDebug() << "text IS " << text.toFloat();
         text = QString::number(angl);
         c_items[type]->rotate(angl);
 
-        float new_angl = c_items[type]->rotation();
-        qDebug() << "rotation from item is " << new_angl;
-
+        //float new_angl = c_items[type]->rotation();
+        //qDebug() << "rotation from item is " << new_angl;
 
         to_removal = false;
     } else {
@@ -659,8 +669,8 @@ void editor::add_element_to_scene(QString type, float startX, float startY, floa
 
 void editor::on_addRectButton_clicked()
 {
-    static int i = 0;
-    QString value = "text" + QString::number(i++);
+    //static int i = 0;
+    QString value = "text";// + QString::number(i++);
     add_element_to_scene(value, 0, 0, 200, 50, QBrush(Qt::yellow), QFont("Arial", 20), "text", false);
 
 }
@@ -695,6 +705,7 @@ void editor::on_loadButton_clicked()
 }
 
 void editor::load_xml_data_into_editor(QDomElement *domElement) {
+    ui_scene->blockSignals(true);
     ui_scene->clear();
     c_items_initialize();
 
@@ -733,11 +744,8 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
             }
 
             if (element == "line" ) {
-                add_element_to_scene("line"+QString::number(line_number++), startX, startY, width, heith, linethick.toFloat());
+                add_element_to_scene("line", startX, startY, width, heith, linethick.toFloat());
 
-                //QGraphicsLineItem* line = ui_scene->addLine(startX, startY, startX + width, startY + heith, QPen(Qt::black));
-                //line.setFlags();
-                //line->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
             }
 
             if (element == "barcode") {
@@ -755,8 +763,6 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
             if (element == "text") {
                 if (method == "textInBox") {
                     static int i = 0;
-                    //QString text = domElement->text();
-                    //qDebug() << "text in box is " << text;
                     add_element_to_scene("text"+QString::number(i++), startX, startY,
                                          width, heith, QBrush(Qt::yellow),
                                          font, text, 0);
@@ -795,6 +801,7 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
         node = node.nextSibling();
     }
     generate_preview();
+    ui_scene->blockSignals(false);
 }
 
 void editor::set_file_name(QString name) {
@@ -890,12 +897,12 @@ void editor::on_lineButton_clicked()
             //qDebug() << "item value = " << item_value;
             ln_master->set_line_number(item_value.split("line").at(1).toInt());
         } else {
-            ln_master->set_line_number(line_number++);
+            ln_master->set_line_number(number++);
         }
 
 
     } else {
-        ln_master->set_line_number(line_number++);
+        ln_master->set_line_number(number++);
     }
 
     ln_master->exec();

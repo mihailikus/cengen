@@ -44,10 +44,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     filter_is_on = false;
     filterInformer = new Tinformer();
 
-    //подготовка редактора шаблонов
-    shablon_editor = new editor(this);
-    //connect(shablon_editor, SIGNAL(shablon_is_ready(QDomDocument)), SLOT(describe_shablon(QDomDocument)));
-
     //После создания всех форм - читаем настройки из конфига
     this->readSettings();
 
@@ -1562,6 +1558,8 @@ void cengen::on_tableWidget_itemEntered(QTableWidgetItem* item)
 void cengen::on_show_editor_button_clicked()
 {
     if (file_is_ready) {
+        //подготовка редактора шаблонов
+        shablon_editor = new editor(this);
 
         shablonElement = domDoc.documentElement();
         shablon_editor->load_xml_data_into_editor(&shablonElement);
@@ -1577,6 +1575,8 @@ void cengen::on_show_editor_button_clicked()
         file.setFileName(str);
 
         this->describe_shablon(domDoc);
+
+        delete(shablon_editor);
     }
 }
 
