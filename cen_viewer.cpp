@@ -54,6 +54,8 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
             bool font_italic = domElement.attribute("font-italic", "0").toInt();
 
             float linethick = domElement.attribute("linethick", "3").toFloat();
+            int br_lineAddition = domElement.attribute("addition", "25").toInt();
+
             QString font_family = domElement.attribute("font-family", "sans");
             QFont font = QFont(font_family, font_size);
             font.setBold(font_bold);
@@ -87,6 +89,7 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
                                  width, \
                                  heith);
                 barcode->setFont(font);
+                barcode->setLineAddition(br_lineAddition);
                 barcode->render(scene, rect);
             }
 

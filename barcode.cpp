@@ -16,7 +16,7 @@ Barcode::Barcode(QString text)
     }
     this->renderNumbers = true;
     this->font = QFont("arial", 5);
-    this->textOtstup = 0.0;
+    this->textOtstup = 10.0;
     this->lineAddition = 10.0;
 
 }
@@ -177,21 +177,23 @@ void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
 {
     //функция рендеринга EAN-13
 
-    //scene->addRect(rect->x(), rect->y(), rect->width(), rect->height());
-
     //номера системных штрихов - они печатаются удлиненными
     QList<int> systemLines;
     systemLines << 0 << 1<<  2 << 45 << 46 << 47 << 48 << 49 << 94 << 93 << 92;
 
-    float left_otstup = imagebox(font, this->barcode.at(0)).width();
+    QRectF font_size = imagebox(font, this->barcode.at(0));
+    float left_otstup = font_size.width();
+    float text_size = font_size.height();
+    //float h0 = (inputRect->height() - text_size) / 2;
 
+    //qDebug() << "text heith " << text_size << font.pointSize();
     QRectF* rect = new QRectF(inputRect->left()+left_otstup,
                             inputRect->top(),
                             inputRect->width()-left_otstup,
-                            inputRect->height() - lineAddition*2 - textOtstup);
+                            inputRect->height() - lineAddition);
 
     float line_width = (rect->width()) / 95;    //количство линий в штрихкоде EAN-13
-    //qDebug() << "width = " << line_width;
+
     float line_heit = rect->height();
 
     float Xposition = rect->x();
@@ -216,23 +218,22 @@ void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
 
         if ( systemLines.contains(count))
         {
-            heit = line_heit+this->lineAddition + textOtstup;
+            heit = line_heit+this->lineAddition;
         } else {
             heit = line_heit;
         }
 
-        //qDebug() << "rendering barcode";
         scene->addRect(QRect(Xposition, Yposition, line_width-1, heit), pen, brush);
         Xposition += line_width;
-        //qDebug() << "Position=" << position << "; width=" << line_width;
 
         count++;
     }
     if (this->renderNumbers)
     {
+
         count = 0;
         Xposition = inputRect->left();
-        Yposition = inputRect->y() + inputRect->height() - lineAddition*2;
+        Yposition = rect->y() + rect->height() + lineAddition - text_size + textOtstup;
         QString text = "0";
         //qDebug() << "this FONT" << this->font;
         for (int i = 0; i<13; i++)
@@ -264,7 +265,7 @@ void Barcode::setFont(QFont inputfont)
         //this->lineAddition = 0;
     }
 
-    lineAddition = imagebox(font, this->getText()).height() / 2;
+    //lineAddition = imagebox(font, this->getText()).height() / 2;
 
 }
 
@@ -274,7 +275,7 @@ void Barcode::setTextOtstup(int otstup)
     qDebug() << "using function setTextOtstup " << otstup;
 }
 
-void Barcode::setLineAddition(float addition)
+void Barcode::setLineAddition(int addition)
 {
     this->lineAddition = addition;
     qDebug() << "using function setLineAddition " << addition;

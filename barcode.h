@@ -30,7 +30,7 @@ public slots:
     QString getText();
     void setFont(QFont font);
     void setTextOtstup (int otstup);
-    void setLineAddition (float addition);
+    void setLineAddition (int addition);
     void setRenderDigits(bool param);
 
 

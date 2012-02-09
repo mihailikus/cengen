@@ -157,6 +157,8 @@ private:
     QSpinBox *ui_fontSizeSpin;
     QSpinBox* ui_pwidthSpin, *ui_pheithSpin;
     QLineEdit* ui_textEdit;
+    QLabel *br_label;
+    QSpinBox *br_otstup_box;
 
     //элементы бокса позиционирования элемента
     QGroupBox *posBox;
