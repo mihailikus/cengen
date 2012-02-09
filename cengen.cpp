@@ -199,7 +199,6 @@ void cengen::make_search_tab() {
     //подключаем слоты к сигналам
     connect(ui_tableWidget, SIGNAL(cellClicked(int,int)), SLOT(on_tableWidget_cellClicked(int,int)));
     connect(ui_tableWidget, SIGNAL(cellChanged(int,int)), SLOT(on_tableWidget_cellChanged(int,int)));
-    connect(ui_tableWidget, SIGNAL(itemEntered(QTableWidgetItem*)), SLOT(on_tableWidget_itemEntered(QTableWidgetItem*)));
 
     //готовим lineEdit - строку для ввода поисковой фразы
     ui_lineEdit = new QLineEdit;
@@ -1615,17 +1614,6 @@ void cengen::on_tableWidget_cellChanged(int row, int column)
     QTableWidgetItem* item = ui_tableWidget->item(row, column);
     ui_tableWidget->setCurrentItem(item);
 
-
-}
-
-void cengen::on_tableWidget_itemEntered(QTableWidgetItem* item)
-{
-    int row = item->row();
-    qDebug() << "row entered = " << row;
-    if (row<ui_tableWidget->rowCount()) {
-
-        qDebug() << "set Focus";
-    }
 
 }
 

@@ -309,7 +309,6 @@ private slots:
     void on_spinLimit_valueChanged(int );
     void on_maxButton_clicked();
     void on_tableWidget_cellChanged(int row, int column);
-    void on_tableWidget_itemEntered(QTableWidgetItem* item);
     void update_mainTableTabs(QTableWidget * ui_tableWidget);
 
 
