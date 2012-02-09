@@ -128,6 +128,9 @@ private:
     QPushButton *ui_selecctShablonButton;
     QLabel *ui_label;
     QPushButton *ui_show_editor_button;
+    QLabel *label24;
+    QComboBox *shablonBox;
+
 
     QGridLayout *layBoxT2B3;
     QComboBox *comboBox;
@@ -175,7 +178,6 @@ private:
     QLabel *label18, *label19, *label20, *label21, *label22, *label23, *label23a;
 
 
-    //Ui::cengen *ui;
 
     QSettings m_settings;
     QList<int> mainTableTabs;
@@ -202,7 +204,9 @@ private:
     int sizeDeltaY;
     QLabel *ui_countLabel;
     QTabWidget* ui_tabWidget;
-    QFile file;
+    QFile file; //файл шаблона
+    QStringList shablonList;    //список шаблонов в текущей дирректории
+    //QString shablonPath;
     QDomDocument domDoc;
     QDomElement shablonElement;
     QPushButton *ui_pushButton, *ui_maxButton;
@@ -276,7 +280,7 @@ private slots:
     void on_action_scaleUp_triggered();
     void on_comboBox_activated(QString );
     void on_tabWidget_currentChanged(int index);
-    void on_selecctShablonButton_clicked();
+    void on_selectShablonButton_clicked();
     void on_action_make_triggered();
     void on_apply_filter_on_current_list_triggered();
     void on_lineEdit_returnPressed();
@@ -330,6 +334,10 @@ private slots:
     void on_radioButton_7_clicked();
 
     void on_action_about_triggered();
+
+    void on_shablon_name_changed(QString name);
+
+    void on_shablonList_combo_changed(int index);
 };
 
 #endif // CENGEN_H

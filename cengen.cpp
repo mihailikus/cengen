@@ -10,6 +10,8 @@
 
 cengen::cengen(QWidget *parent) : QMainWindow(parent)
 {
+    shablonList.clear();
+
     //создаем основные рюшечки приложения
     this->make_actions();
     this->make_toolBar();
@@ -371,13 +373,22 @@ void cengen::make_shablon_tab() {
     ui_groupBox_2 = new QGroupBox(tr("Shablon"));
     layBoxT2B2 = new QBoxLayout(QBoxLayout::TopToBottom);
     ui_selecctShablonButton = new QPushButton (tr("Select shablon file"));
-    connect(ui_selecctShablonButton, SIGNAL(clicked()), SLOT(on_selecctShablonButton_clicked()));
+    connect(ui_selecctShablonButton, SIGNAL(clicked()), SLOT(on_selectShablonButton_clicked()));
     layBoxT2B2->addWidget(ui_selecctShablonButton);
     ui_label = new QLabel(tr("Shablon"));
     layBoxT2B2->addWidget(ui_label);
     ui_show_editor_button = new QPushButton(tr("Open shablon in built-in editor"));
     connect(ui_show_editor_button, SIGNAL(clicked()), SLOT(on_show_editor_button_clicked()));
     layBoxT2B2->addWidget(ui_show_editor_button);
+    label24 = new QLabel(tr("List of other shablons in current directory:"));
+    shablonBox = new QComboBox;
+    shablonBox->blockSignals(true);
+    shablonBox->addItems(shablonList);
+    connect(shablonBox, SIGNAL(currentIndexChanged(int)), SLOT(on_shablonList_combo_changed(int)));
+    layBoxT2B2->addWidget(label24);
+    layBoxT2B2->addWidget(shablonBox);
+
+
     ui_groupBox_2->setLayout(layBoxT2B2);
     layBoxT2B2->addStretch(1);
 
@@ -681,7 +692,7 @@ QList<Tovar> cengen::get_tovar_list(QTableWidget *table, QString priznak) {
     return spisok;
 }
 
-void cengen::on_selecctShablonButton_clicked()
+void cengen::on_selectShablonButton_clicked()
 {
     //функция выбора шаблона файла
 
@@ -697,16 +708,53 @@ void cengen::on_selecctShablonButton_clicked()
 
     if (file_is_ready && str == "") return;
 
+    on_shablon_name_changed(str);
+
+}
+
+void cengen::on_shablonList_combo_changed(int index) {
+    QString name = shablonBox->itemText(index);
+    QString fullName;
+    QFileInfo fi;
+    for (int i = 0; i< shablonList.count(); i++) {
+        fi.setFile(shablonList.at(i));
+        if (fi.fileName() == name) {
+            fullName = shablonList.at(i);
+        }
+    }
+    on_shablon_name_changed(fullName);
+
+}
+
+void cengen::on_shablon_name_changed(QString str) {
     if (str == "") {
         ui_label->setText(tr("Please select file", "If no file selected"));
-        //this->file_is_ready = false;
     } else {
         file.setFileName(str);
         this->read_file_shablon();
         file_is_ready = true;
         ui_statusLabel->setText(tr("Shablon OK"));
-
     }
+
+    //получение списка остальных шаблонов из текущей дирретории
+    QFileInfo fi(str);
+    QDir * dir = new QDir;
+    dir->setPath(fi.path());
+    QFileInfoList shabList = dir->entryInfoList(QStringList() << tr("*.cen"), QDir::Files);
+    shablonBox->blockSignals(true);
+    shablonBox->clear();
+    shablonList.clear();
+
+    int index = 0;
+    QString name;
+    for (int i = 0; i< shabList.count(); i++) {
+        name = shabList.at(i).fileName();
+        shablonList << shabList.at(i).filePath();
+        shablonBox->addItem(name);
+        if (str == shabList.at(i).filePath()) index=i;
+    }
+    shablonBox->setCurrentIndex(index);
+    shablonBox->blockSignals(false);
 }
 
 void cengen::on_tabWidget_currentChanged(int index)
@@ -1093,8 +1141,7 @@ void cengen::readSettings() {
 
     //добавить, если там нет названия шаблона
     QString fileName = m_settings.value("/Settings/shablon", "").toString();
-    file.setFileName(fileName);
-    this->read_file_shablon();
+    on_shablon_name_changed(fileName);
 
     //создаем новые переменные для работы
     this->dbf = new DbfConfig;
