@@ -424,7 +424,7 @@ void cengen::make_shablon_tab() {
     connect(ui_radioButton_6, SIGNAL(clicked()), SLOT(on_radioButton_6_clicked()));
     connect(ui_radioButton_7, SIGNAL(clicked()), SLOT(on_radioButton_7_clicked()));
     totalCennicOnPage = new QLabel(" ");
-    layBoxT2B3->addWidget(totalCennicOnPage, 7, 0, 1, 4);
+    layBoxT2B3->addWidget(totalCennicOnPage, 8, 0, 1, 4);
 
     zoomLabel = new QLabel (tr("Zoom of cennic's"));
     zoomBox = new QSpinBox;
@@ -433,8 +433,16 @@ void cengen::make_shablon_tab() {
     zoomBox->setValue(100);
     connect(zoomBox, SIGNAL(valueChanged(int)), SLOT(update_values()));
 
-    layBoxT2B3->addWidget(zoomLabel, 6, 0);
-    layBoxT2B3->addWidget(zoomBox, 6, 1);
+    layBoxT2B3->addWidget(zoomLabel, 6, 0, 1, 3);
+    layBoxT2B3->addWidget(zoomBox, 6, 3);
+
+    otstupLabel1 = new QLabel(tr("Otstup from Top of the page"));
+    otstupTopLine = new QLineEdit("0");
+    otstupTopLine->setValidator(ui_nvalidator);
+    connect(otstupTopLine, SIGNAL(textChanged(QString)), SLOT(update_values()));
+
+    layBoxT2B3->addWidget(otstupLabel1, 7, 0, 1, 3);
+    layBoxT2B3->addWidget(otstupTopLine, 7, 3);
 
     ui_groupBox_3->setLayout(layBoxT2B3);
     layTab2->addWidget(ui_groupBox_3);
@@ -819,10 +827,13 @@ void cengen::update_values() {
     float zoomed = zoomBox->value();
     zoomedPageW = pageW / zoomed * 100;
     zoomedPageH = pageH / zoomed * 100;
-    qDebug() << "Zoomed page" << zoomedPageW << zoomedPageH;
+    //qDebug() << "Zoomed page" << zoomedPageW << zoomedPageH;
+
+    //управление отступом от границы страницы
+    this->otstupTop = 10 * otstupTopLine->text().toInt();
 
     if (file_is_ready) {
-        this->Crows = zoomedPageH / rectCen.height();
+        this->Crows = (zoomedPageH - otstupTop) / rectCen.height();
         this->Ccols = zoomedPageW / rectCen.width();
     } else {
         Crows = 1;

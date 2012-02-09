@@ -140,6 +140,9 @@ private:
     QLabel *zoomLabel;
     QSpinBox *zoomBox;
 
+    QLabel *otstupLabel1;
+    QLineEdit *otstupTopLine;
+
 
     //виджеты вкладки источника данных
     QWidget *tab4;
@@ -231,6 +234,7 @@ private:
     int Crows, Ccols;   //количество строк и столбцов в шаблоне ценника
     float pageW, pageH; //ширина и высота бумаги выбранного формата (в мкм)
     float zoomedPageW, zoomedPageH; //размеры немасштабированного поля
+    float otstupTop;    //отступ от верхней границы листа
     float zoom;         //масштаб предпросмотра
     QRectF rectCen;     //размер одного ценника из шаблона
     QList<QRectF> pages;    //области для постраничной печати
