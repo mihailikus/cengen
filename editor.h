@@ -157,8 +157,8 @@ private:
     QSpinBox *ui_fontSizeSpin;
     QSpinBox* ui_pwidthSpin, *ui_pheithSpin;
     QLineEdit* ui_textEdit;
-    QLabel *br_label;
-    QSpinBox *br_otstup_box;
+    QLabel *br_label1, *br_label2;
+    QSpinBox *br_addition_box, *br_otstup_box;  //эти для управления баркодом
 
     //элементы бокса позиционирования элемента
     QGroupBox *posBox;

@@ -272,13 +272,13 @@ void Barcode::setFont(QFont inputfont)
 void Barcode::setTextOtstup(int otstup)
 {
     this->textOtstup = otstup;
-    qDebug() << "using function setTextOtstup " << otstup;
+    //qDebug() << "using function setTextOtstup " << otstup;
 }
 
 void Barcode::setLineAddition(int addition)
 {
     this->lineAddition = addition;
-    qDebug() << "using function setLineAddition " << addition;
+    //qDebug() << "using function setLineAddition " << addition;
 }
 
 void Barcode::setRenderDigits(bool param) {

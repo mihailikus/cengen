@@ -83,8 +83,15 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
     ui_textEdit = new QLineEdit(tr("Belizna electra 1000 ml", "Some example text"));
     delButton = new QPushButton(tr("Delete"));
 
-    br_label = new QLabel(tr("Line addition in barcode"));
+    br_label1 = new QLabel(tr("Line addition in barcode"));
+    br_addition_box = new QSpinBox;
+    br_addition_box->setMaximum(100);
+    br_addition_box->setValue(5);
+
+    br_label2 = new QLabel(tr("Barcode text otstup"));
     br_otstup_box = new QSpinBox;
+    br_otstup_box->setMaximum(100);
+    br_otstup_box->setValue(5);
 
     ui_pwidthSpin->setMaximum(2000);
     ui_pheithSpin->setMaximum(1000);
@@ -198,7 +205,9 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
     connect(fontSelectbutton, SIGNAL(clicked()), SLOT(on_fontSelectButton_clicked()));
     connect(delButton, SIGNAL(clicked()), SLOT(on_delButton_clicked()));
 
+    connect(br_addition_box, SIGNAL(valueChanged(int)), SLOT(generate_preview()));
     connect(br_otstup_box, SIGNAL(valueChanged(int)), SLOT(generate_preview()));
+
 
     //установка начальных переменных
     number = 0;
@@ -327,7 +336,8 @@ void editor::generate_preview()
                     || item_value == "line") {
                 elem = doc.createElement(item_value);
                 if (item_value == "barcode") {
-                    elem.setAttribute("addition", br_otstup_box->value());
+                    elem.setAttribute("addition", br_addition_box->value());
+                    elem.setAttribute("otstup", br_otstup_box->value());
                 }
             } else {
                 elem = doc.createElement("text");
@@ -489,13 +499,15 @@ void editor::on_scene_selected() {
 
     if (text.contains("barcode")) {
         //добавляем кнопку управления отступами
-        propertLay->addWidget(br_label, 5, 0);
-        propertLay->addWidget(br_otstup_box, 5, 1);
-        br_otstup_box->setMinimum(0);
-        br_otstup_box->setMaximum(item->sceneBoundingRect().height()/2);
-        br_otstup_box->setValue(10);
+        propertLay->addWidget(br_label1, 5, 0);
+        propertLay->addWidget(br_addition_box, 5, 1);
+        propertLay->addWidget(br_label2, 6, 0);
+        propertLay->addWidget(br_otstup_box, 6, 1);
+
     } else {
-        propertLay->removeWidget(br_label);
+        propertLay->removeWidget(br_label1);
+        propertLay->removeWidget(br_addition_box);
+        propertLay->removeWidget(br_label2);
         propertLay->removeWidget(br_otstup_box);
     }
 
@@ -753,6 +765,7 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
             QString linethick = domElement->attribute("linethick", "3");
             QString font_family = domElement->attribute("font-family", "sans");
             int br_lineAddition = domElement->attribute("addition", "25").toInt();
+            int br_otstup = domElement->attribute("otstup", "10").toInt();
             QFont font(font_family, font_size);
             font.setBold(font_bold);
             font.setItalic(font_italic);
@@ -780,8 +793,10 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
                 add_element_to_scene("barcode", startX, startY,
                                      width, heith, QBrush(Qt::darkBlue),
                                      font, "216975", 0);
+                br_addition_box->setMaximum(heith/2);
+                br_addition_box->setValue(br_lineAddition);
                 br_otstup_box->setMaximum(heith/2);
-                br_otstup_box->setValue(br_lineAddition);
+                br_otstup_box->setValue(br_otstup);
             }
 
             if (element == "good") {

@@ -839,86 +839,96 @@
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="102"/>
+        <location filename="editor.cpp" line="86"/>
+        <source>Line addition in barcode</source>
+        <translation>Удлинение системных линий</translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="91"/>
+        <source>Barcode text otstup</source>
+        <translation>Текстовый отступ</translation>
+    </message>
+    <message>
+        <location filename="editor.cpp" line="112"/>
         <source>Location</source>
         <translation>Позиционирование</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="105"/>
+        <location filename="editor.cpp" line="115"/>
         <source>^</source>
         <comment>Up button</comment>
         <translation>^</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="106"/>
+        <location filename="editor.cpp" line="116"/>
         <source>\/</source>
         <comment>Down button</comment>
         <translation>\/</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="107"/>
+        <location filename="editor.cpp" line="117"/>
         <source>&lt;</source>
         <comment>Up button</comment>
         <translation>&lt;</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="108"/>
+        <location filename="editor.cpp" line="118"/>
         <source>&gt;</source>
         <comment>Up button</comment>
         <translation>&gt;</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="109"/>
+        <location filename="editor.cpp" line="119"/>
         <source>.</source>
         <comment>Center button</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="129"/>
+        <location filename="editor.cpp" line="139"/>
         <source>Zoom</source>
         <translation>Масштаб</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="131"/>
+        <location filename="editor.cpp" line="141"/>
         <source>-</source>
         <comment>Zoom --</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="132"/>
+        <location filename="editor.cpp" line="142"/>
         <source>+</source>
         <comment>Zoom ++</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="261"/>
+        <location filename="editor.cpp" line="275"/>
         <source>Save template</source>
         <translation>Сохранить шаблон</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="261"/>
-        <location filename="editor.cpp" line="680"/>
+        <location filename="editor.cpp" line="275"/>
+        <location filename="editor.cpp" line="714"/>
         <source>Cennic templates (*.cen)</source>
         <translation>Файлы шаблонов (*.cen)</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="347"/>
+        <location filename="editor.cpp" line="365"/>
         <source>kop</source>
         <translation>коп</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="552"/>
-        <location filename="editor.cpp" line="554"/>
+        <location filename="editor.cpp" line="586"/>
+        <location filename="editor.cpp" line="588"/>
         <source>r::k</source>
         <translation>р::коп</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="680"/>
+        <location filename="editor.cpp" line="714"/>
         <source>Open cennic template</source>
         <translation>Открыть файл шаблона</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="760"/>
+        <location filename="editor.cpp" line="805"/>
         <source>Belizna electra 1000 ml</source>
         <translation>Белизна электра 1000 мл вкусная с пупырышками и весь этот текст только для проверки поэтому он не важен</translation>
     </message>
