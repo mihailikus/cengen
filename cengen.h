@@ -137,6 +137,9 @@ private:
     QRadioButton *ui_radioButton_6;
     QRadioButton *ui_radioButton_7;
 
+    QLabel *zoomLabel;
+    QSpinBox *zoomBox;
+
 
     //виджеты вкладки источника данных
     QWidget *tab4;
@@ -227,6 +230,7 @@ private:
     QString paperOrientation;   // книжная или альбомная
     int Crows, Ccols;   //количество строк и столбцов в шаблоне ценника
     float pageW, pageH; //ширина и высота бумаги выбранного формата (в мкм)
+    float zoomedPageW, zoomedPageH; //размеры немасштабированного поля
     float zoom;         //масштаб предпросмотра
     QRectF rectCen;     //размер одного ценника из шаблона
     QList<QRectF> pages;    //области для постраничной печати

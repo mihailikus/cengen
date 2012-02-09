@@ -424,7 +424,17 @@ void cengen::make_shablon_tab() {
     connect(ui_radioButton_6, SIGNAL(clicked()), SLOT(on_radioButton_6_clicked()));
     connect(ui_radioButton_7, SIGNAL(clicked()), SLOT(on_radioButton_7_clicked()));
     totalCennicOnPage = new QLabel(" ");
-    layBoxT2B3->addWidget(totalCennicOnPage, 6, 0, 1, 4);
+    layBoxT2B3->addWidget(totalCennicOnPage, 7, 0, 1, 4);
+
+    zoomLabel = new QLabel (tr("Zoom of cennic's"));
+    zoomBox = new QSpinBox;
+    zoomBox->setMaximum(1000);
+    zoomBox->setMinimum(30);
+    zoomBox->setValue(100);
+    connect(zoomBox, SIGNAL(valueChanged(int)), SLOT(update_values()));
+
+    layBoxT2B3->addWidget(zoomLabel, 6, 0);
+    layBoxT2B3->addWidget(zoomBox, 6, 1);
 
     ui_groupBox_3->setLayout(layBoxT2B3);
     layTab2->addWidget(ui_groupBox_3);
@@ -805,9 +815,15 @@ void cengen::update_values() {
         this->pageH = tmp;
     }
 
+    //управление масштабом
+    float zoomed = zoomBox->value();
+    zoomedPageW = pageW / zoomed * 100;
+    zoomedPageH = pageH / zoomed * 100;
+    qDebug() << "Zoomed page" << zoomedPageW << zoomedPageH;
+
     if (file_is_ready) {
-        this->Crows = pageH / rectCen.height();
-        this->Ccols = pageW / rectCen.width();
+        this->Crows = zoomedPageH / rectCen.height();
+        this->Ccols = zoomedPageW / rectCen.width();
     } else {
         Crows = 1;
         Ccols = 1;
@@ -839,13 +855,13 @@ void cengen::generate_preview() {
 
     //высчитываем левый верхний угол первой страницы
     float bXpos, bYpos, bXstart, bYstart;
-    bXstart = (pageW - Ccols*rectCen.width())/2;
-    bYstart = (pageH - Crows*rectCen.height())/2;
+    bXstart = (zoomedPageW - Ccols*rectCen.width())/2;
+    bYstart = (zoomedPageH - Crows*rectCen.height())/2;
     bXpos = bXstart;
     bYpos = bYstart;
 
     //заносим этот угол в список страниц
-    QRectF page(0, 0, pageW, pageH);
+    QRectF page(0, 0, zoomedPageW, zoomedPageH);
     pages << page;
 
     int cenCount = spisok.count();
@@ -873,10 +889,10 @@ void cengen::generate_preview() {
 
         if ( !((i+1) % (Crows * Ccols)) ) {
             //начинаем новую страницу
-            QRectF page(pageW*pages.count()-1, 0,
-                        pageW, pageH);
+            QRectF page(zoomedPageW*pages.count()-1, 0,
+                        zoomedPageW, pageH);
             pages << page;
-            bXstart += pageW;
+            bXstart += zoomedPageW;
             bXpos = bXstart;
             //bYstart не меняется - делаем все странички в строчку
             bYpos = bYstart;
