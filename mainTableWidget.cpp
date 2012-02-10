@@ -6,6 +6,8 @@ MainTableWidget::MainTableWidget(QWidget *pwgt)
 {
     delfield = 255;
     init();
+    method = 0;
+    set_method_view(method);
 }
 
 MainTableWidget::~MainTableWidget() {
@@ -106,13 +108,37 @@ void MainTableWidget::delete_line_from_table(int pos) {
 
 void MainTableWidget::on_tableWidget_cellClicked(int row, int column)
 {
-    if (column == delfield) {
-        this->delete_line_from_table(row);
+    QString text;
+    switch (method) {
+    case 0:
+        if (column == delfield) {
+            this->delete_line_from_table(row);
+        }
+        break;
+    case 1:
+        //qDebug() << "column = " << column;
+        text = item(row, delfield)->text();
+        //qDebug() << text;
+
+        if (text == "V") {
+            text = " ";
+        } else {
+            text = "V";
+        }
+
+        item(row, delfield)->setText(text);
+        repaint();
+        break;
+    default:
+        break;
     }
+
+
 }
 
 void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
 {
+    if (method) return; //если не 0, то ничего не редактируем
     if (editing_price2) {
         editing_price2 = false;
         emit row_count_changed();
@@ -161,10 +187,18 @@ void MainTableWidget::add_table_item(int position, Tovar tovar) {
                 setItem(position, j, item);
             }
             if (tm == tr("DELETE")) {
-                QTableWidgetItem* itemDel = new QTableWidgetItem("x");
-                setItem(position, j, itemDel);
-                item(position, j)->setToolTip(tr("DELETE"));
-                item(position, j)->setWhatsThis(tr("Delete line from table"));
+                QTableWidgetItem* item = new QTableWidgetItem(method_symbol);
+                setItem(position, j, item);
+                switch (method) {
+                case 0:
+                    item->setToolTip(tr("DELETE"));
+                    item->setWhatsThis(tr("Delete line from table"));                    break;
+                case 1:
+                    item->setToolTip(tr("SELECT"));
+                    item->setWhatsThis(tr("Select item to list"));                    break;
+                default:
+                    break;
+                }
             }
             j++;
         }
@@ -174,7 +208,7 @@ void MainTableWidget::add_table_item(int position, Tovar tovar) {
 
 }
 
-void MainTableWidget::load_tovar_list_into_cengen(QList<Tovar> tovarList) {
+void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList) {
     //загружаем список товаров в таблицу генератора ценников
     add_flag = true;
     if (tovarList.count()) tovar_searched = true;
@@ -219,4 +253,39 @@ int MainTableWidget::get_tableTab_width(int col) {
 
 void MainTableWidget::set_tableTab_width(int col, int size) {
     horizontalHeader()->resizeSection(col, size);
+}
+
+void MainTableWidget::set_method_view(int method) {
+    //0 - удаление с крестиком
+    //1 - выбор с галочкой
+    this->method = method;
+    switch (method) {
+    case 0:
+        this->method_symbol = tr("x");
+        break;
+    case 1:
+        this->method_symbol = tr(" ");
+        itemsToSelectAll = true;
+        break;
+    default:
+        this->method_symbol = tr("x");
+        break;
+    }
+}
+
+void MainTableWidget::selectAllItems() {
+    if (!method) return;    //у нас таблица с удалением - нечего выделять
+    QString text;
+    if (itemsToSelectAll) {
+        text = "V";
+        itemsToSelectAll = false;
+    } else {
+        text = " ";
+        itemsToSelectAll = true;
+    }
+
+    for (int i = 0; i<rowCount(); i++) {
+        item(i, delfield)->setText(text);
+    }
+    repaint();
 }

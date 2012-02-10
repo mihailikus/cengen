@@ -227,6 +227,7 @@ void cengen::make_search_tab() {
     layTab1->addWidget(ui_groupBox_6, 0, 4, 2, 1);
 
     tableWidget = new MainTableWidget();
+    tableWidget->set_method_view(0);    //0 - удаление
     connect (tableWidget, SIGNAL(row_count_changed()), SLOT(new_line_ready()));
     layTab1->addWidget(tableWidget, 2, 0, 1, 6);
 
@@ -604,12 +605,13 @@ void cengen::tovar_search() {
     } else {
         tovarList = tovarListFull;
     }
-    tableWidget->load_tovar_list_into_cengen(tovarList);
+    tableWidget->load_tovar_list_into_table(tovarList);
 }
 
 QList<Tovar> cengen::show_found_items(QList<Tovar> inputList) {
     QList<Tovar> tovarList;
     MainTableWidget *table = new MainTableWidget;
+    table->set_method_view(1);  //будет выбор с галочками
     ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
 
     if (!inputList.count()) {
@@ -621,21 +623,8 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList) {
         for (int i =0; i< table->columnCount(); i++) {
             table->set_tableTab_width(i, tableWidget->get_tableTab_width(i));
         }
-        table->load_tovar_list_into_cengen(inputList);
-//        table->setRowCount(inputList.count());
-//        table->setColumnCount(7);
-//        tableWidget->set_tableWidget_header();
-//        Tovar tovar;
-//        for (int i = 0; i<inputList.count(); i++) {
-//            tovar = inputList.at(i);
+        table->load_tovar_list_into_table(inputList);
 
-//            tableWidget->add_table_item(i, tovar);
-
-//            QTableWidgetItem* itemCheck = new QTableWidgetItem(" ");
-//            table->setItem(i, 6, itemCheck);
-//            table->item(i, 6)->setToolTip(tr("SELECT"));
-//            table->item(i, 6)->setWhatsThis(tr("Select item to list"));
-//        }
         dlg->setTable(&table);
     }
     if (dlg->exec()) {
@@ -1602,7 +1591,7 @@ void cengen::on_action_open_triggered()
         if (doc.setContent(&file)) {
             QList<Tovar> tovarList;
             tovarList = convert_xml_into_tovar_list(doc);
-            tableWidget->load_tovar_list_into_cengen(tovarList);
+            tableWidget->load_tovar_list_into_table(tovarList);
 
         }
     } else {
@@ -1747,7 +1736,7 @@ void cengen::on_action_minus_triggered()
             finalList = minus(oldTovarList, newTovarList);
 
             tableWidget->setRowCount(0);
-            tableWidget->load_tovar_list_into_cengen(finalList);
+            tableWidget->load_tovar_list_into_table(finalList);
 
         }
     } else {
@@ -1960,7 +1949,7 @@ void cengen::on_apply_filter_on_current_list_triggered() {
     QList<Tovar> oldList = tableWidget->get_tovar_list("x");
     QList<Tovar> newList = apply_filter(oldList);
     this->on_action_new_triggered();
-    tableWidget->load_tovar_list_into_cengen(newList);
+    tableWidget->load_tovar_list_into_table(newList);
 }
 
 void cengen::on_fieldListBox_checked(bool status) {

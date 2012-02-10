@@ -21,8 +21,6 @@ private:
     QPushButton* buttonCancel;
     QPushButton* buttonSelectAll;
 
-    bool itemsToSelectAll;
-
 public:
     ListFoundedItemsDialog (QWidget* pwgt = 0);
 
@@ -30,8 +28,8 @@ public:
     void setTable(QString error);
 
 private slots:
-    void addTovarToList(int row, int column);
-    void selectAllItems();
+    //void addTovarToList(int row, int column);
+    //void selectAllItems();
 
 };
 

@@ -13,8 +13,6 @@ ListFoundedItemsDialog::ListFoundedItemsDialog (QWidget* pwgt/*= 0*/)
     buttonCancel = new QPushButton (tr("Cancel"));
     buttonSelectAll = new QPushButton (tr("SelectALL"));
 
-    itemsToSelectAll = true;
-
     connect (buttonOK, SIGNAL(clicked()), SLOT (accept()));
     connect (buttonCancel, SIGNAL(clicked()), SLOT (reject()));
 
@@ -31,10 +29,9 @@ ListFoundedItemsDialog::ListFoundedItemsDialog (QWidget* pwgt/*= 0*/)
 void ListFoundedItemsDialog::setTable(MainTableWidget **table) {
     myTable = *table;
     myLayout->addWidget(myTable, 0, 0, 1, 3);
-    connect(myTable, SIGNAL(cellClicked(int,int)), SLOT(addTovarToList(int,int)));
 
     myLayout->addWidget(buttonSelectAll, 1, 2);
-    connect(buttonSelectAll, SIGNAL(clicked()), SLOT(selectAllItems()));
+    connect(buttonSelectAll, SIGNAL(clicked()), myTable, SLOT(selectAllItems()));
 
 }
 
@@ -46,35 +43,5 @@ void ListFoundedItemsDialog::setTable(QString error) {
 
 }
 
-void ListFoundedItemsDialog::addTovarToList(int row, int column) {
-    //qDebug() << "column = " << column;
-    QString text = myTable->item(row, 6)->text();
-    //qDebug() << text;
 
-    if (text == "V") {
-        text = " ";
-    } else {
-        text = "V";
-    }
-
-    myTable->item(row, 6)->setText(text);
-    myTable->repaint();
-
-}
-
-void ListFoundedItemsDialog::selectAllItems() {
-    QString text;
-    if (itemsToSelectAll) {
-        text = "V";
-        itemsToSelectAll = false;
-    } else {
-        text = " ";
-        itemsToSelectAll = true;
-    }
-
-    for (int i = 0; i<myTable->rowCount(); i++) {
-        myTable->item(i, 6)->setText(text);
-    }
-    myTable->repaint();
-}
 

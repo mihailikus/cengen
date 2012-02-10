@@ -21,13 +21,17 @@ public:
     bool is_editing_price2();
 
     QList<Tovar> get_tovar_list(QString priznak);
-    void load_tovar_list_into_cengen(QList<Tovar> tovarList);
+    void load_tovar_list_into_table(QList<Tovar> tovarList);
     void add_table_item(int position, Tovar tovar);
     int get_tableTab_width(int col);
     void set_tableTab_width(int col, int size);
 
     void set_tableFields(QMap<QString, bool> list);
 
+    void set_method_view(int method);
+
+public slots:
+    void selectAllItems();
 
 private:
     QHeaderView* tableHeader;
@@ -38,6 +42,10 @@ private:
 
     QStringList fields; //перечислены те поля, которые используются
     int delfield;   //поле, нажатие на которое означает удаление
+    int method;     //указывает, будет таблица с флагом удаления или с выбором
+    QString method_symbol;  //галочка или крестик
+    bool itemsToSelectAll;
+
 
 
 
