@@ -5,6 +5,7 @@
 #include <QStandardItemModel>
 #include <QHeaderView>
 #include <QMap>
+#include <QComboBox>
 #include "tovar.h"
 
 class MainTableWidget : public QTableWidget {
@@ -30,6 +31,9 @@ public:
 
     void set_method_view(int method);
 
+    void set_shablon_list(QStringList shablonList);
+    void set_shablon_current(int shablon);
+
 public slots:
     void selectAllItems();
 
@@ -42,9 +46,13 @@ private:
 
     QStringList fields; //перечислены те поля, которые используются
     int delfield;   //поле, нажатие на которое означает удаление
+    int shField;    //поле, в которое (возможно) будет заноситься список шаблонов
     int method;     //указывает, будет таблица с флагом удаления или с выбором
     QString method_symbol;  //галочка или крестик
     bool itemsToSelectAll;
+
+    QStringList shablonList;
+    int shablonCurrent;
 
 
 

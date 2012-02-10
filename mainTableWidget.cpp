@@ -15,7 +15,9 @@ MainTableWidget::~MainTableWidget() {
 }
 
 void MainTableWidget::init() {
-   //verticalHeader()->hide();
+    shablonList.clear();
+    shablonCurrent = 0;
+
     //подключаем слоты к сигналам
     connect(this, SIGNAL(cellClicked(int,int)), SLOT(on_tableWidget_cellClicked(int,int)));
     connect(this, SIGNAL(cellChanged(int,int)), SLOT(on_tableWidget_cellChanged(int,int)));
@@ -35,6 +37,9 @@ void MainTableWidget::set_tableFields(QMap<QString, bool> list) {
             QString tm1 = tm.split(QRegExp("[0-9] ")).at(1);
             if (tm.split(QRegExp(" ")).at(0).toInt() == 8) {
                 delfield = i;
+            }
+            if (tm1 == tr("Shablon")) {
+                shField = i;
             }
             fields << tm1;
             i++;
@@ -91,7 +96,11 @@ QList<Tovar> MainTableWidget::get_tovar_list(QString priznak) {
                         }
 
                     }
-
+                    if (tm == tr("Shablon")) {
+                        QComboBox* box = ((QComboBox*)cellWidget(i, j));
+                        tovar.shablon = box->currentIndex();
+                        //qDebug() << "Shablon " << tovar.shablon;
+                    }
                     j++;
                 }
             }
@@ -187,6 +196,7 @@ void MainTableWidget::add_table_item(int position, Tovar tovar) {
                 setItem(position, j, item);
             }
             if (tm == tr("DELETE")) {
+
                 QTableWidgetItem* item = new QTableWidgetItem(method_symbol);
                 setItem(position, j, item);
                 switch (method) {
@@ -199,6 +209,13 @@ void MainTableWidget::add_table_item(int position, Tovar tovar) {
                 default:
                     break;
                 }
+            }
+            if (tm == tr("Shablon")) {
+                QComboBox *box = new QComboBox;
+                box->addItems(shablonList);
+                box->setCurrentIndex(shablonCurrent);
+                setCellWidget(position, j, box);
+                //box->show();
             }
             j++;
         }
@@ -288,4 +305,14 @@ void MainTableWidget::selectAllItems() {
         item(i, delfield)->setText(text);
     }
     repaint();
+}
+
+void MainTableWidget::set_shablon_list(QStringList shablonList) {
+    this->shablonList.clear();
+    //this->shablonList << tr("Default");
+    this->shablonList << shablonList;
+}
+
+void MainTableWidget::set_shablon_current(int shablon) {
+    this->shablonCurrent = shablon;
 }

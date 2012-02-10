@@ -8,6 +8,6 @@ struct Tovar {
     QString barcode;
     int nomer_of_tovar; //товарный номер
     QString codec_name;
-    //static int const organization = 34;
+    int shablon;
 };
 #endif // TOVAR_H

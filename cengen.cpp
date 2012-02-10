@@ -272,7 +272,7 @@ void cengen::make_fieldList_tab() {
     fullFieldsList.insert(QString::number(++i) + " " + tr("Price"), true);
     fullFieldsList.insert(QString::number(++i) + " " + tr("Price2"), true);
     fullFieldsList.insert(QString::number(++i) + " " + tr("Quantity"), false);
-    fullFieldsList.insert(QString::number(++i) + " " + tr("Shablon"), false);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Shablon"), true);
     fullFieldsList.insert(QString::number(++i) + " " + tr("DELETE"), true);
 
     layFields = new QGridLayout;
@@ -417,6 +417,7 @@ void cengen::make_shablon_tab() {
     connect(shablonBox, SIGNAL(currentIndexChanged(int)), SLOT(on_shablonList_combo_changed(int)));
     layBoxT2B2->addWidget(label24);
     layBoxT2B2->addWidget(shablonBox);
+
 
 
     ui_groupBox_2->setLayout(layBoxT2B2);
@@ -700,14 +701,16 @@ void cengen::on_shablonList_combo_changed(int index) {
     }
     on_shablon_name_changed(fullName);
 
+    tableWidget->set_shablon_current(index);
+
 }
 
 void cengen::on_shablon_name_changed(QString str) {
     if (str == "") {
         ui_label->setText(tr("Please select file", "If no file selected"));
     } else {
-        file.setFileName(str);
-        this->read_file_shablon();
+        domDoc = this->read_file_shablon(str);
+        this->describe_shablon(domDoc);
         file_is_ready = true;
         ui_statusLabel->setText(tr("Shablon OK"));
     }
@@ -722,15 +725,19 @@ void cengen::on_shablon_name_changed(QString str) {
     shablonList.clear();
 
     int index = 0;
-    QString name;
+    QStringList names;
     for (int i = 0; i< shabList.count(); i++) {
-        name = shabList.at(i).fileName();
+        names << shabList.at(i).fileName();
         shablonList << shabList.at(i).filePath();
-        shablonBox->addItem(name);
+        shablonBox->addItem(names.last());
         if (str == shabList.at(i).filePath()) index=i;
     }
     shablonBox->setCurrentIndex(index);
     shablonBox->blockSignals(false);
+
+    tableWidget->set_shablon_list(names);
+    tableWidget->set_shablon_current(index);
+
 }
 
 void cengen::on_tabWidget_currentChanged(int index)
@@ -889,11 +896,12 @@ void cengen::generate_preview() {
     Tovar currentTovar;
 
     //высчитываем левый верхний угол первой страницы
-    float bXpos, bYpos, bXstart, bYstart;
+    float bXpos, bYpos, bXstart, bYstart, maxYadd;
     bXstart = (zoomedPageW - Ccols*rectCen.width())/2;
     bYstart = (zoomedPageH - Crows*rectCen.height())/2;
     bXpos = bXstart;
     bYpos = bYstart;
+    maxYadd = 0;
 
     //заносим этот угол в список страниц
     QRectF page(0, 0, zoomedPageW, zoomedPageH);
@@ -911,15 +919,25 @@ void cengen::generate_preview() {
         //получаем из списка очередной товар и рисуем на него ценник
         currentTovar = spisok.at(i);
         currentTovar.name_of_tovar = currentTovar.name_of_tovar.toUtf8();
-        Cennic* cennic = new Cennic(&currentTovar, shablonElement);
+
+        int sName = currentTovar.shablon;
+        qDebug() << "shablon " << sName;
+        QString shbl =  shablonList.at(sName);
+
+        //Cennic* cennic = new Cennic(&currentTovar, shablonElement);
+        Cennic *cennic = new Cennic(&currentTovar, read_file_shablon(shbl).documentElement());
         QPoint corner = cennic->render(currentScene, bXpos, bYpos);
+        if (corner.y() > maxYadd) maxYadd = corner.y();
+
+        qDebug() <<"X & Y " << corner.x() << corner.y();
 
         if ( ((i+1) % this->Ccols) != 0) {
             bXpos += corner.x();
         } else {
             //qDebug() << "Next line";
             bXpos = bXstart;
-            bYpos += corner.y();
+            bYpos += maxYadd;
+            maxYadd = 0;
         }
 
         if ( !((i+1) % (Crows * Ccols)) ) {
@@ -1525,11 +1543,13 @@ void cengen::describe_shablon(QDomDocument shablon) {
     //this->shablonElement = shablon;
 }
 
-void cengen::read_file_shablon() {
-    QDomElement domElement;
+QDomDocument cengen::read_file_shablon(QString str) {
+    //QDomElement domElement;
+    QDomDocument doc;
+    file.setFileName(str);
     if (file.open(QIODevice::ReadOnly)) {
-        if (domDoc.setContent(&file)) {
-            domElement = domDoc.documentElement();
+        if (doc.setContent(&file)) {
+            //domElement = domDoc.documentElement();
             file_is_ready = true;
         }
     } else {
@@ -1537,8 +1557,7 @@ void cengen::read_file_shablon() {
         ui_statusLabel->setText(tr("Cannot open shablon"));
 
     }
-    this->describe_shablon(domDoc);
-
+    return doc;
 }
 
 void cengen::on_action_save_triggered()

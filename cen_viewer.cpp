@@ -67,7 +67,8 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
 
             if (element == "base" ) {
                 scene->addRect(X, Y, width, heith,pen, brush);
-                point = QPoint (width, heith);
+                point.setX(width);
+                point.setY(heith);
             }
 
             if (element == "line" ) {

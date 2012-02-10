@@ -292,7 +292,7 @@ private slots:
     void tovar_search();
     void new_line_ready();
     void update_values();   //обновить значеня шаблона в UI-форме
-    void read_file_shablon();    //прочитать шаблон
+    QDomDocument read_file_shablon(QString str);    //прочитать шаблон
     void describe_shablon(QDomDocument shablon);
     void generate_preview();
     void update_ui_tb_fields(QStringList list);
