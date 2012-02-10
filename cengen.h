@@ -13,6 +13,7 @@
 #include <QRectF>
 #include <QStringList>
 #include <QComboBox>
+#include <QCheckBox>
 #include <QProgressBar>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -27,6 +28,7 @@
 #include <QMenuBar>
 #include <QStandardItemModel>
 #include <QAction>
+#include <QMap>
 //#include <QSpacerItem>
 #include "tinformer.h"
 #include "barcode.h"
@@ -79,6 +81,7 @@ public:
     void make_preview_tab();
     void make_source_tab();
     void make_filter_tab();
+    void make_fieldList_tab();
     void make_status_bar();
 
     void trigger_source_selection(bool state);
@@ -90,7 +93,8 @@ public:
         static int const Shablon = 1;
         static int const Preview = 2;
         static int const Source = 3;
-        static int const Filter = 4;
+        static int const fList = 4;
+        static int const Filter = 5;
     };
 
 protected:
@@ -176,6 +180,15 @@ private:
                 *ui_filterWhatToFoundBox, *ui_filterMethodBox;
     QLineEdit* ui_filterLineText;
     QLabel *label18, *label19, *label20, *label21, *label22, *label23, *label23a;
+
+
+    //виджеты вкладки выбора списка полей для основной таблицы
+    QWidget *tab6;
+    QGridLayout *layTab6;
+    QGridLayout *layFields;
+    QLabel *label25, *label26, *label27, *label28;
+    QMap<QString, bool> fullFieldsList; //список вообще всех полей
+    //QMap<QString, bool> fieldsStatus;   //соответствие, какое поле выбрано, какое нет
 
 
 
@@ -337,6 +350,8 @@ private slots:
     void on_shablon_name_changed(QString name);
 
     void on_shablonList_combo_changed(int index);
+
+    void on_fieldListBox_checked(bool status);
 };
 
 #endif // CENGEN_H

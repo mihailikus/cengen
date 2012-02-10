@@ -31,6 +31,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     this->make_preview_tab();
     this->make_source_tab();
     this->make_filter_tab();
+    this->make_fieldList_tab();
 
     editing_price2 = false;
     tovar_searched = false;
@@ -267,6 +268,55 @@ void cengen::make_preview_tab() {
     layTab3->addWidget(view, 0, 0);
     tab3->setLayout(layTab3);
     ui_tabWidget->insertTab(TabsOrder::Preview, tab3, tr("PREVIEW"));
+}
+
+void cengen::make_fieldList_tab() {
+    tab6 = new QWidget;
+    layTab6 = new QGridLayout;
+
+    label25 = new QLabel(tr("Used fileds:"));
+    label25->setAlignment(Qt::AlignCenter);
+    layTab6->addWidget(label25, 0, 0, 1, 2);
+
+    label27 = new QLabel(tr("Describer"));
+    layTab6->addWidget(label27, 1, 0);
+
+    label28 = new QLabel(tr("Default value"));
+    layTab6->addWidget(label28, 1, 1, 1, 2);
+
+    fullFieldsList.clear();
+    int i = 0;
+    //если будет больше 9 - переделать чтоб шли по порядку
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Tnomer"), true);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Name"), true);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Barcode"), true);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Price"), true);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Price2"), true);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Quantity"), false);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Shablon"), false);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("DELETE"), true);
+
+    layFields = new QGridLayout;
+
+    QMultiMap<QString, bool>::iterator it = fullFieldsList.begin();
+    i = 0;
+    for (; it!=fullFieldsList.end(); ++it) {
+        QCheckBox *box = new QCheckBox(it.key());
+        box->setChecked(it.value());
+        layFields->addWidget(box, i, 0);
+        QLineEdit *defValue = new QLineEdit;
+        layFields->addWidget(defValue, i, 1, 1, 3);
+        connect (box, SIGNAL(clicked(bool)), SLOT(on_fieldListBox_checked(bool)));
+        i++;
+    }
+    layTab6->addLayout(layFields, 2, 0, 1, 4);
+
+    label26 = new QLabel(tr(" "));
+    layTab6->addWidget(label26);
+
+    tab6->setLayout(layTab6);
+
+    ui_tabWidget->insertTab(TabsOrder::fList, tab6, tr("Fields"));
 }
 
 void cengen::make_source_tab() {
@@ -2085,4 +2135,14 @@ void cengen::on_apply_filter_on_current_list_triggered() {
     QList<Tovar> newList = apply_filter(oldList);
     this->on_action_new_triggered();
     this->load_tovar_list_into_cengen(newList);
+}
+
+void cengen::on_fieldListBox_checked(bool status) {
+    QString str = ((QCheckBox*)sender())->text();
+    //qDebug() << "Text checked " << str << status;
+    //qDebug() << "Last val " << fullFieldsList[str];
+    fullFieldsList[str] = status;
+    //qDebug() << "Next val " << fullFieldsList[str];
+
+
 }
