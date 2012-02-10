@@ -4,9 +4,7 @@
 #include <QMainWindow>
 #include <QPrinter>
 #include <QPrintDialog>
-#include <QTableWidget>
 #include <QTabWidget>
-#include <QHeaderView>
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QFile>
@@ -17,7 +15,6 @@
 #include <QProgressBar>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QTabWidget>
 #include <QSettings>
 #include <QGroupBox>
 #include <QSpinBox>
@@ -26,7 +23,6 @@
 #include <QToolBar>
 #include <QStatusBar>
 #include <QMenuBar>
-#include <QStandardItemModel>
 #include <QAction>
 #include <QMap>
 //#include <QSpacerItem>
@@ -38,6 +34,7 @@
 #include "dialog.h"
 #include "editor.h"
 #include "about.h"
+#include "mainTableWidget.h"
 
 QT_BEGIN_NAMESPACE
 //class QLineEdit;
@@ -101,7 +98,6 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    QHeaderView* tableHeader;
     TabsOrder order;
 
     //статусбар
@@ -114,6 +110,7 @@ private:
     QGridLayout *layTab1,
                 *layBox1, *layBox5, *layBox6;
     QLineEdit* ui_lineEdit;
+    MainTableWidget *tableWidget;
 
 
     //виджеты вкладки предварительного просмотра
@@ -188,12 +185,10 @@ private:
     QGridLayout *layFields;
     QLabel *label25, *label26, *label27, *label28;
     QMap<QString, bool> fullFieldsList; //список вообще всех полей
-    //QMap<QString, bool> fieldsStatus;   //соответствие, какое поле выбрано, какое нет
 
 
 
     QSettings m_settings;
-    QList<int> mainTableTabs;
     int mainTableWidth, mainTableHeith;
 
     editor* shablon_editor;
@@ -212,7 +207,7 @@ private:
                   *ui_radioButton_3,
                     *ui_radioButton_5;
     QGroupBox *ui_groupBox, *ui_groupBox_6;
-    QTableWidget* ui_tableWidget;
+    //QTableWidget* tableWidget;
     int sizeDeltaX;  //разница в ширине между основным окном и таблицей
     int sizeDeltaY;
     QLabel *ui_countLabel;
@@ -238,8 +233,6 @@ private:
     bool db_is_ready;
     bool describer_is_ready;
 
-    bool editing_price2;
-    bool tovar_searched;
 
     //переменные для работы фильтра
     bool filter_is_on;
@@ -261,7 +254,6 @@ private:
 
     QSpinBox* ui_spinLimit;
 
-    bool add_flag;
 
     QToolBar* ui_mainToolBar;
     QMenuBar* mainMenu;
@@ -280,7 +272,7 @@ private:
     QAction* apply_filter_on_current_list;
 
 private slots:
-    void on_tableWidget_cellClicked(int row, int column);
+    //void on_tableWidget_cellClicked(int row, int column);
     void get_method_from_ui();
 
     void on_source_changed_toDBF();
@@ -306,23 +298,17 @@ private slots:
     void update_ui_tb_fields(QStringList list);
     void update_ui_db_controls();
     void update_ui_connection_established();
-    void delete_line_from_table(int pos);
+
     QList<Tovar> show_found_items(QList<Tovar> inputList);
-    QList<Tovar> get_tovar_list(QTableWidget* table, QString priznak);
     QList<Tovar> apply_filter(QList<Tovar> inputList);
     QRectF get_shablon_rect(const QDomNode& node);
     QString get_shablon_name(const QDomNode& node);
     bool read_opisateli_from_settings();
     void set_opisateli_from_settings();
 
-    void set_tableWidget_header(QTableWidget* table);
-    void add_table_item(QTableWidget* table, int position, Tovar tovar);
-
     void on_selectSourceDBF_file_button_clicked();
     void on_spinLimit_valueChanged(int );
     void on_maxButton_clicked();
-    void on_tableWidget_cellChanged(int row, int column);
-    void update_mainTableTabs(QTableWidget * ui_tableWidget);
 
 
     void on_show_editor_button_clicked();
@@ -330,7 +316,6 @@ private slots:
     void on_action_open_triggered();
     void on_action_new_triggered();
 
-    void load_tovar_list_into_cengen(QList<Tovar> tovarList);
     QList<Tovar> convert_xml_into_tovar_list(QDomDocument doc);
     QDomDocument convert_tovar_list_into_xml(QList<Tovar> tovarList);
     QList<Tovar> minus(QList<Tovar> oldList, QList<Tovar> newList);

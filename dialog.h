@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QGridLayout>
 #include <QTableWidget>
+#include "mainTableWidget.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -15,7 +16,7 @@ class ListFoundedItemsDialog : public QDialog {
     Q_OBJECT
 private:
     QGridLayout* myLayout;
-    QTableWidget* myTable;
+    MainTableWidget* myTable;
     QPushButton* buttonOK;
     QPushButton* buttonCancel;
     QPushButton* buttonSelectAll;
@@ -25,7 +26,7 @@ private:
 public:
     ListFoundedItemsDialog (QWidget* pwgt = 0);
 
-    void setTable(QTableWidget **table);
+    void setTable(MainTableWidget **table);
     void setTable(QString error);
 
 private slots:

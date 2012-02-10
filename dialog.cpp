@@ -28,7 +28,7 @@ ListFoundedItemsDialog::ListFoundedItemsDialog (QWidget* pwgt/*= 0*/)
 
 }
 
-void ListFoundedItemsDialog::setTable(QTableWidget **table) {
+void ListFoundedItemsDialog::setTable(MainTableWidget **table) {
     myTable = *table;
     myLayout->addWidget(myTable, 0, 0, 1, 3);
     connect(myTable, SIGNAL(cellClicked(int,int)), SLOT(addTovarToList(int,int)));

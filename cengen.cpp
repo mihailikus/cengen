@@ -33,8 +33,8 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     this->make_filter_tab();
     this->make_fieldList_tab();
 
-    editing_price2 = false;
-    tovar_searched = false;
+    tableWidget->set_editing_price2(false);
+    tableWidget->set_tovar_searched(false);
 
     my_informer = new Tinformer();
     zoom = 1.0;
@@ -176,31 +176,6 @@ void cengen::make_search_tab() {
     tab1 = new QWidget;
     layTab1 = new QGridLayout;
 
-    ui_tableWidget = new QTableWidget(0,7,this);
-    ui_tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-    //устанавливаем заголовки главной таблицы
-    QStandardItemModel *model = new QStandardItemModel(5,5, this);
-    QTableView *tableView = new QTableView;
-    tableView->setModel(model);
-    tableHeader = new QHeaderView(Qt::Horizontal, tableView);
-    QStandardItemModel *header_model_1 = new QStandardItemModel(0,0, tableHeader);
-    header_model_1->setHorizontalHeaderLabels(QStringList()
-                                              <<tr("#")
-                                              <<tr("Name", "Name of tovar")
-                                              <<tr("Barcode")
-                                              <<tr("Tnomer")
-                                              <<tr("Price1")
-                                              <<tr("Price2")
-                                              <<tr("x", "Symbol for DELETE action")
-                                              );
-    tableHeader->setModel(header_model_1);
-    ui_tableWidget->setHorizontalHeader(tableHeader);
-    ui_tableWidget->verticalHeader()->hide();
-    //подключаем слоты к сигналам
-    connect(ui_tableWidget, SIGNAL(cellClicked(int,int)), SLOT(on_tableWidget_cellClicked(int,int)));
-    connect(ui_tableWidget, SIGNAL(cellChanged(int,int)), SLOT(on_tableWidget_cellChanged(int,int)));
-
     //готовим lineEdit - строку для ввода поисковой фразы
     ui_lineEdit = new QLineEdit;
     ui_lineEdit->setAlignment(Qt::AlignCenter);
@@ -250,10 +225,13 @@ void cengen::make_search_tab() {
 
     layTab1->addWidget(ui_groupBox, 1, 0, 1, 4);
     layTab1->addWidget(ui_groupBox_6, 0, 4, 2, 1);
-    layTab1->addWidget(ui_tableWidget, 2, 0, 1, 6);
+
+    tableWidget = new MainTableWidget();
+    connect (tableWidget, SIGNAL(row_count_changed()), SLOT(new_line_ready()));
+    layTab1->addWidget(tableWidget, 2, 0, 1, 6);
+
     tab1->setLayout(layTab1);
     ui_tabWidget->insertTab(TabsOrder::Search, tab1, tr("SEARCH"));
-    //order = this->TabsOrder
 
 }
 
@@ -317,6 +295,8 @@ void cengen::make_fieldList_tab() {
     tab6->setLayout(layTab6);
 
     ui_tabWidget->insertTab(TabsOrder::fList, tab6, tr("Fields"));
+
+    tableWidget->set_tableFields(fullFieldsList);
 }
 
 void cengen::make_source_tab() {
@@ -624,40 +604,12 @@ void cengen::tovar_search() {
     } else {
         tovarList = tovarListFull;
     }
-
-    load_tovar_list_into_cengen(tovarList);
-}
-
-void cengen::load_tovar_list_into_cengen(QList<Tovar> tovarList) {
-    //загружаем список товаров в таблицу генератора ценников
-    add_flag = true;
-    if (tovarList.count()) tovar_searched = true;
-    for (int i = 0; i<tovarList.count(); i++) {
-        //qDebug() << "i=" << i;
-        Tovar tovar = tovarList.at(i);
-
-        int position = ui_tableWidget->rowCount();
-        //qDebug() << "position=" << position;
-        ui_tableWidget->setRowCount(position + 1);
-        ui_countLabel->setText(tr("COUNT: ", "ITOGO") + QString::number(ui_tableWidget->rowCount()));
-
-        add_table_item(ui_tableWidget, position, tovar);
-
-            QTableWidgetItem* itemDel = new QTableWidgetItem("x");
-            ui_tableWidget->setItem(position, 6, itemDel);
-            ui_tableWidget->item(position, 6)->setToolTip(tr("DELETE"));
-            ui_tableWidget->item(position, 6)->setWhatsThis(tr("Delete line from table"));
-
-            //ui_tableWidget->scrollToItem(itemDel);
-            ui_tableWidget->scrollToBottom();
-    }
-    add_flag = false;
-
+    tableWidget->load_tovar_list_into_cengen(tovarList);
 }
 
 QList<Tovar> cengen::show_found_items(QList<Tovar> inputList) {
     QList<Tovar> tovarList;
-    QTableWidget* table = new QTableWidget;
+    MainTableWidget *table = new MainTableWidget;
     ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
 
     if (!inputList.count()) {
@@ -665,24 +617,29 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList) {
         dlg->setTable(tr("NOT FOUND"));
 
     } else {
-        table->setRowCount(inputList.count());
-        table->setColumnCount(7);
-        set_tableWidget_header(table);
-        Tovar tovar;
-        for (int i = 0; i<inputList.count(); i++) {
-            tovar = inputList.at(i);
-
-            add_table_item(table, i, tovar);
-
-            QTableWidgetItem* itemCheck = new QTableWidgetItem(" ");
-            table->setItem(i, 6, itemCheck);
-            table->item(i, 6)->setToolTip(tr("SELECT"));
-            table->item(i, 6)->setWhatsThis(tr("Select item to list"));
+        table->set_tableFields(fullFieldsList);
+        for (int i =0; i< table->columnCount(); i++) {
+            table->set_tableTab_width(i, tableWidget->get_tableTab_width(i));
         }
+        table->load_tovar_list_into_cengen(inputList);
+//        table->setRowCount(inputList.count());
+//        table->setColumnCount(7);
+//        tableWidget->set_tableWidget_header();
+//        Tovar tovar;
+//        for (int i = 0; i<inputList.count(); i++) {
+//            tovar = inputList.at(i);
+
+//            tableWidget->add_table_item(i, tovar);
+
+//            QTableWidgetItem* itemCheck = new QTableWidgetItem(" ");
+//            table->setItem(i, 6, itemCheck);
+//            table->item(i, 6)->setToolTip(tr("SELECT"));
+//            table->item(i, 6)->setWhatsThis(tr("Select item to list"));
+//        }
         dlg->setTable(&table);
     }
     if (dlg->exec()) {
-        tovarList = get_tovar_list(table, "V");
+        tovarList = table->get_tovar_list("V");
     }
 
     return tovarList;
@@ -690,24 +647,26 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList) {
 
 void cengen::on_lineEdit_returnPressed()
 {
-    if (ui_lineEdit->text() != "" || tovar_searched == false) {
+    if (ui_lineEdit->text() != "" || tableWidget->is_tovar_searched() == false) {
         this->tovar_search();
         this->new_line_ready();
     } else {
         //нажата Энтер с пустым полем - значит, хотим отредактировать
         //    цену только что введенного товара
-        editing_price2 = true;
-        if (ui_tableWidget->rowCount()) {
-            QTableWidgetItem* item = ui_tableWidget->item
-                    (ui_tableWidget->rowCount()-1, 5);
-            ui_tableWidget->setCurrentItem(item);
-            ui_tableWidget->setFocus();
+        tableWidget->set_editing_price2(true);
+        if (tableWidget->rowCount()) {
+            QTableWidgetItem* item = tableWidget->item
+                    (tableWidget->rowCount()-1, 5);
+            tableWidget->setCurrentItem(item);
+            tableWidget->setFocus();
         }
     }
 
 }
 
 void cengen::new_line_ready() {
+    ui_countLabel->setText(tr("COUNT: ", "ITOGO")
+                           + QString::number(tableWidget->rowCount()));
     ui_lineEdit->clear();
     ui_lineEdit->setFocus();
 }
@@ -718,27 +677,6 @@ void cengen::on_action_make_triggered()
     ui_tabWidget->setCurrentIndex(TabsOrder::Preview);
     this->generate_preview();
     action_print->setEnabled(true);
-}
-
-QList<Tovar> cengen::get_tovar_list(QTableWidget *table, QString priznak) {
-    QList<Tovar> spisok;
-    Tovar tovar;
-    //qDebug() << "total " << ui_tableWidget->rowCount();
-    for (int i = 0; i<table->rowCount(); i++) {
-        //qDebug() << "row " << i;
-        if (table->item(i, 6)->text() == priznak) {
-            tovar.name_of_tovar = table->item(i, 1)->text().trimmed();
-            tovar.barcode = table->item(i, 2)->text().trimmed();
-            tovar.nomer_of_tovar = table->item(i, 3)->text().toInt();
-            tovar.price1 = table->item(i, 4)->text().toFloat();
-            if (!(table->item(i, 5)->text().isEmpty())) {
-                tovar.price2 = table->item(i, 5)->text().toFloat();
-            }
-            spisok << tovar;
-        }
-    }
-    //qDebug() << "spisok done" << spisok.count();
-    return spisok;
 }
 
 void cengen::on_selectShablonButton_clicked()
@@ -958,7 +896,7 @@ void cengen::generate_preview() {
 
     pages.clear();
 
-    QList<Tovar> spisok =  this->get_tovar_list(ui_tableWidget, "x");
+    QList<Tovar> spisok =  tableWidget->get_tovar_list("x");
     Tovar currentTovar;
 
     //высчитываем левый верхний угол первой страницы
@@ -1157,14 +1095,13 @@ void cengen::writeSettings()
     m_settings.setValue("heith", this->height());
     m_settings.endGroup();
 
-    int mainTableCount = ui_tableWidget->horizontalHeader()->count();
+    int mainTableCount = tableWidget->horizontalHeader()->count();
     m_settings.setValue("mainTableCount", mainTableCount);
     m_settings.beginGroup("/mainTable");
-    mainTableWidth = ui_tableWidget->width();
+    mainTableWidth = tableWidget->width();
     m_settings.setValue("tabWidth", mainTableWidth);
-    update_mainTableTabs(ui_tableWidget);
     for (int i=0; i<mainTableCount; i++) {
-        m_settings.setValue("tab"+QString::number(i), mainTableTabs.at(i));
+        m_settings.setValue("tab"+QString::number(i), tableWidget->get_tableTab_width(i));
     }
     m_settings.endGroup();
 
@@ -1182,11 +1119,11 @@ void cengen::readSettings() {
 
     int mainTableCount = m_settings.value("/Settings/mainTableCount", 0).toInt();
 
-    mainTableTabs.clear();
+    //mainTableTabs.clear();
     for (int i = 0; i<mainTableCount; i++) {
-        mainTableTabs << m_settings.value("/Settings/mainTable/tab"+QString::number(i), 10).toInt();
+        tableWidget->set_tableTab_width(i, m_settings.value("/Settings/mainTable/tab"+QString::number(i), 10).toInt());
     }
-    set_tableWidget_header(ui_tableWidget);
+    //set_tableWidget_header(tableWidget);
 
     //добавить, если там нет названия шаблона
     QString fileName = m_settings.value("/Settings/shablon", "").toString();
@@ -1451,24 +1388,8 @@ void cengen::get_method_from_ui()
         method= "any";
         ui_lineEdit->setValidator(ui_svalidator);
     }
-    tovar_searched = false;
+    tableWidget->set_tovar_searched(false);
     new_line_ready();
-}
-
-void cengen::delete_line_from_table(int pos) {
-    qDebug() << "pos" << pos;
-    ui_tableWidget->removeRow(pos);
-    int num = ui_tableWidget->rowCount();
-    for (int i = 0; i<num; i++) {
-        //int nomer = ui_tableWidget->item(i, 0)->text().toInt();
-        ui_tableWidget->item(i, 0)->setText(QString::number(i+1));        
-    }
-    ui_countLabel->setText(tr("COUNT: ", "ITOGO") + QString::number(num));
-
-    //тут бы еще сами кнопки перенумеровать
-
-
-    this->new_line_ready();
 }
 
 void cengen::on_source_changed_toMySQL()
@@ -1504,15 +1425,6 @@ void cengen::trigger_source_selection(bool state) {
     ui_groupSQL->setChecked(!state);
     ui_groupDBF->blockSignals(false);
     ui_groupSQL->blockSignals(false);
-
-}
-
-void cengen::on_tableWidget_cellClicked(int row, int column)
-{
-    //qDebug() << "clicked row "<< row << "; col " << column;
-    if (column == 6) {
-        this->delete_line_from_table(row);
-    }
 
 }
 
@@ -1576,59 +1488,6 @@ void cengen::set_opisateli_from_settings()
     }
 }
 
-void cengen::set_tableWidget_header(QTableWidget *table) {
-//устанавливаем заданную ширину столбцов таблицы
-    for (int i = 0; i<mainTableTabs.count(); i++) {
-        table->horizontalHeader()->resizeSection(i, mainTableTabs.at(i));
-    }
-    table->verticalHeader()->hide();
-}
-
-void cengen::add_table_item(QTableWidget *table, int position, Tovar tovar) {
-
-
-    QTableWidgetItem* itemN = new QTableWidgetItem(QString::number(position + 1));
-    QTableWidgetItem* itemName = new QTableWidgetItem(tovar.name_of_tovar);
-    QTableWidgetItem* itemBarcode = new QTableWidgetItem(tovar.barcode);
-    QTableWidgetItem* itemNomer = new QTableWidgetItem(QString::number(tovar.nomer_of_tovar));
-    QTableWidgetItem* itemPrice1 = new QTableWidgetItem(QString::number(tovar.price1));
-    QTableWidgetItem* itemPrice2 = new QTableWidgetItem(QString::number(tovar.price2));
-
-    table->setItem(position, 0, itemN);
-    table->setItem(position, 1, itemName);
-    table->setItem(position, 2, itemBarcode);
-    table->setItem(position, 3, itemNomer);
-    table->setItem(position, 4, itemPrice1);
-    table->setItem(position, 5, itemPrice2);
-
-
-    /*
-    ButtonForTable* del_button = new ButtonForTable;
-    del_button->setPosition(position);
-    del_button->setText("del");
-    del_button->setToolTip("DELETE FROM TABLE");
-    connect(del_button, SIGNAL(clickedID(int)), SLOT(delete_line_from_table(int)));
-    */
-//        QLineEdit* brLine = new QLineEdit;
-//        brLine->setText(tovar.barcode);
-//        brLine->setValidator(ui_bvalidator);
-//        ui_tableWidget->setCellWidget(position, 2, brLine);
-//        qDebug() << "text " << ui_tableWidget->item(position,2)->text();
-
-
-
-
-
-    //ui_tableWidget->setCellWidget(position, 6, del_button);
-
-    /*
-    QPushButton* button = new QPushButton("del");
-    //QTableWidgetItem* item2 = new QTableWidgetItem();
-    ui_tableWidget->setItem(0, 1, item);
-    ui_tableWidget->setCellWidget(0, 0, button);
-    */
-}
-
 void cengen::on_spinLimit_valueChanged(int number)
 {
     //qDebug() << "limit = " << number;
@@ -1639,32 +1498,6 @@ void cengen::on_maxButton_clicked()
 {
     //нажата кнопка выбора лимита поиска без ограничений
     ui_spinLimit->setValue(ui_spinLimit->maximum());
-}
-
-void cengen::on_tableWidget_cellChanged(int row, int column)
-{
-    if (editing_price2) {
-        editing_price2 = false;
-        new_line_ready();
-        return;
-    }
-
-    if (add_flag) {
-        return;
-    }
-
-    if (row < ui_tableWidget->rowCount()-1) {
-        row++;
-    } else {
-        if (column < ui_tableWidget->columnCount() -1) {
-            column++;
-        }
-    }
-
-    QTableWidgetItem* item = ui_tableWidget->item(row, column);
-    ui_tableWidget->setCurrentItem(item);
-
-
 }
 
 void cengen::on_show_editor_button_clicked()
@@ -1724,7 +1557,7 @@ void cengen::on_action_save_triggered()
     //Сохранение списка товаров
     qDebug() << "saving tovar list";
 
-    QList<Tovar> spisok= get_tovar_list(ui_tableWidget, "x");
+    QList<Tovar> spisok= tableWidget->get_tovar_list("x");
 
     QDomDocument doc;
 
@@ -1769,7 +1602,7 @@ void cengen::on_action_open_triggered()
         if (doc.setContent(&file)) {
             QList<Tovar> tovarList;
             tovarList = convert_xml_into_tovar_list(doc);
-            this->load_tovar_list_into_cengen(tovarList);
+            tableWidget->load_tovar_list_into_cengen(tovarList);
 
         }
     } else {
@@ -1879,7 +1712,7 @@ QDomDocument cengen::convert_tovar_list_into_xml(QList<Tovar> spisok) {
 void cengen::on_action_new_triggered()
 {
     ui_countLabel->setText(tr("COUNT: ") + "0");
-    ui_tableWidget->setRowCount(0);
+    tableWidget->setRowCount(0);
     action_print->setEnabled(false);
     currentScene->clear();
     ui_tabWidget->setCurrentIndex(TabsOrder::Search);
@@ -1909,12 +1742,12 @@ void cengen::on_action_minus_triggered()
         if (doc.setContent(&file)) {
             QList<Tovar> newTovarList, oldTovarList, finalList;
             newTovarList = convert_xml_into_tovar_list(doc);
-            oldTovarList = get_tovar_list(ui_tableWidget, "x");
+            oldTovarList = tableWidget->get_tovar_list("x");
 
             finalList = minus(oldTovarList, newTovarList);
 
-            ui_tableWidget->setRowCount(0);
-            this->load_tovar_list_into_cengen(finalList);
+            tableWidget->setRowCount(0);
+            tableWidget->load_tovar_list_into_cengen(finalList);
 
         }
     } else {
@@ -2102,13 +1935,6 @@ void cengen::on_radioButton_7_clicked()
     update_values();
 }
 
-void cengen::update_mainTableTabs(QTableWidget *table) {
-    mainTableTabs.clear();
-    for (int i = 0; i<table->columnCount(); i++) {
-        mainTableTabs << table->horizontalHeader()->sectionSize(i);
-    }
-}
-
 void cengen::on_action_about_triggered()
 {
     About d (this);
@@ -2131,10 +1957,10 @@ void cengen::on_action_about_triggered()
 }
 
 void cengen::on_apply_filter_on_current_list_triggered() {
-    QList<Tovar> oldList = this->get_tovar_list(ui_tableWidget, "x");
+    QList<Tovar> oldList = tableWidget->get_tovar_list("x");
     QList<Tovar> newList = apply_filter(oldList);
     this->on_action_new_triggered();
-    this->load_tovar_list_into_cengen(newList);
+    tableWidget->load_tovar_list_into_cengen(newList);
 }
 
 void cengen::on_fieldListBox_checked(bool status) {
@@ -2143,6 +1969,7 @@ void cengen::on_fieldListBox_checked(bool status) {
     //qDebug() << "Last val " << fullFieldsList[str];
     fullFieldsList[str] = status;
     //qDebug() << "Next val " << fullFieldsList[str];
+    tableWidget->set_tableFields(fullFieldsList);
 
 
 }

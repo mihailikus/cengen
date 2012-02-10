@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     graph.cpp \
     addlinemaster.cpp \
     imagebox.cpp \
-    about.cpp
+    about.cpp \
+    mainTableWidget.cpp
 HEADERS += cengen.h \
     tinformer.h \
     tovar.h \
@@ -41,7 +42,8 @@ HEADERS += cengen.h \
     graph.h \
     addlinemaster.h \
     imagebox.h \
-    about.h
+    about.h \
+    mainTableWidget.h
 FORMS += \
     addlinemaster.ui
 
@@ -54,4 +56,6 @@ TRANSLATIONS = cengen_ru.ts\
 
 RESOURCES += \
     resource.qrc
+
+
 
