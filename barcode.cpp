@@ -184,9 +184,7 @@ void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
     QRectF font_size = imagebox(font, this->barcode.at(0));
     float left_otstup = font_size.width();
     float text_size = font_size.height();
-    //float h0 = (inputRect->height() - text_size) / 2;
 
-    //qDebug() << "text heith " << text_size << font.pointSize();
     QRectF* rect = new QRectF(inputRect->left()+left_otstup,
                             inputRect->top(),
                             inputRect->width()-left_otstup,
@@ -223,7 +221,7 @@ void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
             heit = line_heit;
         }
 
-        scene->addRect(QRect(Xposition, Yposition, line_width-1, heit), pen, brush);
+        scene->addRect(QRectF(Xposition, Yposition, line_width-1, heit), pen, brush);
         Xposition += line_width;
 
         count++;
@@ -235,7 +233,6 @@ void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
         Xposition = inputRect->left();
         Yposition = rect->y() + rect->height() + lineAddition - text_size + textOtstup;
         QString text = "0";
-        //qDebug() << "this FONT" << this->font;
         for (int i = 0; i<13; i++)
         {
             text[0] = barcode[i].toAscii();
@@ -262,23 +259,17 @@ void Barcode::setFont(QFont inputfont)
     this->font = inputfont;
     if (font.pixelSize() == 0) {
         this->renderNumbers = false;
-        //this->lineAddition = 0;
     }
-
-    //lineAddition = imagebox(font, this->getText()).height() / 2;
-
 }
 
 void Barcode::setTextOtstup(int otstup)
 {
     this->textOtstup = otstup;
-    //qDebug() << "using function setTextOtstup " << otstup;
 }
 
 void Barcode::setLineAddition(int addition)
 {
     this->lineAddition = addition;
-    //qDebug() << "using function setLineAddition " << addition;
 }
 
 void Barcode::setRenderDigits(bool param) {
