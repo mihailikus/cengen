@@ -40,6 +40,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     zoom = 1.0;
 
     method = "tbarcode";
+    currShablonFileName = "";
 
     this->paperOrientation = "portrate";
 
@@ -674,14 +675,15 @@ void cengen::on_selectShablonButton_clicked()
     //функция выбора шаблона файла
 
 
-    QString open_name;
-    if (file_is_ready) {
-        open_name = file.fileName();
-    } else {
-        open_name = "";
-    }
+//    QString open_name;
+//    if (file_is_ready) {
+//        open_name = file.fileName();
+//        open_name = currShablonFileName;
+//    } else {
+//        open_name = "";
+//    }
 
-    QString str = QFileDialog::getOpenFileName(0, tr("Select shablon file"), open_name, tr("CEN-files (*.cen)"));
+    QString str = QFileDialog::getOpenFileName(0, tr("Select shablon file"), currShablonFileName, tr("CEN-files (*.cen)"));
 
     if (file_is_ready && str == "") return;
 
@@ -706,6 +708,7 @@ void cengen::on_shablonList_combo_changed(int index) {
 }
 
 void cengen::on_shablon_name_changed(QString str) {
+    currShablonFileName = str;
     if (str == "") {
         ui_label->setText(tr("Please select file", "If no file selected"));
     } else {
@@ -921,11 +924,19 @@ void cengen::generate_preview() {
         currentTovar.name_of_tovar = currentTovar.name_of_tovar.toUtf8();
 
         int sName = currentTovar.shablon;
-        qDebug() << "shablon " << sName;
+        //qDebug() << "shablon " << sName;
         QString shbl =  shablonList.at(sName);
+        QDomElement sbl;
+        qDebug() << "Names files " << i << shbl << currShablonFileName;
+        if (currShablonFileName != shbl) {
+             sbl = read_file_shablon(shbl).documentElement();
+        } else {
+            qDebug() << "Same names";
+            sbl = domDoc.documentElement();
+        }
 
-        //Cennic* cennic = new Cennic(&currentTovar, shablonElement);
-        Cennic *cennic = new Cennic(&currentTovar, read_file_shablon(shbl).documentElement());
+
+        Cennic *cennic = new Cennic(&currentTovar, sbl);
         QPoint corner = cennic->render(currentScene, bXpos, bYpos);
         if (corner.y() > maxYadd) maxYadd = corner.y();
 
@@ -1027,34 +1038,30 @@ void cengen::on_action_print_triggered()
 
 void cengen::writeSettings()
 {
-        m_settings.beginGroup("/Settings");
-        if (this->db_source) {
-            m_settings.setValue("/source", 1);
-            //если 1 - ищем в мускуле, если 0 - в DBF
-            if (db_is_ready) {
-                m_settings.beginGroup("/sql");
-                m_settings.setValue("/host", sql->dbHost);
-                m_settings.setValue("/dbName", sql->dbName);
-                m_settings.setValue("/pass", sql->dbPass);
-                m_settings.setValue("/user", sql->dbUser);
-                m_settings.setValue("/tbName", sql->tbName);
+    m_settings.beginGroup("/Settings");
+    if (this->db_source) {
+        m_settings.setValue("/source", 1);
+        //если 1 - ищем в мускуле, если 0 - в DBF
+        if (db_is_ready) {
+            m_settings.beginGroup("/sql");
+            m_settings.setValue("/host", sql->dbHost);
+            m_settings.setValue("/dbName", sql->dbName);
+            m_settings.setValue("/pass", sql->dbPass);
+            m_settings.setValue("/user", sql->dbUser);
+            m_settings.setValue("/tbName", sql->tbName);
 
-                //qDebug() << "saving TABLE " << sql->tbName;
-                m_settings.endGroup();
-                qDebug() << "sql config written";
-            }
-        } else {
-            m_settings.setValue("/source", 0);
-            m_settings.beginGroup("/dbf");
-            m_settings.setValue("/filename", this->dbf->fileName);
+            //qDebug() << "saving TABLE " << sql->tbName;
             m_settings.endGroup();
+            qDebug() << "sql config written";
         }
-
-        if (file_is_ready) {
-
-        m_settings.setValue("/shablon", file.fileName());
-        //qDebug() << "Settings written";
+    } else {
+        m_settings.setValue("/source", 0);
+        m_settings.beginGroup("/dbf");
+        m_settings.setValue("/filename", this->dbf->fileName);
+        m_settings.endGroup();
     }
+
+    m_settings.setValue("/shablon", currShablonFileName);
 
     if (describer_is_ready) {
         m_settings.beginGroup("/describer");
@@ -1133,8 +1140,7 @@ void cengen::readSettings() {
     //set_tableWidget_header(tableWidget);
 
     //добавить, если там нет названия шаблона
-    QString fileName = m_settings.value("/Settings/shablon", "").toString();
-    on_shablon_name_changed(fileName);
+    on_shablon_name_changed(m_settings.value("/Settings/shablon", "").toString());
 
     //создаем новые переменные для работы
     this->dbf = new DbfConfig;
@@ -1515,7 +1521,7 @@ void cengen::on_show_editor_button_clicked()
 
         shablonElement = domDoc.documentElement();
         shablon_editor->load_xml_data_into_editor(&shablonElement);
-        shablon_editor->set_file_name(this->file.fileName());
+        shablon_editor->set_file_name(currShablonFileName);
 
         shablon_editor->resize(this->size());
 
@@ -1523,8 +1529,9 @@ void cengen::on_show_editor_button_clicked()
 
         domDoc.clear();
         domDoc = shablon_editor->get_new_shablon();
-        QString str = shablon_editor->get_new_fileName();
-        file.setFileName(str);
+        currShablonFileName = shablon_editor->get_new_fileName();
+        //file.setFileName(str);
+
 
         this->describe_shablon(domDoc);
 
@@ -1546,11 +1553,12 @@ void cengen::describe_shablon(QDomDocument shablon) {
 QDomDocument cengen::read_file_shablon(QString str) {
     //QDomElement domElement;
     QDomDocument doc;
-    file.setFileName(str);
-    if (file.open(QIODevice::ReadOnly)) {
-        if (doc.setContent(&file)) {
-            //domElement = domDoc.documentElement();
+    QFile * fileSh = new QFile;
+    fileSh->setFileName(str);
+    if (fileSh->open(QIODevice::ReadOnly)) {
+        if (doc.setContent(fileSh)) {
             file_is_ready = true;
+            fileSh->close();
         }
     } else {
         file_is_ready = false;

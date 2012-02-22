@@ -212,7 +212,8 @@ private:
     int sizeDeltaY;
     QLabel *ui_countLabel;
     QTabWidget* ui_tabWidget;
-    QFile file; //файл шаблона
+    //QFile file; //файл шаблона
+    QString currShablonFileName;
     QStringList shablonList;    //список шаблонов в текущей дирректории
     //QString shablonPath;
     QDomDocument domDoc;
