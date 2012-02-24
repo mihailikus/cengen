@@ -112,57 +112,55 @@ QStringList dbf_informer::get_dbf_header(QString filename) {
 }
 
 QString dbf_informer::get_one_cell(int offset, int lenth) {
-    QString value;
+    QByteArray arr;
+    arr.resize(lenth);
     for (int j = 0; j<lenth; j++) {
-        value += this->all_records[j+offset];
+        arr[j] = this->all_records[j+offset];
     }
-    return value;
+    return codec->toUnicode(arr).trimmed();
 }
 
 QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString method, int limit) {
     Tovar tovar;
     QList<Tovar> tovarList;
-    tovar.barcode = "Not found";
-    int offset = 1;
+    tovar.price2 = 0;
+    int offset;
+    offset = 1 + dbf_fields[method].offset;
     int i = 0;
     int count = 0;
+    int curLength;
+    QString value;
+
     while (i<number_of_records && count < limit)
     {
-        offset = i*this->length_of_each_record + 1;
-        offset += dbf_fields[method].offset;
-        QString value;
         value = this->get_one_cell(offset, dbf_fields[method].length);
-        //qDebug() << "tmp found " << value;
         if (  (
                 (method == "tbarcode" || method == "tnomer") &&
-                (value.trimmed() == searchText)
+                (value == searchText)
                )
                ||
                (
                 (method == "tname") &&
-                (codec->toUnicode(value.trimmed().toAscii()).contains(searchText, Qt::CaseInsensitive))
+                (value.contains(searchText, Qt::CaseInsensitive))
                 )
             )
         {
-            //qDebug() << "found " << value;
-            tovar.barcode = value.trimmed();
-            tovar.name_of_tovar = codec->toUnicode(
-                get_one_cell(dbf_fields["tname"].offset + i*this->length_of_each_record + 1,
-                             dbf_fields["tname"].length).trimmed().toAscii()
-                );
-            tovar.nomer_of_tovar = get_one_cell(dbf_fields["tnomer"].offset + i*this->length_of_each_record + 1,
+            curLength = i*this->length_of_each_record +1;
+
+            tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + curLength,
+                             dbf_fields["tname"].length);
+            tovar.nomer_of_tovar = get_one_cell(dbf_fields["tnomer"].offset + curLength,
                                                 dbf_fields["tnomer"].length).toInt();
-            tovar.price1 = get_one_cell(dbf_fields["tprice"].offset + i*this->length_of_each_record + 1,
+            tovar.price1 = get_one_cell(dbf_fields["tprice"].offset + curLength,
                                                 dbf_fields["tprice"].length).toFloat();
-            tovar.barcode = get_one_cell(dbf_fields["tbarcode"].offset + i*this->length_of_each_record + 1,
-                                         dbf_fields["tbarcode"].length).trimmed();
-            tovar.price2 = 0;
+            tovar.barcode = get_one_cell(dbf_fields["tbarcode"].offset + curLength,
+                                         dbf_fields["tbarcode"].length);
 
             tovarList << tovar;
             count++;
         }
     i++;
-
+    offset += this->length_of_each_record;
     }
 
     return tovarList;
