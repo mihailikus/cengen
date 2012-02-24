@@ -6,27 +6,32 @@
 #include "barcode.h"
 
 Cennic::Cennic(Tovar *tovar, const QDomNode &shablon) {
-
+    barcode = new Barcode();
     this->create(tovar, shablon);
     this->preview = false;
 
 }
 
+Cennic::Cennic() {
+    barcode = new Barcode();
+    this->preview = false;
+}
+
 void Cennic::create(Tovar *tovar, const QDomNode &shablon) {
-    barcode = new Barcode(tovar->barcode);
+    barcode->update(tovar->barcode);
 
     this->codec = QTextCodec::codecForName("UTF-8");
     this->domNode = shablon;
     ctovar = tovar;
     if (ctovar->name_of_tovar == "") {
-        ctovar->name_of_tovar = "tname is not set";
+        ctovar->name_of_tovar = QObject::tr("tname is not set");
     } else {
         ctovar->name_of_tovar = codec->toUnicode(ctovar->name_of_tovar.toAscii());
     }
 }
 
 Cennic::~Cennic() {
-    qDebug() << "destructor of cennic";
+    delete barcode;
 }
 
 QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {

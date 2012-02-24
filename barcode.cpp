@@ -5,15 +5,7 @@
 
 Barcode::Barcode(QString text)
 {
-    this->setText(text);
-    if (this->is_valid()) {
-        this->TextToBit();
-    } else {
-        for (int i=0; i<95; i++)
-        {
-            lines << false;
-        }
-    }
+    this->update(text);
     this->renderNumbers = true;
     this->font = QFont("arial", 5);
     this->textOtstup = 10.0;
@@ -24,6 +16,18 @@ Barcode::Barcode(QString text)
 Barcode::~Barcode()
 {
 
+}
+
+void Barcode::update(QString text) {
+    this->setText(text);
+    if (this->is_valid()) {
+        this->TextToBit();
+    } else {
+        for (int i=0; i<95; i++)
+        {
+            lines << false;
+        }
+    }
 }
 
 bool Barcode::is_valid()

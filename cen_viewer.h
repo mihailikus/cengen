@@ -15,16 +15,17 @@ class Cennic : public ImageBox {
 public:
 
     Cennic(Tovar * tovar, const QDomNode& shablon);
+    Cennic();
     ~Cennic();
 
 public slots:
+    void create(Tovar * tovar, const QDomNode& shablon);
     QPoint render(QGraphicsScene * scene, float X, float Y);
     QString money_format(float price, QString rub, QString kop);
 
 private slots:
     QStringList mysplit(QString text);
     QStringList split_text(float maxlen, QString text, QFont font);
-    void create(Tovar * tovar, const QDomNode& shablon);
     QString tra(QString text);
     void set_preview_mode(bool mode);
     bool preview_mode();

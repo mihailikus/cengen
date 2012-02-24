@@ -22,7 +22,7 @@ public:
     ~Barcode();
 
 public slots:
-
+    void update(QString text = "0000000000000");
     bool is_valid();
     bool setText(QString barcode);
     QList<bool> TextToBit();
@@ -39,7 +39,6 @@ private slots:
     QString GCode(QString text);
     QString RCode(QString text);
     int correctSymbol(QChar symbol);
-
 
 };
 

@@ -672,17 +672,6 @@ void cengen::on_action_make_triggered()
 
 void cengen::on_selectShablonButton_clicked()
 {
-    //функция выбора шаблона файла
-
-
-//    QString open_name;
-//    if (file_is_ready) {
-//        open_name = file.fileName();
-//        open_name = currShablonFileName;
-//    } else {
-//        open_name = "";
-//    }
-
     QString str = QFileDialog::getOpenFileName(0, tr("Select shablon file"), currShablonFileName, tr("CEN-files (*.cen)"));
 
     if (file_is_ready && str == "") return;
@@ -916,6 +905,8 @@ void cengen::generate_preview() {
     statusBar->addWidget(progressBar);
     progressBar->show();
 
+    Cennic *cennics = new Cennic();
+
     for (int i = 0; i<spisok.count(); i++) {
         progressBar->setValue(i);
 
@@ -924,28 +915,21 @@ void cengen::generate_preview() {
         currentTovar.name_of_tovar = currentTovar.name_of_tovar.toUtf8();
 
         int sName = currentTovar.shablon;
-        //qDebug() << "shablon " << sName;
         QString shbl =  shablonList.at(sName);
         QDomElement sbl;
-        qDebug() << "Names files " << i << shbl << currShablonFileName;
         if (currShablonFileName != shbl) {
              sbl = read_file_shablon(shbl).documentElement();
         } else {
-            qDebug() << "Same names";
             sbl = domDoc.documentElement();
         }
 
-
-        Cennic *cennic = new Cennic(&currentTovar, sbl);
-        QPoint corner = cennic->render(currentScene, bXpos, bYpos);
+        cennics->create(&currentTovar, sbl);
+        QPoint corner = cennics->render(currentScene, bXpos, bYpos);
         if (corner.y() > maxYadd) maxYadd = corner.y();
-
-        qDebug() <<"X & Y " << corner.x() << corner.y();
 
         if ( ((i+1) % this->Ccols) != 0) {
             bXpos += corner.x();
         } else {
-            //qDebug() << "Next line";
             bXpos = bXstart;
             bYpos += maxYadd;
             maxYadd = 0;
@@ -961,10 +945,9 @@ void cengen::generate_preview() {
             //bYstart не меняется - делаем все странички в строчку
             bYpos = bYstart;
         }
-
-
     }
 
+    delete cennics;
     statusBar->removeWidget(progressBar);
 }
 
