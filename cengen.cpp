@@ -272,7 +272,7 @@ void cengen::make_fieldList_tab() {
     fullFieldsList.insert(QString::number(++i) + " " + tr("Barcode"), true);
     fullFieldsList.insert(QString::number(++i) + " " + tr("Price"), true);
     fullFieldsList.insert(QString::number(++i) + " " + tr("Price2"), true);
-    fullFieldsList.insert(QString::number(++i) + " " + tr("Quantity"), false);
+    fullFieldsList.insert(QString::number(++i) + " " + tr("Quantity"), true);
     fullFieldsList.insert(QString::number(++i) + " " + tr("Shablon"), true);
     fullFieldsList.insert(QString::number(++i) + " " + tr("DELETE"), true);
 
@@ -505,6 +505,7 @@ void cengen::make_filter_tab() {
 
     laytab5g1 = new QGridLayout;
     label18 = new QLabel(tr("File"));
+    label18a =new QLabel(tr("File not selected yet"));
     label19 = new QLabel(tr("What to find2"));
     label20 = new QLabel(tr("Where is it"));
     label21 = new QLabel(tr("Column for compare"));
@@ -535,6 +536,7 @@ void cengen::make_filter_tab() {
 
     laytab5g1->addWidget(label18, 0, 0);
     laytab5g1->addWidget(ui_filterFileSelectButton, 0, 1);
+    laytab5g1->addWidget(label18a, 0, 2, 1, 2);
     laytab5g1->addWidget(label21, 1, 0);
     laytab5g1->addWidget(ui_filterWhatBox, 1, 1);
     laytab5g1->addWidget(label19, 1, 2);
@@ -548,6 +550,29 @@ void cengen::make_filter_tab() {
 
     ui_filterLineText = new QLineEdit;
     laytab5g1->addWidget(ui_filterLineText, 3, 1, 1, 3);
+
+
+    filBoxCheck = new QGroupBox(tr("Use filter for update fields"));
+    filBoxCheck->setCheckable(true);
+    filBoxCheck->setChecked(true);
+
+    filCheckLay = new QGridLayout;
+
+    label30 = new QLabel(tr("Use found field: "));
+    label31 = new QLabel(tr("for update field in main table:"));
+    filCheckLay->addWidget(label30, 0, 0);
+    filCheckLay->addWidget(label31, 1, 0);
+
+    filterCheckInBox = new QComboBox;
+    filterCheckOutBox = new QComboBox;
+    filCheckLay->addWidget(filterCheckInBox, 0, 1);
+    filCheckLay->addWidget(filterCheckOutBox, 1, 1);
+
+
+
+
+    filBoxCheck->setLayout(filCheckLay);
+    laytab5g1->addWidget(filBoxCheck, 4, 0, 1, 4);
 
 
 
@@ -1079,6 +1104,8 @@ void cengen::writeSettings()
         //метод фильтрации - равно, больше, меньше и т.п. (в виде индекса)
         m_settings.setValue("/Method", ui_filterMethodBox->currentIndex());
 
+        m_settings.setValue("/CheckIn", filterCheckInBox->currentIndex());
+
         m_settings.endGroup();
 
     }
@@ -1216,8 +1243,8 @@ void cengen::readSettings() {
     this->update_ui_db_controls();
 
     //Читаем настройки фильтра
-    bool filter = m_settings.value("/Settings/filterIsOn", "false").toBool();
-    if (filter) {
+    filter_is_on = m_settings.value("/Settings/filterIsOn", "false").toBool();
+    if (filter_is_on) {
         //если фильтр включен - включаем контрол в UI и читаем настройки
         ui_filterBox->setChecked(true);
         this->read_filter_settings();
@@ -1256,6 +1283,7 @@ void cengen::read_filter_settings() {
 
     ui_filterWhatToFoundBox->setCurrentIndex(m_settings.value("/Settings/filter/WhatToFoundBox", "0").toInt());
 
+    filterCheckInBox->setCurrentIndex(m_settings.value("/Settings/filter/CheckIn", "0").toInt());
 
 }
 
@@ -1812,6 +1840,11 @@ void cengen::on_filterFileName_changed() {
 
     ui_filterWhereBox->clear();
     ui_filterWhereBox->addItems(list);
+
+    filterCheckInBox->clear();
+    filterCheckInBox->addItems(list);
+
+    label18a->setText(filterDbf.fileName);
 }
 
 QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
@@ -1821,7 +1854,8 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     filterConfig.tnomer = ui_filterWhereBox->currentText();
     filterConfig.tprice = ui_filterWhereBox->currentText();
     filterConfig.tname = ui_filterWhereBox->currentText();
-    filterConfig.tbarcode = ui_filterWhereBox->currentText();
+    //filterConfig.tbarcode = ui_filterWhereBox->currentText();
+    filterConfig.tbarcode = filterCheckInBox->currentText();
 
     int WhatToFound = ui_filterWhatToFoundBox->currentIndex();
     qDebug() << "What to found is " << WhatToFound;
@@ -1855,6 +1889,8 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     qDebug() << "Method in filter " << method;
 
     Tovar tovarItem, tovarFound;
+
+    bool ckeckOut = filBoxCheck->isChecked();
 
     for (int i = 0; i<inputList.count(); i++) {
         tovarItem = inputList.at(i);
@@ -1890,7 +1926,7 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
             itemfound = false;
             tovarFound = foundList.at(0);
             //qDebug() << "tovar is " << tovarFound.price1;
-            qDebug() << "FOUND in filter: " << tovarFound.name_of_tovar;
+            //qDebug() << "FOUND in filter: " << tovarFound.name_of_tovar;
 
             //проверяем, используя выбранный метод сравнения
             switch (method) {
@@ -1911,7 +1947,12 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
             default:
                 break;
             }
+            if (ckeckOut) {
+                //qDebug() << "count << " << tovarFound.barcode;
+                tovarItem.quantity = tovarFound.barcode.toFloat();
+                //qDebug() << "count << " << tovarItem.quantity;
 
+            }
             if (itemfound) filteredList <<tovarItem;
 
         }

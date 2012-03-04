@@ -9,5 +9,6 @@ struct Tovar {
     int nomer_of_tovar; //товарный номер
     QString codec_name;
     int shablon;
+    int quantity;
 };
 #endif // TOVAR_H

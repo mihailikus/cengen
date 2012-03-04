@@ -96,6 +96,9 @@ QList<Tovar> MainTableWidget::get_tovar_list(QString priznak) {
                         }
 
                     }
+                    if (tm == tr("Quantity")) {
+                        tovar.quantity = item(i, j)->text().toInt();
+                    }
                     if (tm == tr("Shablon")) {
                         QComboBox* box = ((QComboBox*)cellWidget(i, j));
                         tovar.shablon = box->currentIndex();
@@ -193,6 +196,10 @@ void MainTableWidget::add_table_item(int position, Tovar tovar) {
             }
             if (tm == tr("Price2")) {
                 QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovar.price2));
+                setItem(position, j, item);
+            }
+            if (tm == tr("Quantity")) {
+                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovar.quantity));
                 setItem(position, j, item);
             }
             if (tm == tr("DELETE")) {

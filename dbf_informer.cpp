@@ -124,6 +124,8 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
     Tovar tovar;
     QList<Tovar> tovarList;
     tovar.price2 = 0;
+    tovar.quantity = 0;
+    tovar.shablon = 0;
     int offset;
     offset = 1 + dbf_fields[method].offset;
     int i = 0;

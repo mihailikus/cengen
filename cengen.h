@@ -176,7 +176,13 @@ private:
     QComboBox   *ui_filterWhatBox, *ui_filterWhereBox,
                 *ui_filterWhatToFoundBox, *ui_filterMethodBox;
     QLineEdit* ui_filterLineText;
-    QLabel *label18, *label19, *label20, *label21, *label22, *label23, *label23a;
+    QLabel *label18, *label19, *label20, *label21, *label22, *label23, *label23a, *label18a;
+
+    QGroupBox *filBoxCheck;
+    QGridLayout *filCheckLay;
+    QLabel *label30, *label31;
+    QComboBox *filterCheckOutBox, *filterCheckInBox;
+
 
 
     //виджеты вкладки выбора списка полей для основной таблицы

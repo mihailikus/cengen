@@ -66,6 +66,8 @@ QList<Tovar> Tinformer::info(QString searchText, QString method = "tbarcode") {
     tovar.nomer_of_tovar = 0;
     tovar.price1 = 0;
     tovar.price2 = 0;
+    tovar.shablon = 0;
+    tovar.quantity = 0;
 
     if (method == "any") {
         //не для поиска, а для создания пустой строки
