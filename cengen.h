@@ -147,6 +147,9 @@ private:
     QLabel *otstupLabel1;
     QLineEdit *otstupTopLine;
 
+    //QLabel *label32;
+    QCheckBox *expandBox;
+
 
     //виджеты вкладки источника данных
     QWidget *tab4;
@@ -326,6 +329,7 @@ private slots:
     QList<Tovar> convert_xml_into_tovar_list(QDomDocument doc);
     QDomDocument convert_tovar_list_into_xml(QList<Tovar> tovarList);
     QList<Tovar> minus(QList<Tovar> oldList, QList<Tovar> newList);
+    QList<Tovar> expand(QList<Tovar> list);
 
 
     void on_action_minus_triggered();

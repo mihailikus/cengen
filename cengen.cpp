@@ -467,7 +467,7 @@ void cengen::make_shablon_tab() {
     connect(ui_radioButton_6, SIGNAL(clicked()), SLOT(on_radioButton_6_clicked()));
     connect(ui_radioButton_7, SIGNAL(clicked()), SLOT(on_radioButton_7_clicked()));
     totalCennicOnPage = new QLabel(" ");
-    layBoxT2B3->addWidget(totalCennicOnPage, 8, 0, 1, 4);
+    layBoxT2B3->addWidget(totalCennicOnPage, 9, 0, 1, 4);
 
     zoomLabel = new QLabel (tr("Zoom of cennic's"));
     zoomBox = new QSpinBox;
@@ -486,6 +486,10 @@ void cengen::make_shablon_tab() {
 
     layBoxT2B3->addWidget(otstupLabel1, 7, 0, 1, 3);
     layBoxT2B3->addWidget(otstupTopLine, 7, 3);
+
+    //label32 = new QLabel(tr(""));
+    expandBox = new QCheckBox(tr("Expand tovar list for each item prices"));
+    layBoxT2B3->addWidget(expandBox, 8, 0, 1, 3);
 
     ui_groupBox_3->setLayout(layBoxT2B3);
     layTab2->addWidget(ui_groupBox_3);
@@ -910,6 +914,8 @@ void cengen::generate_preview() {
     pages.clear();
 
     QList<Tovar> spisok =  tableWidget->get_tovar_list("x");
+    if (expandBox->isChecked()) spisok = expand(spisok);
+
     Tovar currentTovar;
 
     //высчитываем левый верхний угол первой страницы
@@ -2012,4 +2018,15 @@ void cengen::on_fieldListBox_checked(bool status) {
     tableWidget->set_tableFields(fullFieldsList);
 
 
+}
+
+QList<Tovar> cengen::expand(QList<Tovar> list) {
+    QList<Tovar> newList;
+    for (int i = 0; i<list.count(); i++) {
+        newList << list.at(i);
+        if (list.at(i).quantity>1) {
+            for (int j=0; j<list.at(i).quantity-1; j++) newList<<list.at(i);
+        }
+    }
+    return newList;
 }
