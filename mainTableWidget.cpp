@@ -236,17 +236,12 @@ void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList) {
     //загружаем список товаров в таблицу генератора ценников
     add_flag = true;
     if (tovarList.count()) tovar_searched = true;
-    for (int i = 0; i<tovarList.count(); i++) {
-        Tovar tovar = tovarList.at(i);
-
-        int position = rowCount();
-        setRowCount(position + 1);
-        emit row_count_changed();
-
-        add_table_item(position, tovar);
-
-
+    int count = rowCount();
+    setRowCount(count + tovarList.count());
+    for (int position = count; position<count+tovarList.count(); position++) {
+        add_table_item(position, tovarList.at(position-count));
     }
+    emit row_count_changed();
     scrollToBottom();
     add_flag = false;
 }

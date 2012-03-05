@@ -23,7 +23,6 @@ public:
 
     QList<Tovar> get_tovar_list(QString priznak);
     void load_tovar_list_into_table(QList<Tovar> tovarList);
-    void add_table_item(int position, Tovar tovar);
     int get_tableTab_width(int col);
     void set_tableTab_width(int col, int size);
 
@@ -64,7 +63,7 @@ private slots:
     void on_tableWidget_cellClicked(int,int);
     void on_tableWidget_cellChanged(int,int);
     void delete_line_from_table(int pos);
-
+    void add_table_item(int position, Tovar tovar);
 
 
 signals:
