@@ -2909,32 +2909,36 @@ void cengen::on_action_sell_filter_triggered() {
     QString curDate;
     QDate dt1;
     dt1 = dateStart->selectedDate();
+    qDebug() << "last date is " << dt1.toString("yyyyMMdd");
+    dt1 = dt1.addDays(-1);
     //dt1 = QDate::currentDate();
 
     curDate =  dt1.toString("yyyyMMdd");
+//    curDate = "20120310";
     qDebug() << curDate;
-
-    tb1 = sell_informer->info(curDate, "tbarcode", 0, -1, 0, true);
-
     int startPos;
+    startPos = 374150;
+    tb1 = sell_informer->info(curDate, "tbarcode", 0, -1, 0, false);
+
 
     if (!tb1.count()) {
         startPos = 0;
 
     } else {
         startPos = sell_informer->last_found_record_number();
-        startPos--;
+        startPos++;
+        startPos++;
     }
     qDebug() << "Start position " << startPos;
 
 
     curDate = dateStop->selectedDate().toString("yyyyMMdd");
-    //dt1 = QDate::currentDate();
-    //curDate =  dt1.toString("yyyyMMdd");
+//    curDate = "20120311";
     qDebug() << curDate;
 
     tb2 = sell_informer->info(curDate, "tbarcode", startPos, -1, 0, false);
     int lastPos;
+    //lastPos = 374904;
     int max = sell_informer->get_maximum();
     if (tb2.count()) {
         lastPos = sell_informer->last_found_record_number();
@@ -2961,7 +2965,15 @@ void cengen::on_action_sell_filter_triggered() {
     for (int i = 0; i<curTb.count(); i++) {
         progressBar->setValue(i);
         tovar = curTb.at(i);
-        tb3 = sell_informer->info(QString::number(tovar.nomer_of_tovar), "tnomer", startPos, lastPos, lastPos-startPos, true);
+        tb3 = sell_informer->info
+                (QString::number(tovar.nomer_of_tovar),
+                 "tnomer",
+                 startPos,
+                 lastPos,
+                 lastPos-startPos,
+                 true);
+        qDebug() << i << " Last found number" << sell_informer->last_found_record_number();
+
         count = 0;
         for (int j = 0; j<tb3.count(); j++) {
             count += tb3.at(j).price1;

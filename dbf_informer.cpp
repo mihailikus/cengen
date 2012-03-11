@@ -185,7 +185,7 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
         }
         if (found)
         {
-            curLength = i*this->length_of_each_record +1;
+            curLength = (i-startPos)*this->length_of_each_record +1;
 
             tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + curLength,
                              dbf_fields["tname"].length);
