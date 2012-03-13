@@ -80,7 +80,7 @@ public:
     void make_filter_tab();
     void make_fieldList_tab();
     void make_status_bar();
-
+    void set_org_name(QString org, QString prog);
     void trigger_source_selection(bool state);
 
     //порядок вкладок
@@ -98,6 +98,8 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    QString org_name, app_name;
+
     TabsOrder order;
 
     //статусбар
@@ -348,6 +350,7 @@ private slots:
     void on_shablonList_combo_changed(int index);
 
     void on_fieldListBox_checked(bool status);
+
 };
 
 #endif // CENGEN_H
