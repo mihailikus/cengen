@@ -12,6 +12,8 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
 {
     shablonList.clear();
 
+    //this->set_org_name();
+
     //создаем основные рюшечки приложения
     this->make_actions();
     this->make_toolBar();
@@ -1052,6 +1054,7 @@ void cengen::on_action_print_triggered()
 
 void cengen::writeSettings()
 {
+    qDebug() << "ORG " << m_settings.organizationName();
     m_settings.beginGroup("/Settings");
     if (this->db_source) {
         m_settings.setValue("/source", 1);
@@ -1141,7 +1144,6 @@ void cengen::writeSettings()
 }
 
 void cengen::readSettings() {
-
     //устанавливаем геометрию окна
     int bWidth = m_settings.value("/Settings/Window/width", 950).toInt();
     int bHeith = m_settings.value("/Settings/Window/heith", 500).toInt();
@@ -2029,4 +2031,9 @@ QList<Tovar> cengen::expand(QList<Tovar> list) {
         }
     }
     return newList;
+}
+
+void cengen::set_org_name(QString org, QString prog) {
+    org_name = org;
+    app_name = prog;
 }

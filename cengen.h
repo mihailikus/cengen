@@ -98,6 +98,8 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    QString org_name, app_name;
+
     TabsOrder order;
 
     //статусбар
@@ -348,6 +350,9 @@ private slots:
     void on_shablonList_combo_changed(int index);
 
     void on_fieldListBox_checked(bool status);
+
+    void set_org_name(QString org, QString prog);
+
 };
 
 #endif // CENGEN_H
