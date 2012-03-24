@@ -33,8 +33,12 @@ public:
     void set_shablon_list(QStringList shablonList);
     void set_shablon_current(int shablon);
 
+    void set_focus_on_price2();
+
+
 public slots:
     void selectAllItems();
+    void on_interchange_prices_in_table_triggered();
 
 private:
     QHeaderView* tableHeader;
@@ -53,7 +57,7 @@ private:
     QStringList shablonList;
     int shablonCurrent;
 
-
+    int price1, price2; //порядковые номера, где цена1, где старая цена
 
 
 private slots:

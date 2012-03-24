@@ -43,7 +43,8 @@ HEADERS += cengen.h \
     addlinemaster.h \
     imagebox.h \
     about.h \
-    mainTableWidget.h
+    mainTableWidget.h \
+    tnvalidator.h
 FORMS += \
     addlinemaster.ui
 
@@ -56,6 +57,7 @@ TRANSLATIONS = cengen_ru.ts\
 
 RESOURCES += \
     resource.qrc
+
 
 
 

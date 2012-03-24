@@ -7,6 +7,8 @@ MainTableWidget::MainTableWidget(QWidget *pwgt)
     delfield = 255;
     init();
     method = 0;
+    price1=0;
+    price2=0;
     set_method_view(method);
 }
 
@@ -40,6 +42,12 @@ void MainTableWidget::set_tableFields(QMap<QString, bool> list) {
             }
             if (tm1 == tr("Shablon")) {
                 shField = i;
+            }
+            if (tm1 == tr("Price")) {
+                price1 = i;
+            }
+            if (tm1 == tr("Price2")) {
+                price2 = i;
             }
             fields << tm1;
             i++;
@@ -153,6 +161,7 @@ void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
     if (method) return; //если не 0, то ничего не редактируем
     if (editing_price2) {
         editing_price2 = false;
+        tovar_searched = false;
         emit row_count_changed();
         return;
     }
@@ -244,6 +253,8 @@ void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList) {
     emit row_count_changed();
     scrollToBottom();
     add_flag = false;
+    editing_price2 = true;
+    tovar_searched = true;
 }
 
 void MainTableWidget::set_editing_price2(bool status) {
@@ -317,4 +328,28 @@ void MainTableWidget::set_shablon_list(QStringList shablonList) {
 
 void MainTableWidget::set_shablon_current(int shablon) {
     this->shablonCurrent = shablon;
+}
+
+void MainTableWidget::on_interchange_prices_in_table_triggered() {
+    if (price1 == 0 || price2 == 0) {
+        //одна из цен не представлена в таблице - делать нечего
+        return;
+    }
+
+    QString tmp;
+    for (int i = 0; i<rowCount(); i++){
+            tmp = item(i, price1)->text();
+            //qDebug() << "tmp " << tmp << i << p1;
+            item(i, price1)->setText(item(i, price2)->text());
+            item(i, price2)->setText(tmp);
+    }
+}
+
+void MainTableWidget::set_focus_on_price2() {
+    set_editing_price2(true);
+    if (rowCount()) {
+        setCurrentCell(rowCount()-1, price2);
+        setFocus();
+    }
+
 }

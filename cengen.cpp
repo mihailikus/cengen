@@ -38,6 +38,10 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     tableWidget->set_editing_price2(false);
     tableWidget->set_tovar_searched(false);
 
+    //подключаем функцию обмена старых цен на новые
+    connect(interchange_prices_in_table, SIGNAL(triggered()),
+            tableWidget, SLOT(on_interchange_prices_in_table_triggered()));
+
     my_informer = new Tinformer();
     zoom = 1.0;
 
@@ -135,6 +139,10 @@ void cengen::make_actions() {
     connect(apply_filter_on_current_list, SIGNAL(triggered()),
             SLOT(on_apply_filter_on_current_list_triggered()));
 
+    //поменять местами старую и новую цену
+    interchange_prices_in_table = new QAction(tr("Interchange prices"), this);
+    interchange_prices_in_table->setToolTip(tr("Intercange OLD and NEW prices"));
+
 }
 
 void cengen::make_toolBar() {
@@ -168,6 +176,10 @@ void cengen::make_mainMenu() {
     menuFile->addSeparator();
     menuFile->addAction(action_exit);
 
+    //menuEdit = new QMenuBar;
+    menuEdit = mainMenu->addMenu(tr("Edit"));
+    menuEdit->addAction(interchange_prices_in_table);
+
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_about);
 
@@ -185,7 +197,7 @@ void cengen::make_search_tab() {
     connect (ui_lineEdit, SIGNAL(returnPressed()), SLOT(on_lineEdit_returnPressed()));
     //устанавливаем валидатор (первый вход в программу - поиск через баркод)
     ui_bvalidator = new BarcodeValidator(this);
-    ui_nvalidator = new QIntValidator(this);
+    ui_nvalidator = new TNValidator(this);
     ui_svalidator = new SqlValidator(this);
     ui_lineEdit->setValidator(ui_bvalidator);
     layTab1->addWidget(ui_lineEdit, 0, 0, 1, 3);
@@ -669,19 +681,13 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList) {
 
 void cengen::on_lineEdit_returnPressed()
 {
-    if (ui_lineEdit->text() != "" || tableWidget->is_tovar_searched() == false) {
+    if (ui_lineEdit->text() != "" || !tableWidget->is_tovar_searched()) {
         this->tovar_search();
         this->new_line_ready();
     } else {
         //нажата Энтер с пустым полем - значит, хотим отредактировать
         //    цену только что введенного товара
-        tableWidget->set_editing_price2(true);
-        if (tableWidget->rowCount()) {
-            QTableWidgetItem* item = tableWidget->item
-                    (tableWidget->rowCount()-1, 5);
-            tableWidget->setCurrentItem(item);
-            tableWidget->setFocus();
-        }
+        tableWidget->set_focus_on_price2();
     }
 
 }
@@ -1410,6 +1416,7 @@ void cengen::get_method_from_ui()
     if (ui_radioButton_2->isChecked()) {
         method= "tnomer";
         ui_lineEdit->setValidator(ui_nvalidator);
+        //ui_lineEdit->setValidator(ui_bvalidator);
     }
     if (ui_radioButton_3->isChecked()) {
         method= "tname";

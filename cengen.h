@@ -31,6 +31,7 @@
 #include "cen_viewer.h"
 #include "bvalidator.h"
 #include "sql_validator.h"
+#include "tnvalidator.h"
 #include "dialog.h"
 #include "editor.h"
 #include "about.h"
@@ -206,7 +207,7 @@ private:
 
     //валидаторы для штрих-кода, номера и текста
     BarcodeValidator* ui_bvalidator;
-    QIntValidator* ui_nvalidator;
+    TNValidator* ui_nvalidator;
     SqlValidator* ui_svalidator;
 
 
@@ -269,7 +270,7 @@ private:
 
     QToolBar* ui_mainToolBar;
     QMenuBar* mainMenu;
-    QMenu *menuFile, *menuHelp;
+    QMenu *menuFile, *menuEdit, *menuHelp;
 
     QAction* action_new; //новый файл
     QAction* action_exit; //выход
@@ -282,6 +283,7 @@ private:
     QAction* action_about;
     QAction* action_minus;
     QAction* apply_filter_on_current_list;
+    QAction* interchange_prices_in_table;
 
 private slots:
     //void on_tableWidget_cellClicked(int row, int column);
