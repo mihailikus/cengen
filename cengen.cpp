@@ -38,9 +38,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     tableWidget->set_editing_price2(false);
     tableWidget->set_tovar_searched(false);
 
-    //подключаем функцию обмена старых цен на новые
-    connect(interchange_prices_in_table, SIGNAL(triggered()),
-            tableWidget, SLOT(on_interchange_prices_in_table_triggered()));
 
     my_informer = new Tinformer();
     zoom = 1.0;
@@ -142,7 +139,8 @@ void cengen::make_actions() {
     //поменять местами старую и новую цену
     interchange_prices_in_table = new QAction(tr("Interchange prices"), this);
     interchange_prices_in_table->setToolTip(tr("Intercange OLD and NEW prices"));
-
+    connect(interchange_prices_in_table, SIGNAL(triggered()),
+            this, SLOT(on_interchange_prices_in_table_triggered()));
 }
 
 void cengen::make_toolBar() {
@@ -1596,20 +1594,14 @@ QDomDocument cengen::read_file_shablon(QString str) {
 void cengen::on_action_save_triggered()
 {
     //Сохранение списка товаров
-    qDebug() << "saving tovar list";
-
-    QList<Tovar> spisok= tableWidget->get_tovar_list("x");
-
-    QDomDocument doc;
-
-    doc = this->convert_tovar_list_into_xml(spisok);
-
-
-    //записываем все это дело в файл
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save tovar list"),"" , tr("Tovar lists (*.tov)"));
     if (fileName != "") {
         QFile file(fileName);
         if(file.open(QIODevice::WriteOnly)) {
+            QList<Tovar> spisok= tableWidget->get_tovar_list("x");
+            QDomDocument doc;
+            doc = this->convert_tovar_list_into_xml(spisok);
+
             QString shablon_array = doc.toString();
             QTextStream out(&file);
             //out.setCodec(codec_utf8);
@@ -1617,11 +1609,7 @@ void cengen::on_action_save_triggered()
 
             file.close();
         }
-        //qDebug() << "template:: \n " << doc.toString();
-
     }
-
-
 }
 
 void cengen::on_action_open_triggered()
@@ -1666,7 +1654,7 @@ QList<Tovar> cengen::convert_xml_into_tovar_list(QDomDocument doc) {
         if (node.isElement()) {
             QDomElement item = node.toElement();
             Tovar tovarItem;
-
+            tovarItem.quantity = 0;
             if (item.tagName() == "tovarItem") {
                 QDomNode nodeItem = node.firstChild();
                 while (!nodeItem.isNull()) {
@@ -2042,4 +2030,11 @@ QList<Tovar> cengen::expand(QList<Tovar> list) {
 void cengen::set_org_name(QString org, QString prog) {
     org_name = org;
     app_name = prog;
+}
+
+void cengen::on_interchange_prices_in_table_triggered() {
+    tableWidget->interchange_prices_in_table();
+    if (ui_tabWidget->currentIndex() == TabsOrder::Preview) {
+        on_action_make_triggered();
+    }
 }

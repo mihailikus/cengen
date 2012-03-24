@@ -302,6 +302,7 @@ private slots:
     void on_selectShablonButton_clicked();
     void on_action_make_triggered();
     void on_apply_filter_on_current_list_triggered();
+    void on_interchange_prices_in_table_triggered();
     void on_lineEdit_returnPressed();
     void tovar_search();
     void new_line_ready();

@@ -10,6 +10,9 @@ MainTableWidget::MainTableWidget(QWidget *pwgt)
     price1=0;
     price2=0;
     set_method_view(method);
+    connect(this, SIGNAL(cellClicked(int,int)), SLOT(set_editing_price2()));
+    connect(this, SIGNAL(cellDoubleClicked(int,int)), SLOT(set_editing_price2()));
+
 }
 
 MainTableWidget::~MainTableWidget() {
@@ -175,8 +178,7 @@ void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
             column++;
         }
     }
-    QTableWidgetItem* itemC = item(row, column);
-    setCurrentItem(itemC);
+    setCurrentCell(row, column);
 }
 
 void MainTableWidget::add_table_item(int position, Tovar tovar) {
@@ -330,7 +332,7 @@ void MainTableWidget::set_shablon_current(int shablon) {
     this->shablonCurrent = shablon;
 }
 
-void MainTableWidget::on_interchange_prices_in_table_triggered() {
+void MainTableWidget::interchange_prices_in_table() {
     if (price1 == 0 || price2 == 0) {
         //одна из цен не представлена в таблице - делать нечего
         return;

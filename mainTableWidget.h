@@ -15,7 +15,6 @@ public:
     MainTableWidget(QWidget* pwgt = 0);
     ~MainTableWidget();
 
-    void set_editing_price2(bool status);
     void set_add_flag(bool status);
     void set_tovar_searched(bool status);
     bool is_tovar_searched();
@@ -38,7 +37,8 @@ public:
 
 public slots:
     void selectAllItems();
-    void on_interchange_prices_in_table_triggered();
+    void interchange_prices_in_table();
+    void set_editing_price2(bool status = false);
 
 private:
     QHeaderView* tableHeader;
