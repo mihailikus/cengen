@@ -19,7 +19,6 @@ int main(int argc, char *argv[])
         QTextStream out(file);
         out << "org_name = " + org_name + "\n";
         out << "app_name = " + app_name + "\n";
-        //file << org_name;
 
     } else {
         //читаем название организации из файла
@@ -34,7 +33,6 @@ int main(int argc, char *argv[])
                         name = name.split("=").at(1).trimmed();
                         org_name = name;
                     }
-                    qDebug() << "NAME is " << name;
                 }
                 if (line.contains("app_name")) {
                     name = line;
@@ -42,10 +40,8 @@ int main(int argc, char *argv[])
                         name = name.split("=").at(1).trimmed();
                         app_name = name;
                     }
-                    qDebug() << "APP is " << name;
                 }
             }
-            qDebug() << line;
         }
     }
     file->close();

@@ -1054,7 +1054,6 @@ void cengen::on_action_print_triggered()
 
 void cengen::writeSettings()
 {
-    qDebug() << "ORG " << m_settings.organizationName();
     m_settings.beginGroup("/Settings");
     if (this->db_source) {
         m_settings.setValue("/source", 1);

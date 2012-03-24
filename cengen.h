@@ -351,11 +351,6 @@ private slots:
 
     void on_fieldListBox_checked(bool status);
 
-<<<<<<< HEAD
-=======
-    void set_org_name(QString org, QString prog);
-
->>>>>>> 3b035ea9502db2b831b29793690ca66d3f115f7e
 };
 
 #endif // CENGEN_H
