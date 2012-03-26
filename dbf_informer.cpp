@@ -132,20 +132,24 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
     int count = 0;
     int curLength;
     QString value;
+    bool found = false;
 
     while (i<number_of_records && count < limit)
     {
         value = this->get_one_cell(offset, dbf_fields[method].length);
-        if (  (
-                (method == "tbarcode" || method == "tnomer") &&
-                (value == searchText)
-               )
-               ||
-               (
-                (method == "tname") &&
-                (value.contains(searchText, Qt::CaseInsensitive))
-                )
-            )
+        if ((method == "tbarcode"
+             || method == "tnomer") &&
+                (value == searchText) ) found = true;
+        if (method == "tname") {
+            QStringList searches = searchText.split(" ");
+            found = true;
+            for (int j = 0; j<searches.count(); j++) {
+                if (!value.contains(searches.at(j), Qt::CaseInsensitive)) {
+                    found = false;
+                }
+            }
+        }
+        if (found)
         {
             curLength = i*this->length_of_each_record +1;
 
@@ -162,6 +166,7 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
             count++;
         }
     i++;
+    found = false;
     offset += this->length_of_each_record;
     }
 
