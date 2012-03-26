@@ -20,6 +20,7 @@ private:
 public:
     Barcode(QString text = "0000000000000");
     ~Barcode();
+    QString found_lost_digit(QString text);
 
 public slots:
     void update(QString text = "0000000000000");

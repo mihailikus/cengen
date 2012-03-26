@@ -76,6 +76,7 @@ void MainTableWidget::set_tableFields(QMap<QString, bool> list) {
 QList<Tovar> MainTableWidget::get_tovar_list(QString priznak) {
     QList<Tovar> spisok;
     Tovar tovar;
+    QComboBox* box; //вынесено из цикла для работы со списком шаблонов
     for (int i = 0; i<rowCount(); i++) {
         if (item(i, delfield)->text() == priznak) {
 
@@ -111,7 +112,7 @@ QList<Tovar> MainTableWidget::get_tovar_list(QString priznak) {
                         tovar.quantity = item(i, j)->text().toInt();
                     }
                     if (tm == tr("Shablon")) {
-                        QComboBox* box = ((QComboBox*)cellWidget(i, j));
+                        box = ((QComboBox*)cellWidget(i, j));
                         tovar.shablon = box->currentIndex();
                         //qDebug() << "Shablon " << tovar.shablon;
                     }
@@ -330,6 +331,11 @@ void MainTableWidget::set_shablon_list(QStringList shablonList) {
 
 void MainTableWidget::set_shablon_current(int shablon) {
     this->shablonCurrent = shablon;
+    QComboBox* box;
+    for (int i = 0; i<rowCount(); i++) {
+        box = ((QComboBox*)cellWidget(i, shField));
+        box->setCurrentIndex(shablon);
+    }
 }
 
 void MainTableWidget::interchange_prices_in_table() {

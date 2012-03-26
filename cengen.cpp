@@ -141,6 +141,10 @@ void cengen::make_actions() {
     interchange_prices_in_table->setToolTip(tr("Intercange OLD and NEW prices"));
     connect(interchange_prices_in_table, SIGNAL(triggered()),
             this, SLOT(on_interchange_prices_in_table_triggered()));
+
+    action_verify_barcode = new QAction(tr("Verify or correct barcode"), this);
+    connect(action_verify_barcode, SIGNAL(triggered()),
+            SLOT(on_action_verify_barcode()));
 }
 
 void cengen::make_toolBar() {
@@ -174,9 +178,9 @@ void cengen::make_mainMenu() {
     menuFile->addSeparator();
     menuFile->addAction(action_exit);
 
-    //menuEdit = new QMenuBar;
     menuEdit = mainMenu->addMenu(tr("Edit"));
     menuEdit->addAction(interchange_prices_in_table);
+    menuEdit->addAction(action_verify_barcode);
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_about);
@@ -2037,4 +2041,19 @@ void cengen::on_interchange_prices_in_table_triggered() {
     if (ui_tabWidget->currentIndex() == TabsOrder::Preview) {
         on_action_make_triggered();
     }
+}
+
+void cengen::on_action_verify_barcode() {
+    //qDebug() << "going to ver barcode";
+    Barcode *barc = new Barcode;
+    QString text = ui_lineEdit->text();
+    QString br = barc->found_lost_digit(text);
+    //qDebug() << "Lost digit is " << br;
+
+    ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
+    dlg->setTable(tr("FOUND ") + br);
+    if (dlg->exec()) {
+        ui_lineEdit->setText(br);
+    }
+
 }

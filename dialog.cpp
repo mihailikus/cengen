@@ -38,6 +38,7 @@ void ListFoundedItemsDialog::setTable(MainTableWidget **table) {
 void ListFoundedItemsDialog::setTable(QString error) {
     QLabel* label = new QLabel (error);
     label->setAlignment(Qt::AlignCenter);
+    label->setAcceptDrops(true);
     myLayout->addWidget (label, 0, 0, 1, 0);
     this->setFixedSize(300, 70);
 

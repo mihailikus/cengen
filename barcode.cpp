@@ -35,7 +35,7 @@ bool Barcode::is_valid()
     if (barcode.length()<6) return false;
     int sum = 0;
     int k = 1;
-    for (int i = barcode.length()-1; i>=0; i--)
+    for (int i = barcode.length(); i>=0; i--)
     {
         sum += k*(barcode[i].toAscii()-48);
         if (k==1) {
@@ -287,4 +287,24 @@ int Barcode::correctSymbol(QChar symbol) {
         bit = 0;
     }
     return bit;
+}
+
+QString Barcode::found_lost_digit(QString text) {
+    QStringList items = text.split("*");
+    if (items.count() != 2) {
+        //qDebug() << "Small";
+        return "-1";
+    }
+    if (items.at(0).length() + items.at(1).length() != 12)
+    {
+        //qDebug() <<"Length";
+        return "-1";
+    }
+
+    for (int i = 9; i>=0; i--) {
+        this->barcode = items.at(0) + QString::number(i) + items.at(1);
+        //qDebug() <<"Cur bar" << barcode;
+        if (is_valid()) return barcode;
+    }
+    return "-1";
 }

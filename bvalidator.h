@@ -13,11 +13,15 @@ public:
 
     virtual State validate(QString& str, int& ) const
     {
-        //pos++;
-        QRegExp rxp = QRegExp ("\\D");
-        if (str.contains(rxp)) {
-            return Invalid;
+        QString tmp;
+        QRegExp rxp = QRegExp ("[0-9]");
+        for (int i = 0; i<str.length(); i++) {
+            tmp = str.at(i);
+            if (!tmp.contains(rxp) && tmp != "*") {
+                return Invalid;
+            }
         }
+
         if (str.length()>13) {
             return Invalid;
         }
