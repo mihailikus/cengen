@@ -1599,18 +1599,37 @@ void cengen::on_action_save_triggered()
 {
     //Сохранение списка товаров
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save tovar list"),"" , tr("Tovar lists (*.tov)"));
+
     if (fileName != "") {
+        bool ckeck = false;
+        int ind = fileName.lastIndexOf(".tov", -1, Qt::CaseInsensitive);
+        if (ind + 4 != fileName.length() || ind == -1) {
+            fileName += ".tov";
+            ckeck = true;
+        }
+
         QFile file(fileName);
-        if(file.open(QIODevice::WriteOnly)) {
+        if (ckeck && file.exists()) {
+            ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
+            dlg->setTable(tr("File exist. Rewrite?"));
+            if (dlg->exec()) {
+                ckeck = false;
+            } else {
+                //приделать повторный выбор имени файла
+                return;
+            }
+        } else {
+            ckeck = false;
+        }
+
+        if(!ckeck && file.open(QIODevice::WriteOnly)) {
             QList<Tovar> spisok= tableWidget->get_tovar_list("x");
             QDomDocument doc;
             doc = this->convert_tovar_list_into_xml(spisok);
 
             QString shablon_array = doc.toString();
             QTextStream out(&file);
-            //out.setCodec(codec_utf8);
             out << shablon_array;
-
             file.close();
         }
     }
@@ -1624,7 +1643,6 @@ void cengen::on_action_open_triggered()
         qDebug() << "Please select file name";
         return;
     }
-
     QDomDocument doc;
     //QDomElement domElement;
 
