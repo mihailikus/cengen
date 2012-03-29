@@ -4,7 +4,7 @@
 MainTableWidget::MainTableWidget(QWidget *pwgt)
 : QTableWidget (pwgt)
 {
-    delfield = 255;
+    delfield = 0;
     init();
     method = 0;
     price1=0;
@@ -40,11 +40,11 @@ void MainTableWidget::set_tableFields(QMap<QString, bool> list) {
             tmp << it.key();
             QString tm = tmp.at(i);
             QString tm1 = tm.split(QRegExp("[0-9] ")).at(1);
-            if (tm.split(QRegExp(" ")).at(0).toInt() == 8) {
-                delfield = i;
-            }
-            if (tm1 == tr("Shablon")) {
-                shField = i;
+            if (tm1 == tr("DELETE")) {
+                delfield += i;
+                if (method) {
+                    tm1 = tr("Check");
+                }
             }
             if (tm1 == tr("Price")) {
                 price1 = i;
@@ -52,7 +52,19 @@ void MainTableWidget::set_tableFields(QMap<QString, bool> list) {
             if (tm1 == tr("Price2")) {
                 price2 = i;
             }
-            fields << tm1;
+            if (tm1 == tr("Shablon")) {
+                shField = i;
+            }
+            if ( method && tm1 == tr("Shablon")) {
+                //если у нас метод показа 1 (т.е. список найденных)
+                //  то нам не нужно поле выбора шаблона, удаляем
+                fieldList.remove(it.key());
+                delfield--;
+            } else {
+
+                    fields << tm1;
+            }
+
             i++;
         }
     }
@@ -140,9 +152,7 @@ void MainTableWidget::on_tableWidget_cellClicked(int row, int column)
         }
         break;
     case 1:
-        //qDebug() << "column = " << column;
         text = item(row, delfield)->text();
-        //qDebug() << text;
 
         if (text == "V") {
             text = " ";
