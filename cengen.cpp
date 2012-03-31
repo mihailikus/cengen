@@ -1899,9 +1899,6 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
 
     }
 
-    //filterConfig.tbarcode = ui_filterWhatBox->currentText();
-
-
     filterInformer->set_fields(&filterConfig);
 
     filterInformer->set_limit_search(1);
@@ -1910,15 +1907,18 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     QString search = ui_filterLineText->text();
     bool itemfound;
 
-    qDebug() << "Method in filter " << method;
-
     Tovar tovarItem, tovarFound;
 
     bool ckeckOut = filBoxCheck->isChecked();
 
+    //поиск еще не оптимален - иногда он бывает долгим
+    progressBar->setMaximum(inputList.count());
+    statusBar->addWidget(progressBar);
+    progressBar->show();
+
     for (int i = 0; i<inputList.count(); i++) {
+        progressBar->setValue(i);
         tovarItem = inputList.at(i);
-        //qDebug() << "filter i=" << i;
 
         QString searchText, searchMethod;
         //в зависимости от выбранного ищем по номеру, цене и т.п.
@@ -1943,14 +1943,11 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
             searchMethod = "tnomer";
             break;
         }
-        //qDebug() << "Search text in filter: " << searchText;
 
         QList<Tovar> foundList = filterInformer->info(searchText, searchMethod);
         if (foundList.count()) {
             itemfound = false;
             tovarFound = foundList.at(0);
-            //qDebug() << "tovar is " << tovarFound.price1;
-            //qDebug() << "FOUND in filter: " << tovarFound.name_of_tovar;
 
             //проверяем, используя выбранный метод сравнения
             switch (method) {
@@ -1979,10 +1976,10 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
             }
             if (itemfound) filteredList <<tovarItem;
 
-        }
+        }        
     }
 
-
+    statusBar->removeWidget(progressBar);
 
     return filteredList;
 }
