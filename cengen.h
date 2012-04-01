@@ -25,6 +25,8 @@
 #include <QMenuBar>
 #include <QAction>
 #include <QMap>
+#include <QApplication>
+#include <QClipboard>
 //#include <QSpacerItem>
 #include "tinformer.h"
 #include "barcode.h"
@@ -285,6 +287,9 @@ private:
     QAction* apply_filter_on_current_list;
     QAction* interchange_prices_in_table;
     QAction* action_verify_barcode;
+    QAction* action_update_prices;
+    QAction* action_input_load_from_clipboard;
+    QAction* action_on_off_filter;
 
 private slots:
     //void on_tableWidget_cellClicked(int row, int column);
@@ -304,7 +309,10 @@ private slots:
     void on_action_make_triggered();
     void on_apply_filter_on_current_list_triggered();
     void on_interchange_prices_in_table_triggered();
+    void on_action_input_load_from_clipboard_triggered();
+    void on_action_on_off_filter_triggered(bool status);
     void on_action_verify_barcode();
+    void on_action_update_prices();
     void on_lineEdit_returnPressed();
     void tovar_search();
     void new_line_ready();

@@ -145,6 +145,20 @@ void cengen::make_actions() {
     action_verify_barcode = new QAction(tr("Verify or correct barcode"), this);
     connect(action_verify_barcode, SIGNAL(triggered()),
             SLOT(on_action_verify_barcode()));
+
+    action_update_prices = new QAction(tr("Update price1 for current tovar list"), this);
+    connect(action_update_prices, SIGNAL(triggered()),
+            SLOT(on_action_update_prices()));
+
+    action_input_load_from_clipboard = new QAction(tr("Load tovar list from clipboard"), this);
+    connect(action_input_load_from_clipboard, SIGNAL(triggered()),
+            SLOT(on_action_input_load_from_clipboard_triggered()));
+
+    action_on_off_filter = new QAction(tr("Filter ON"), this);
+    action_on_off_filter->setCheckable(true);
+    connect(action_on_off_filter, SIGNAL(triggered(bool)),
+            SLOT(on_action_on_off_filter_triggered(bool)));
+
 }
 
 void cengen::make_toolBar() {
@@ -179,7 +193,10 @@ void cengen::make_mainMenu() {
     menuFile->addAction(action_exit);
 
     menuEdit = mainMenu->addMenu(tr("Edit"));
+    menuEdit->addAction(action_on_off_filter);
     menuEdit->addAction(interchange_prices_in_table);
+    menuEdit->addAction(action_update_prices);
+    menuEdit->addAction(action_input_load_from_clipboard);
     menuEdit->addAction(action_verify_barcode);
 
     menuHelp = mainMenu->addMenu(tr("About"));
@@ -1261,11 +1278,13 @@ void cengen::readSettings() {
     filter_is_on = m_settings.value("/Settings/filterIsOn", "false").toBool();
     if (filter_is_on) {
         //если фильтр включен - включаем контрол в UI и читаем настройки
-        ui_filterBox->setChecked(true);
-        this->read_filter_settings();
+        //ui_filterBox->setChecked(true);
+        this->action_on_off_filter->setChecked(true);
+        this->read_filter_settings();        
     } else {
         //если в конфиге фильтр выключен - выключем его в UI на всякий случай
-        ui_filterBox->setChecked(false);
+        //ui_filterBox->setChecked(false);
+        this->action_on_off_filter->setChecked(false);
     }
 
     //читаем номер текущей вкладки (по умолчанию - вкладка с источником данных)
@@ -2071,4 +2090,79 @@ void cengen::on_action_verify_barcode() {
         ui_lineEdit->setText(br);
     }
 
+}
+
+void cengen::on_action_update_prices() {
+    QList<Tovar> spisokCur, spisokNew, spisokWrong, spTmp;
+    Tovar tovar;
+    spisokCur = tableWidget->get_tovar_list("x");
+
+    //qDebug() << "Count " << spisokCur.count();
+    int count = spisokCur.count();
+
+    progressBar->setMaximum(count);
+    statusBar->addWidget(progressBar);
+    progressBar->show();
+
+    for (int i = 0; i<count; i++){
+        progressBar->setValue(i);
+        tovar = spisokCur.at(i);
+        //qDebug() << "i. " << i << tovar.nomer_of_tovar << tovar.name_of_tovar;
+        spTmp = my_informer->info(QString::number(tovar.nomer_of_tovar), "tnomer");
+        if (!spTmp.count()) {
+            tovar.name_of_tovar = tr("NOT FOUND ") + tovar.name_of_tovar;
+            spisokWrong << tovar;
+        } else {
+            tovar.price1 = spTmp.at(0).price1;
+            spisokNew << tovar;
+
+            if (tovar.price1 != spTmp.at(0).price1) {
+                tovar.name_of_tovar = tr("Price changed ") + tovar.name_of_tovar;
+                tovar.price2 = spTmp.at(0).price1;
+                spisokWrong << tovar;
+            }
+        }
+
+
+    }
+    statusBar->removeWidget(progressBar);
+
+    this->on_action_new_triggered();
+    tableWidget->load_tovar_list_into_table(spisokNew);
+
+}
+
+void cengen::on_action_input_load_from_clipboard_triggered() {
+    QClipboard *pcb = QApplication::clipboard();
+    QString str = pcb->text();
+    if (!str.isNull()) {
+        QStringList strs = str.split("\n");
+        QString tmp;
+        Tovar tovar;
+        QList<Tovar> tmpList, newList, badList;
+
+        progressBar->setMaximum(strs.count());
+        statusBar->addWidget(progressBar);
+        progressBar->show();
+
+        for (int i = 0; i<strs.count(); i++) {
+            progressBar->setValue(i);
+            tmp = QString::number(strs.at(i).toFloat());    //убрать все лишнее
+            tmpList = my_informer->info(tmp, "tnomer");
+            if (tmpList.count()) {
+                newList << tmpList;
+            } else {
+                tovar.name_of_tovar = strs.at(i);
+                badList << tovar;
+            }
+        }
+        tableWidget->load_tovar_list_into_table(newList);
+        statusBar->removeWidget(progressBar);
+    }
+
+}
+
+void cengen::on_action_on_off_filter_triggered(bool status) {
+    //qDebug() << "Filter status" << status;
+    ui_filterBox->setChecked(status);
 }
