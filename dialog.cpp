@@ -22,11 +22,11 @@ ListFoundedItemsDialog::ListFoundedItemsDialog (QWidget* pwgt/*= 0*/)
     myLayout->addWidget (buttonCancel, 1, 1);
 
     setLayout(myLayout);
-    this->setFixedSize(1000, 500);
-
+    resize(pwgt->size());
 }
 
 void ListFoundedItemsDialog::setMessage(MainTableWidget **table) {
+
     myTable = *table;
     myLayout->addWidget(myTable, 0, 0, 1, 3);
 
@@ -40,7 +40,7 @@ void ListFoundedItemsDialog::setMessage(QString error) {
     label->setAlignment(Qt::AlignCenter);
     label->setAcceptDrops(true);
     myLayout->addWidget (label, 0, 0, 1, 0);
-    this->setFixedSize(300, 70);
+    this->resize(300, 70);
 
 }
 

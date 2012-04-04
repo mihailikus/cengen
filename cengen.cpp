@@ -1104,6 +1104,8 @@ void cengen::writeSettings()
 
     m_settings.setValue("/shablon", currShablonFileName);
 
+    m_settings.setValue("/SearchLimit", ui_spinLimit->value());
+
     if (describer_is_ready) {
         m_settings.beginGroup("/describer");
         m_settings.setValue("/tnomer", config_index[0]);
@@ -1295,6 +1297,7 @@ void cengen::readSettings() {
     ui_tabWidget->setCurrentIndex(ind);
 
     ui_spinLimit->setMaximum(my_informer->get_maximum());
+    ui_spinLimit->setValue(m_settings.value("/Settings/SearchLimit", "10").toInt());
 }
 
 void cengen::read_filter_settings() {
@@ -2182,7 +2185,7 @@ void cengen::ask_user_to_save_wrong_tovar_list(QList<Tovar> spisokWrong) {
     if (spisokWrong.count()) {
         ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
         dlg->setMessage(tr("FOUND ") + QString::number(spisokWrong.count())
-                        + " wrong tovars. Click OK to save them");
+                        + " wrong tovars.\nIf you want to save them into file, click OK button");
         if (dlg->exec()) {
             //сохраняем список
             qDebug() << "Going to save spisok";
