@@ -24,8 +24,8 @@ private:
 public:
     ListFoundedItemsDialog (QWidget* pwgt = 0);
 
-    void setTable(MainTableWidget **table);
-    void setTable(QString error);
+    void setMessage(MainTableWidget **table);
+    void setMessage(QString error);
 
 private slots:
     //void addTovarToList(int row, int column);

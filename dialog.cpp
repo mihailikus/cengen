@@ -26,7 +26,7 @@ ListFoundedItemsDialog::ListFoundedItemsDialog (QWidget* pwgt/*= 0*/)
 
 }
 
-void ListFoundedItemsDialog::setTable(MainTableWidget **table) {
+void ListFoundedItemsDialog::setMessage(MainTableWidget **table) {
     myTable = *table;
     myLayout->addWidget(myTable, 0, 0, 1, 3);
 
@@ -35,7 +35,7 @@ void ListFoundedItemsDialog::setTable(MainTableWidget **table) {
 
 }
 
-void ListFoundedItemsDialog::setTable(QString error) {
+void ListFoundedItemsDialog::setMessage(QString error) {
     QLabel* label = new QLabel (error);
     label->setAlignment(Qt::AlignCenter);
     label->setAcceptDrops(true);

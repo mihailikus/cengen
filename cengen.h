@@ -27,7 +27,6 @@
 #include <QMap>
 #include <QApplication>
 #include <QClipboard>
-//#include <QSpacerItem>
 #include "tinformer.h"
 #include "barcode.h"
 #include "cen_viewer.h"
@@ -40,9 +39,7 @@
 #include "mainTableWidget.h"
 
 QT_BEGIN_NAMESPACE
-//class QLineEdit;
 class QPushButton;
-//class QRadioButton;
 class QTableWidget;
 class QLabel;
 class QFile;
@@ -310,7 +307,6 @@ private slots:
     void on_apply_filter_on_current_list_triggered();
     void on_interchange_prices_in_table_triggered();
     void on_action_input_load_from_clipboard_triggered();
-    void on_action_on_off_filter_triggered(bool status);
     void on_action_verify_barcode();
     void on_action_update_prices();
     void on_lineEdit_returnPressed();
@@ -363,6 +359,10 @@ private slots:
     void on_shablonList_combo_changed(int index);
 
     void on_fieldListBox_checked(bool status);
+
+    void save_tovar_list_into_file(QString name, QList<Tovar> spisok);
+
+    void ask_user_to_save_wrong_tovar_list(QList<Tovar> spisok);
 
 };
 

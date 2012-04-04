@@ -157,7 +157,7 @@ void cengen::make_actions() {
     action_on_off_filter = new QAction(tr("Filter ON"), this);
     action_on_off_filter->setCheckable(true);
     connect(action_on_off_filter, SIGNAL(triggered(bool)),
-            SLOT(on_action_on_off_filter_triggered(bool)));
+            SLOT(on_filterBox_toggled(bool)));
 
 }
 
@@ -680,7 +680,7 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList) {
 
     if (!inputList.count()) {
         //если пусто - показать ошибку
-        dlg->setTable(tr("NOT FOUND"));
+        dlg->setMessage(tr("NOT FOUND"));
 
     } else {
         table->set_tableFields(fullFieldsList);
@@ -689,7 +689,7 @@ QList<Tovar> cengen::show_found_items(QList<Tovar> inputList) {
         }
         table->load_tovar_list_into_table(inputList);
 
-        dlg->setTable(&table);
+        dlg->setMessage(&table);
     }
     if (dlg->exec()) {
         tovarList = table->get_tovar_list("V");
@@ -1279,12 +1279,12 @@ void cengen::readSettings() {
     if (filter_is_on) {
         //если фильтр включен - включаем контрол в UI и читаем настройки
         //ui_filterBox->setChecked(true);
-        this->action_on_off_filter->setChecked(true);
-        this->read_filter_settings();        
+        on_filterBox_toggled(true);
+        //this->read_filter_settings();
     } else {
         //если в конфиге фильтр выключен - выключем его в UI на всякий случай
         //ui_filterBox->setChecked(false);
-        this->action_on_off_filter->setChecked(false);
+        on_filterBox_toggled(false);
     }
 
     //читаем номер текущей вкладки (по умолчанию - вкладка с источником данных)
@@ -1614,10 +1614,15 @@ QDomDocument cengen::read_file_shablon(QString str) {
     return doc;
 }
 
-void cengen::on_action_save_triggered()
+void cengen::on_action_save_triggered() {
+    QList<Tovar> spisok= tableWidget->get_tovar_list("x");
+    this->save_tovar_list_into_file("", spisok);
+}
+
+void cengen::save_tovar_list_into_file(QString preferName, QList<Tovar> spisok)
 {
     //Сохранение списка товаров
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save tovar list"),"" , tr("Tovar lists (*.tov)"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save tovar list"), preferName , tr("Tovar lists (*.tov)"));
 
     if (fileName != "") {
         bool ckeck = false;
@@ -1630,7 +1635,7 @@ void cengen::on_action_save_triggered()
         QFile file(fileName);
         if (ckeck && file.exists()) {
             ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
-            dlg->setTable(tr("File exist. Rewrite?"));
+            dlg->setMessage(tr("File exist. Rewrite?"));
             if (dlg->exec()) {
                 ckeck = false;
             } else {
@@ -1642,7 +1647,6 @@ void cengen::on_action_save_triggered()
         }
 
         if(!ckeck && file.open(QIODevice::WriteOnly)) {
-            QList<Tovar> spisok= tableWidget->get_tovar_list("x");
             QDomDocument doc;
             doc = this->convert_tovar_list_into_xml(spisok);
 
@@ -1850,14 +1854,19 @@ QList<Tovar> cengen::minus(QList<Tovar> oldList, QList<Tovar> newList) {
 
 void cengen::on_filterBox_toggled(bool arg1)
 {
+    action_on_off_filter->blockSignals(true);
+    ui_filterBox->blockSignals(true);
+    action_on_off_filter->setChecked(arg1);
+    ui_filterBox->setChecked(arg1);
+    action_on_off_filter->blockSignals(false);
+    ui_filterBox->blockSignals(false);
+
     filter_is_on = arg1;
     apply_filter_on_current_list->setEnabled(arg1);
     if (arg1) {
         qDebug() << "Enabled filter";
         this->read_filter_settings();
-
     }
-
 }
 
 void cengen::on_filterFileSelectButton_clicked()
@@ -2085,7 +2094,7 @@ void cengen::on_action_verify_barcode() {
     //qDebug() << "Lost digit is " << br;
 
     ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
-    dlg->setTable(tr("FOUND ") + br);
+    dlg->setMessage(tr("FOUND ") + br);
     if (dlg->exec()) {
         ui_lineEdit->setText(br);
     }
@@ -2097,8 +2106,8 @@ void cengen::on_action_update_prices() {
     Tovar tovar;
     spisokCur = tableWidget->get_tovar_list("x");
 
-    //qDebug() << "Count " << spisokCur.count();
     int count = spisokCur.count();
+    float tmpPrice;
 
     progressBar->setMaximum(count);
     statusBar->addWidget(progressBar);
@@ -2107,18 +2116,19 @@ void cengen::on_action_update_prices() {
     for (int i = 0; i<count; i++){
         progressBar->setValue(i);
         tovar = spisokCur.at(i);
-        //qDebug() << "i. " << i << tovar.nomer_of_tovar << tovar.name_of_tovar;
         spTmp = my_informer->info(QString::number(tovar.nomer_of_tovar), "tnomer");
         if (!spTmp.count()) {
-            tovar.name_of_tovar = tr("NOT FOUND ") + tovar.name_of_tovar;
+            tovar.name_of_tovar = tr("NOT FOUND ")
+                    + tovar.name_of_tovar;
             spisokWrong << tovar;
         } else {
+            tmpPrice = tovar.price1;
             tovar.price1 = spTmp.at(0).price1;
             spisokNew << tovar;
 
-            if (tovar.price1 != spTmp.at(0).price1) {
+            if (tmpPrice != spTmp.at(0).price1) {
                 tovar.name_of_tovar = tr("Price changed ") + tovar.name_of_tovar;
-                tovar.price2 = spTmp.at(0).price1;
+                tovar.price2 = tmpPrice;
                 spisokWrong << tovar;
             }
         }
@@ -2130,6 +2140,7 @@ void cengen::on_action_update_prices() {
     this->on_action_new_triggered();
     tableWidget->load_tovar_list_into_table(spisokNew);
 
+    ask_user_to_save_wrong_tovar_list(spisokWrong);
 }
 
 void cengen::on_action_input_load_from_clipboard_triggered() {
@@ -2139,7 +2150,10 @@ void cengen::on_action_input_load_from_clipboard_triggered() {
         QStringList strs = str.split("\n");
         QString tmp;
         Tovar tovar;
-        QList<Tovar> tmpList, newList, badList;
+        tovar.price1 = 0;
+        tovar.price2 = 0;
+        tovar.quantity = 0;
+        QList<Tovar> tmpList, newList, spisokWrong;
 
         progressBar->setMaximum(strs.count());
         statusBar->addWidget(progressBar);
@@ -2152,17 +2166,30 @@ void cengen::on_action_input_load_from_clipboard_triggered() {
             if (tmpList.count()) {
                 newList << tmpList;
             } else {
-                tovar.name_of_tovar = strs.at(i);
-                badList << tovar;
+                tovar.name_of_tovar = tr("NOT FOUND ") + strs.at(i);
+                tovar.nomer_of_tovar = strs.at(i).toInt();
+                spisokWrong << tovar;
             }
         }
         tableWidget->load_tovar_list_into_table(newList);
         statusBar->removeWidget(progressBar);
-    }
 
+        ask_user_to_save_wrong_tovar_list(spisokWrong);
+    }
 }
 
-void cengen::on_action_on_off_filter_triggered(bool status) {
-    //qDebug() << "Filter status" << status;
-    ui_filterBox->setChecked(status);
+void cengen::ask_user_to_save_wrong_tovar_list(QList<Tovar> spisokWrong) {
+    if (spisokWrong.count()) {
+        ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
+        dlg->setMessage(tr("FOUND ") + QString::number(spisokWrong.count())
+                        + " wrong tovars. Click OK to save them");
+        if (dlg->exec()) {
+            //сохраняем список
+            qDebug() << "Going to save spisok";
+            QString name;
+            QDate date = QDate::currentDate();
+            name = date.toString("yyyy MMMM dddd (dd)") + ".tov";
+            save_tovar_list_into_file(name, spisokWrong);
+        }
+    }
 }
