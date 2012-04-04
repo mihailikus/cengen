@@ -150,15 +150,22 @@ void cengen::make_actions() {
     connect(action_update_prices, SIGNAL(triggered()),
             SLOT(on_action_update_prices()));
 
-    action_input_load_from_clipboard = new QAction(tr("Load tovar list from clipboard"), this);
-    connect(action_input_load_from_clipboard, SIGNAL(triggered()),
-            SLOT(on_action_input_load_from_clipboard_triggered()));
+    action_update_names = new QAction(tr("Update names for current tovar list"), this);
+    connect(action_update_names, SIGNAL(triggered()),
+            SLOT(on_action_update_names()));
+
+    action_search_by_tnomer_in_clipboard = new QAction(tr("Search by tnomer in clip-board"), this);
+    connect(action_search_by_tnomer_in_clipboard, SIGNAL(triggered()),
+            SLOT(on_action_search_by_tnomer_in_clipboard_triggered()));
 
     action_on_off_filter = new QAction(tr("Filter ON"), this);
     action_on_off_filter->setCheckable(true);
     connect(action_on_off_filter, SIGNAL(triggered(bool)),
             SLOT(on_filterBox_toggled(bool)));
 
+    action_load_tovar_list_from_clipboard = new QAction(tr("Load tovar list from clipboard"), this);
+    connect (action_load_tovar_list_from_clipboard, SIGNAL(triggered()),
+             SLOT(on_action_load_tovar_list_in_clipboard_triggered()));
 }
 
 void cengen::make_toolBar() {
@@ -194,9 +201,14 @@ void cengen::make_mainMenu() {
 
     menuEdit = mainMenu->addMenu(tr("Edit"));
     menuEdit->addAction(action_on_off_filter);
+    menuFile->addSeparator();
     menuEdit->addAction(interchange_prices_in_table);
     menuEdit->addAction(action_update_prices);
-    menuEdit->addAction(action_input_load_from_clipboard);
+    menuEdit->addAction(action_update_names);
+    menuFile->addSeparator();
+    menuEdit->addAction(action_search_by_tnomer_in_clipboard);
+    menuEdit->addAction(action_load_tovar_list_from_clipboard);
+    menuFile->addSeparator();
     menuEdit->addAction(action_verify_barcode);
 
     menuHelp = mainMenu->addMenu(tr("About"));
@@ -2146,7 +2158,7 @@ void cengen::on_action_update_prices() {
     ask_user_to_save_wrong_tovar_list(spisokWrong);
 }
 
-void cengen::on_action_input_load_from_clipboard_triggered() {
+void cengen::on_action_search_by_tnomer_in_clipboard_triggered() {
     QClipboard *pcb = QApplication::clipboard();
     QString str = pcb->text();
     if (!str.isNull()) {
@@ -2195,4 +2207,93 @@ void cengen::ask_user_to_save_wrong_tovar_list(QList<Tovar> spisokWrong) {
             save_tovar_list_into_file(name, spisokWrong);
         }
     }
+}
+
+void cengen::on_action_load_tovar_list_in_clipboard_triggered(){
+    qDebug() << "777";
+    QClipboard *pcb = QApplication::clipboard();
+    QString str = pcb->text();
+    if (str.isNull()) return;
+
+    QStringList strs = str.split("\n");
+    QString tmp;
+    QStringList tmps;
+    Tovar tovar;
+    tovar.quantity = 0;
+    QList<Tovar> newList;
+    int i;
+
+    progressBar->setMaximum(strs.count());
+    statusBar->addWidget(progressBar);
+    progressBar->show();
+
+    for (int j = 0; j<strs.count(); j++) {
+        progressBar->setValue(j);
+        qDebug() << "I " << j;
+
+        tmps =  strs.at(j).split("\t");
+        i = tmps.count();
+        tovar.nomer_of_tovar = tmps.at(0).toInt();
+        if (i>1) {
+            tovar.name_of_tovar = tmps.at(1);
+        } else {
+            tovar.name_of_tovar = "";
+        }
+        if (i>2) {
+            tmp = tmps.at(2);
+            if (tmp.contains(",")) tmp.replace(",", ".");
+            tovar.price1 = tmp.toFloat();
+        } else {
+            tovar.price2 = 0;
+        }
+        if (i>3) {
+            tmp = tmps.at(3);
+            if (tmp.contains(",")) tmp.replace(",", ".");
+            tovar.price2 = tmp.toFloat();
+        } else {
+            tovar.price2 = 0;
+        }
+        newList << tovar;
+
+
+    }
+    tableWidget->load_tovar_list_into_table(newList);
+    statusBar->removeWidget(progressBar);
+
+    //ask_user_to_save_wrong_tovar_list(spisokWrong);
+}
+
+void cengen::on_action_update_names() {
+    QList<Tovar> spisokCur, spisokNew, spTmp, spisokWrong;
+    Tovar tovar;
+    spisokCur = tableWidget->get_tovar_list("x");
+
+    int count = spisokCur.count();
+
+    progressBar->setMaximum(count);
+    statusBar->addWidget(progressBar);
+    progressBar->show();
+
+    for (int i = 0; i<count; i++){
+        progressBar->setValue(i);
+        tovar = spisokCur.at(i);
+        spTmp = my_informer->info(QString::number(tovar.nomer_of_tovar), "tnomer");
+        if (!spTmp.count()) {
+            tovar.name_of_tovar = tr("NOT FOUND ")
+                    + tovar.name_of_tovar;
+            spisokWrong << tovar;
+        } else {
+            tovar.name_of_tovar = spTmp.at(0).name_of_tovar;
+            tovar.barcode = spTmp.at(0).barcode;
+            spisokNew << tovar;
+        }
+
+
+    }
+    statusBar->removeWidget(progressBar);
+
+    this->on_action_new_triggered();
+    tableWidget->load_tovar_list_into_table(spisokNew);
+
+    ask_user_to_save_wrong_tovar_list(spisokWrong);
 }
