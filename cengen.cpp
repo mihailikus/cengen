@@ -201,14 +201,14 @@ void cengen::make_mainMenu() {
 
     menuEdit = mainMenu->addMenu(tr("Edit"));
     menuEdit->addAction(action_on_off_filter);
-    menuFile->addSeparator();
+    menuEdit->addSeparator();
     menuEdit->addAction(interchange_prices_in_table);
     menuEdit->addAction(action_update_prices);
     menuEdit->addAction(action_update_names);
-    menuFile->addSeparator();
+    menuEdit->addSeparator();
     menuEdit->addAction(action_search_by_tnomer_in_clipboard);
     menuEdit->addAction(action_load_tovar_list_from_clipboard);
-    menuFile->addSeparator();
+    menuEdit->addSeparator();
     menuEdit->addAction(action_verify_barcode);
 
     menuHelp = mainMenu->addMenu(tr("About"));
@@ -2197,10 +2197,10 @@ void cengen::ask_user_to_save_wrong_tovar_list(QList<Tovar> spisokWrong) {
     if (spisokWrong.count()) {
         ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
         dlg->setMessage(tr("FOUND ") + QString::number(spisokWrong.count())
-                        + " wrong tovars.\nIf you want to save them into file, click OK button");
+                        + tr(" wrong tovars.") + "\n"
+                        + tr("If you want to save them into file, click OK button"));
         if (dlg->exec()) {
             //сохраняем список
-            qDebug() << "Going to save spisok";
             QString name;
             QDate date = QDate::currentDate();
             name = date.toString("yyyy MMMM dddd (dd)") + ".tov";
@@ -2210,7 +2210,6 @@ void cengen::ask_user_to_save_wrong_tovar_list(QList<Tovar> spisokWrong) {
 }
 
 void cengen::on_action_load_tovar_list_in_clipboard_triggered(){
-    qDebug() << "777";
     QClipboard *pcb = QApplication::clipboard();
     QString str = pcb->text();
     if (str.isNull()) return;
@@ -2229,7 +2228,6 @@ void cengen::on_action_load_tovar_list_in_clipboard_triggered(){
 
     for (int j = 0; j<strs.count(); j++) {
         progressBar->setValue(j);
-        qDebug() << "I " << j;
 
         tmps =  strs.at(j).split("\t");
         i = tmps.count();
@@ -2254,13 +2252,9 @@ void cengen::on_action_load_tovar_list_in_clipboard_triggered(){
             tovar.price2 = 0;
         }
         newList << tovar;
-
-
     }
     tableWidget->load_tovar_list_into_table(newList);
     statusBar->removeWidget(progressBar);
-
-    //ask_user_to_save_wrong_tovar_list(spisokWrong);
 }
 
 void cengen::on_action_update_names() {
