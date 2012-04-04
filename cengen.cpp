@@ -1667,6 +1667,7 @@ void cengen::save_tovar_list_into_file(QString preferName, QList<Tovar> spisok)
 
             QString shablon_array = doc.toString();
             QTextStream out(&file);
+            out.setCodec("UTF-8");
             out << shablon_array;
             file.close();
         }
