@@ -218,6 +218,19 @@
     </message>
 </context>
 <context>
+    <name>QWidget</name>
+    <message>
+        <location filename="barcode.cpp" line="299"/>
+        <source>Too many lost digits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="barcode.cpp" line="303"/>
+        <source>This is short or big record</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>cengen</name>
     <message>
         <location filename="cengen.cpp" line="646"/>
@@ -540,30 +553,35 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2112"/>
-        <location filename="cengen.cpp" line="2199"/>
+        <location filename="cengen.cpp" line="2113"/>
+        <location filename="cengen.cpp" line="2213"/>
         <source>FOUND </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2136"/>
-        <location filename="cengen.cpp" line="2184"/>
-        <location filename="cengen.cpp" line="2276"/>
+        <location filename="cengen.cpp" line="2113"/>
+        <source>Do you want to search them in database?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="2150"/>
+        <location filename="cengen.cpp" line="2198"/>
+        <location filename="cengen.cpp" line="2290"/>
         <source>NOT FOUND </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2145"/>
+        <location filename="cengen.cpp" line="2159"/>
         <source>Price changed </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2200"/>
+        <location filename="cengen.cpp" line="2214"/>
         <source> wrong tovars.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2201"/>
+        <location filename="cengen.cpp" line="2215"/>
         <source>If you want to save them into file, click OK button</source>
         <translation type="unfinished"></translation>
     </message>
@@ -842,38 +860,38 @@
     </message>
     <message>
         <location filename="cengen.cpp" line="1640"/>
-        <location filename="cengen.cpp" line="1679"/>
-        <location filename="cengen.cpp" line="1819"/>
+        <location filename="cengen.cpp" line="1680"/>
+        <location filename="cengen.cpp" line="1820"/>
         <source>Tovar lists (*.tov)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1679"/>
+        <location filename="cengen.cpp" line="1680"/>
         <source>Open tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1803"/>
+        <location filename="cengen.cpp" line="1804"/>
         <source>COUNT: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1819"/>
+        <location filename="cengen.cpp" line="1820"/>
         <source>Select tovar list for minus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2046"/>
+        <location filename="cengen.cpp" line="2047"/>
         <source>Michael Volkov</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2059"/>
+        <location filename="cengen.cpp" line="2060"/>
         <source>UG_Dvor_34</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2059"/>
+        <location filename="cengen.cpp" line="2060"/>
         <source>Encouragement</source>
         <translation type="unfinished"></translation>
     </message>

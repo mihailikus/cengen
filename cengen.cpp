@@ -2103,16 +2103,27 @@ void cengen::on_interchange_prices_in_table_triggered() {
 }
 
 void cengen::on_action_verify_barcode() {
-    //qDebug() << "going to ver barcode";
     Barcode *barc = new Barcode;
     QString text = ui_lineEdit->text();
     QString br = barc->found_lost_digit(text);
-    //qDebug() << "Lost digit is " << br;
-
     ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
-    dlg->setMessage(tr("FOUND ") + br);
+    QStringList strs = br.split("\n");
+    dlg->setMessage(tr("FOUND ") + QString::number(strs.count()-1)  + " items.\n" + tr("Do you want to search them in database?"));
     if (dlg->exec()) {
-        ui_lineEdit->setText(br);
+        QList<Tovar> tmp;
+
+        progressBar->setMaximum(strs.count());
+        statusBar->addWidget(progressBar);
+        progressBar->show();
+
+        for (int i = 0; i<strs.count()-1; i++) {
+            progressBar->setValue(i);
+            tmp = my_informer->info(strs.at(i), "tbarcode");
+            if (tmp.count()) {
+                tableWidget->load_tovar_list_into_table(tmp);
+            }
+        }
+        statusBar->removeWidget(progressBar);
     }
 
 }

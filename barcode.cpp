@@ -1,4 +1,6 @@
 #include <QtGui>
+#include <math.h>
+#include <QtCore>
 #include <QDebug>
 #include "barcode.h"
 
@@ -293,17 +295,32 @@ int Barcode::correctSymbol(QChar symbol) {
 
 QString Barcode::found_lost_digit(QString text) {
     QStringList items = text.split("*");
-    if (items.count() != 2) {
-        return "-1";
+    if (items.count() >5 || items.count() <2) {
+        return QWidget::tr("Too many lost digits");
     }
-    if (items.at(0).length() + items.at(1).length() != 12)
+    if (text.length() != 13)
     {
-        return "-1";
+        return QWidget::tr("This is short or big record");
     }
 
-    for (int i = 9; i>=0; i--) {
-        this->barcode = items.at(0) + QString::number(i) + items.at(1);
-        if (is_valid()) return barcode;
+    QString tmp;
+    int k;
+    int t;
+    QString retValue = "";
+
+    for (int j = 0; j<pow(10, items.count()-1); j++) {
+        tmp = items.last();
+        t = j;
+        for (int i = items.count()-2; i>=0; i--) {
+            k = t % 10;
+            t = t/10;
+            tmp =  items.at(i) + QString::number(k) + tmp;
+        }
+        this->barcode = tmp;
+        if (is_valid()) {
+            retValue += tmp + "\n";
+        }
+
     }
-    return "-1";
+    return retValue;
 }
