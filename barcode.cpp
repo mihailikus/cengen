@@ -181,8 +181,9 @@ QString Barcode::GCode(QString bitlist)
     return reverse;
 }
 
-void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
+QGraphicsItemGroup * Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
 {
+    items = scene->createItemGroup(scene->selectedItems());
     //функция рендеринга EAN-13
 
     //номера системных штрихов - они печатаются удлиненными
@@ -229,7 +230,7 @@ void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
             heit = line_heit;
         }
 
-        scene->addRect(QRectF(Xposition, Yposition, line_width-1, heit), pen, brush);
+        items->addToGroup(scene->addRect(QRectF(Xposition, Yposition, line_width-1, heit), pen, brush));
         Xposition += line_width;
 
         count++;
@@ -246,6 +247,7 @@ void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
             text[0] = barcode[i].toAscii();
             QGraphicsTextItem * item = scene->addText(text, font);
             item->setPos(Xposition, Yposition);
+            items->addToGroup(item);
             Xposition += 7*line_width;
             if ( (i==6) || (i==0)) {
                 Xposition += line_width*4;
@@ -254,7 +256,7 @@ void Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
         }
     }
 
-
+return items;
 }
 
 QString Barcode::getText()

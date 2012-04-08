@@ -34,10 +34,10 @@ Cennic::~Cennic() {
     delete barcode;
 }
 
-QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
+QGraphicsItemGroup* Cennic::render(QGraphicsScene *scene, float X, float Y) {
+    items = scene->createItemGroup(scene->selectedItems());
     QPen pen(Qt::black, 1);
     QBrush brush (Qt::white);
-    QPoint point;
     point = QPoint(X, Y);
     QDomNode node = this->domNode.firstChild();
     while (!node.isNull()){
@@ -71,7 +71,7 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
             QString kopSymbol = domElement.attribute("kop", "");
 
             if (element == "base" ) {
-                scene->addRect(X, Y, width, heith,pen, brush);
+                items->addToGroup(scene->addRect(X, Y, width, heith,pen, brush));
                 point.setX(width);
                 point.setY(heith);
             }
@@ -88,6 +88,7 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
                 QGraphicsRectItem* rect1 = scene->addRect(0, 0, len, linethick, QPen(Qt::black), QBrush(Qt::black));
                 rect1->setPos(X+startX, Y+startY);
                 rect1->rotate(angl);
+                items->addToGroup(rect1);
             }
 
             if (element == "barcode") {
@@ -98,7 +99,7 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
                 barcode->setFont(font);
                 barcode->setLineAddition(br_lineAddition);
                 barcode->setTextOtstup(br_otstup);
-                barcode->render(scene, rect);
+                items->addToGroup(barcode->render(scene, rect));
             }
 
             if (element == "good") {
@@ -149,12 +150,13 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
                             float coordX = X + startX + width/2 - Xtemp.at(i);
                             //qDebug() << "coordX=" << coordX;
                             item->setPos(coordX, corner);
+                            items->addToGroup(item);
                             corner += Ytemp.at(i);
                     }
 
                 } else {
                     //если превью - рисуем просто прямоугольник
-                    scene->addRect(X+startX, Y+startY, width, heith);
+                    items->addToGroup(scene->addRect(X+startX, Y+startY, width, heith));
                 }
 
             }
@@ -195,9 +197,10 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
                     float newY = Y + startY + \
                                  (heith - textRect.height()) / 2;
                     textItem->setPos(newX, newY);
+                    items->addToGroup(textItem);
                 } else {
                     //если превью - рисуем просто прямоугольник
-                    scene->addRect(X+startX, Y+startY, width, heith);
+                    items->addToGroup(scene->addRect(X+startX, Y+startY, width, heith));
                 }
 
 
@@ -208,7 +211,7 @@ QPoint Cennic::render(QGraphicsScene *scene, float X, float Y) {
 
         node = node.nextSibling();
     }
-return (point);
+return (items);
 }
 
 QStringList Cennic::mysplit(QString text) {
@@ -352,5 +355,8 @@ void Cennic::set_preview_mode(bool mode) {
 bool Cennic::preview_mode() {
     qDebug() << "view mode is " << preview;
     return preview;
+}
 
+QPoint Cennic::lastCorner() {
+    return point;
 }

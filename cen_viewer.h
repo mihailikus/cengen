@@ -3,6 +3,7 @@
 
 #include <QFile>
 #include <QGraphicsScene>
+#include <QGraphicsItemGroup>
 #include <QTextCodec>
 #include <QString>
 #include <QtXml>
@@ -20,8 +21,9 @@ public:
 
 public slots:
     void create(Tovar * tovar, const QDomNode& shablon);
-    QPoint render(QGraphicsScene * scene, float X, float Y);
+    QGraphicsItemGroup *render(QGraphicsScene * scene, float X, float Y);
     QString money_format(float price, QString rub, QString kop);
+    QPoint lastCorner();
 
 private slots:
     QStringList mysplit(QString text);
@@ -42,6 +44,9 @@ private:
     Barcode* barcode;
     Tovar * ctovar;
 
+    QGraphicsItemGroup *items;
+
+    QPoint point;
 
 };
 

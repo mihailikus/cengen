@@ -958,12 +958,15 @@ void cengen::generate_preview() {
     Tovar currentTovar;
 
     //высчитываем левый верхний угол первой страницы
-    float bXpos, bYpos, bXstart, bYstart, maxYadd;
+    float bXpos, bYpos, bXstart, bYstart, maxYadd, oldYadd;
     bXstart = (zoomedPageW - Ccols*rectCen.width())/2;
     bYstart = (zoomedPageH - Crows*rectCen.height())/2;
     bXpos = bXstart;
     bYpos = bYstart;
     maxYadd = 0;
+    oldYadd = 0;
+
+    int zazor = bXstart;
 
     //заносим этот угол в список страниц
     QRectF page(0, 0, zoomedPageW, zoomedPageH);
@@ -994,26 +997,40 @@ void cengen::generate_preview() {
         }
 
         cennics->create(&currentTovar, sbl);
-        QPoint corner = cennics->render(currentScene, bXpos, bYpos);
-        if (corner.y() > maxYadd) maxYadd = corner.y();
+        QGraphicsItemGroup *items = cennics->render(currentScene, bXpos, bYpos);
 
-        if ( ((i+1) % this->Ccols) != 0) {
-            bXpos += corner.x();
-        } else {
-            bXpos = bXstart;
-            bYpos += maxYadd;
-            maxYadd = 0;
+        if (cennics->lastCorner().y() > maxYadd) {
+            oldYadd = maxYadd;
+            maxYadd = cennics->lastCorner().y();
         }
 
-        if ( !((i+1) % (Crows * Ccols)) ) {
-            //начинаем новую страницу
-            QRectF page(zoomedPageW*pages.count()-1, 0,
-                        zoomedPageW, pageH);
-            pages << page;
-            bXstart += zoomedPageW;
-            bXpos = bXstart;
-            //bYstart не меняется - делаем все странички в строчку
-            bYpos = bYstart;
+            //проверим - не начать ли новую строчку
+        if (cennics->lastCorner().x() + bXpos <= zoomedPageW*(pages.count())) {
+                bXpos  += cennics->lastCorner().x();
+            } else {
+                items->setPos(bXstart-bXpos, maxYadd);
+                bXpos = bXstart + cennics->lastCorner().x();
+                bYpos += maxYadd;
+
+                if (bYpos >= zoomedPageH) {
+                    //начали новую строчку - а вдруг надо новую страницу?
+
+                    //начинаем новую страницу
+                    QRectF page(zoomedPageW*pages.count()-1, 0,
+                                zoomedPageW, pageH);
+                    pages << page;
+                    bXstart += zoomedPageW;
+                    bXpos = bXstart;
+                    //bYstart не меняется - делаем все странички в строчку
+                    items->setPos(zazor*2, -bYpos+maxYadd);
+
+                    bYpos = bYstart;
+
+
+                    bXpos += cennics->lastCorner().x();
+                }
+                maxYadd = cennics->lastCorner().y();
+
         }
     }
 

@@ -16,6 +16,7 @@ private:
     bool renderNumbers; //если 1 - будут рисоваться цифры внизу штрих-кода
     float textOtstup; //отступ цифр от линий штрих-кода
     float lineAddition; //удлинение линий служебных штрихов
+    QGraphicsItemGroup *items;   //собираем все элементы штрих-кода в группу
 
 public:
     Barcode(QString text = "0000000000000");
@@ -27,7 +28,7 @@ public slots:
     bool is_valid();
     bool setText(QString barcode);
     QList<bool> TextToBit();
-    void render (QGraphicsScene * scene, QRectF* rect);
+    QGraphicsItemGroup *render (QGraphicsScene * scene, QRectF* rect);
     QString getText();
     void setFont(QFont font);
     void setTextOtstup (int otstup);
