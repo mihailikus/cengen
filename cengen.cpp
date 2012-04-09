@@ -150,6 +150,10 @@ void cengen::make_actions() {
     connect(action_update_prices, SIGNAL(triggered()),
             SLOT(on_action_update_prices()));
 
+    action_update_prices_in_minus = new QAction(tr("Update price1 for current tovar list after re-pricing"), this);
+    connect(action_update_prices_in_minus, SIGNAL(triggered()),
+            SLOT(on_action_update_prices_in_minus()));
+
     action_update_names = new QAction(tr("Update names for current tovar list"), this);
     connect(action_update_names, SIGNAL(triggered()),
             SLOT(on_action_update_names()));
@@ -204,6 +208,7 @@ void cengen::make_mainMenu() {
     menuEdit->addSeparator();
     menuEdit->addAction(interchange_prices_in_table);
     menuEdit->addAction(action_update_prices);
+    menuEdit->addAction(action_update_prices_in_minus);
     menuEdit->addAction(action_update_names);
     menuEdit->addSeparator();
     menuEdit->addAction(action_search_by_tnomer_in_clipboard);
@@ -2185,6 +2190,48 @@ void cengen::on_action_update_prices() {
     tableWidget->load_tovar_list_into_table(spisokNew);
 
     ask_user_to_save_wrong_tovar_list(spisokWrong);
+}
+
+void cengen::on_action_update_prices_in_minus() {
+    QList<Tovar> spisokCur, spisokWrong, spTmp;
+    Tovar tovar;
+    spisokCur = tableWidget->get_tovar_list("x");
+
+    int count = spisokCur.count();
+    float tmpPrice;
+
+    progressBar->setMaximum(count);
+    statusBar->addWidget(progressBar);
+    progressBar->show();
+
+    for (int i = 0; i<count; i++){
+        progressBar->setValue(i);
+        tovar = spisokCur.at(i);
+        spTmp = my_informer->info(QString::number(tovar.nomer_of_tovar), "tnomer");
+        if (!spTmp.count()) {
+            tovar.name_of_tovar = tr("NOT FOUND ")
+                    + tovar.name_of_tovar;
+            spisokWrong << tovar;
+        } else {
+            tmpPrice = tovar.price1;
+            tovar.price1 = spTmp.at(0).price1;
+            //spisokNew << tovar;
+
+            if (tmpPrice > spTmp.at(0).price1) {
+                tovar.name_of_tovar = tr("Price changed ") + tovar.name_of_tovar;
+                tovar.price2 = tmpPrice;
+                spisokWrong << tovar;
+            }
+        }
+
+
+    }
+    statusBar->removeWidget(progressBar);
+
+    this->on_action_new_triggered();
+    tableWidget->load_tovar_list_into_table(spisokWrong);
+
+    //ask_user_to_save_wrong_tovar_list(spisokWrong);
 }
 
 void cengen::on_action_search_by_tnomer_in_clipboard_triggered() {
