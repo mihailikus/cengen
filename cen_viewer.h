@@ -28,7 +28,6 @@ public slots:
 private slots:
     QStringList mysplit(QString text);
     QStringList split_text(float maxlen, QString text, QFont font);
-    QString tra(QString text);
     void set_preview_mode(bool mode);
     bool preview_mode();
 

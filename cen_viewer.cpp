@@ -221,7 +221,6 @@ QStringList Cennic::mysplit(QString text) {
     QString *lines = new QString[arr.count()];
     for (int i = 0; i<=j; i++) {
         lines[i] = arr.at(i);
-        //qDebug()<< "lineYYY" << lines[i];
     }
 
     //признак парности скобок - 0 нет, 1 была
@@ -230,7 +229,7 @@ QStringList Cennic::mysplit(QString text) {
     int i = 0;
     int position = 0;
 
-    QList<QString> goodlines;
+    QStringList goodlines;
     goodlines.clear();
 
     while (i<j) {
@@ -255,18 +254,8 @@ QStringList Cennic::mysplit(QString text) {
                     //если это не парный символ и не символ переноса строки
                     //  то просто добавляем его
                     lines[i] += line1;
-                }
+                }                
         }
-/*
-        if (lines[i].length() == 1) {
-            //если все слово - только из разделителя,
-            //  то плюсуем разделитель к предыдущему слову
-            lines[i-1] += lines[i];
-            i++;
-            position++;
-        }
-*/
-
         i++;
     }
 
@@ -274,18 +263,13 @@ QStringList Cennic::mysplit(QString text) {
         goodlines << lines[i];
     }
 
-    //qDebug() << "Updated lines: " << goodlines;
-return goodlines;
+    return goodlines;
 }
 
 QStringList Cennic::split_text(float maxlen, QString text, QFont font) {
     QStringList lines = this->mysplit(text);
     QStringList sep_lines;
-    //scene->addText()
-    //qDebug() << "maxlen = " << maxlen;
 
-
-    //qDebug() << "split text func: " << lines;
     QString line;
     QString line_old = line;
     float text_l;
@@ -296,38 +280,26 @@ QStringList Cennic::split_text(float maxlen, QString text, QFont font) {
     float text_old_l;
     while (i < j) {
         line = lines.at(i-1);
-        //qDebug() << "line=" << line;
         text_l = 0;
         while ( (text_l < maxlen) && (i < j)  ) {
 
             text_old_l = text_l;
             line_old = line;
-            //qDebug() << lines.at(i);
             line += lines.at(i);
 
-            //qDebug() << "imagebox again";
-            QRectF coord1 = imagebox(font, line);
-            //qDebug() << "imagebox again2";
-            text_l = coord1.width();
-            //qDebug() << "maxlen=" << maxlen << "; " << i<< "; text length = " << text_l;
+            text_l = imagebox(font, line).width();
             i++;
-            //echo "text_l = ". $text_l . "; maxlen = ". $maxlen ."; i=". $i . "<br>";
         }
         if (text_l <= maxlen) {
-            line_old += lines.at(j-1);
+            line_old += lines.at(i-1);
             i++;
         }
-
-        //qDebug() << "Line old = " << line_old << ", width = " << text_old_l;
         sep_lines << line_old;
-
     }
     if (i == j) {
         sep_lines << lines.at(j-1);
     }
-    //qDebug() << sep_lines;
     return sep_lines;
-
 }
 
 QString Cennic::money_format(float price, QString rubl, QString kope) {
@@ -342,10 +314,6 @@ QString Cennic::money_format(float price, QString rubl, QString kope) {
         money_format += money_lines.at(1) + kope;
     }
     return money_format;
-}
-
-QString Cennic::tra(QString text) {
-    return codec->toUnicode(text.toAscii());
 }
 
 void Cennic::set_preview_mode(bool mode) {
