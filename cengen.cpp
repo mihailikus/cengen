@@ -2215,23 +2215,17 @@ void cengen::on_action_update_prices_in_minus() {
         } else {
             tmpPrice = tovar.price1;
             tovar.price1 = spTmp.at(0).price1;
-            //spisokNew << tovar;
 
             if (tmpPrice > spTmp.at(0).price1) {
-                tovar.name_of_tovar = tr("Price changed ") + tovar.name_of_tovar;
                 tovar.price2 = tmpPrice;
                 spisokWrong << tovar;
             }
         }
-
-
     }
     statusBar->removeWidget(progressBar);
 
     this->on_action_new_triggered();
     tableWidget->load_tovar_list_into_table(spisokWrong);
-
-    //ask_user_to_save_wrong_tovar_list(spisokWrong);
 }
 
 void cengen::on_action_search_by_tnomer_in_clipboard_triggered() {
