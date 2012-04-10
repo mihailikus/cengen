@@ -536,7 +536,7 @@ void cengen::make_shablon_tab() {
     layBoxT2B3->addWidget(zoomBox, 6, 3);
 
     otstupLabel1 = new QLabel(tr("Otstup from Top of the page"));
-    otstupTopLine = new QLineEdit("0");
+    otstupTopLine = new QLineEdit("10");
     otstupTopLine->setValidator(ui_nvalidator);
     connect(otstupTopLine, SIGNAL(textChanged(QString)), SLOT(update_values()));
 
@@ -975,7 +975,9 @@ void cengen::generate_preview() {
     bXpos = bXstart;
     bYpos = bYstart;
     maxYadd = 0;
+    int maxYaddPos = 0;
     oldYadd = 0;
+    float oldX, oldY;
 
     int zazor = bXstart;
 
@@ -1009,36 +1011,45 @@ void cengen::generate_preview() {
 
         cennics->create(&currentTovar, sbl);
         QGraphicsItemGroup *items = cennics->render(currentScene, bXpos, bYpos);
+        oldX = bXpos;
+        oldY = bYpos;
 
         if (cennics->lastCorner().y() > maxYadd) {
             oldYadd = maxYadd;
             maxYadd = cennics->lastCorner().y();
+            maxYaddPos = i;
         }
 
             //проверим - не начать ли новую строчку
         if (cennics->lastCorner().x() + bXpos <= zoomedPageW*(pages.count())) {
                 bXpos  += cennics->lastCorner().x();
             } else {
-                items->setPos(bXstart-bXpos, maxYadd);
-                bXpos = bXstart + cennics->lastCorner().x();
-                bYpos += maxYadd;
+            if (maxYaddPos == i) {
+                maxYadd = oldYadd;
+            }
+            //if (maxYadd < oldYadd) maxYadd = oldYadd;
 
-                if (bYpos >= zoomedPageH) {
-                    //начали новую строчку - а вдруг надо новую страницу?
+            items->setPos(bXstart-bXpos, max(maxYadd, oldYadd));
+            bXpos = bXstart + cennics->lastCorner().x();
+            bYpos += max(maxYadd, oldYadd);
+            oldYadd = 0;
 
-                    //начинаем новую страницу
-                    QRectF page(zoomedPageW*pages.count()-1, 0,
-                                zoomedPageW, pageH);
-                    pages << page;
-                    bXstart += zoomedPageW;
-                    bXpos = bXstart;
-                    //bYstart не меняется - делаем все странички в строчку
-                    items->setPos(zazor*2, -bYpos+maxYadd);
+            if (bYpos >= zoomedPageH - otstupTop - maxYadd) {
+                //начали новую строчку - а вдруг надо новую страницу?
 
-                    bYpos = bYstart;
+                //начинаем новую страницу
+                QRectF page(zoomedPageW*pages.count()-1, 0,
+                            zoomedPageW, pageH);
+                pages << page;
+                bXstart += zoomedPageW;
+                bXpos = bXstart;
+                //bYstart не меняется - делаем все странички в строчку
+                items->setPos(zoomedPageW-oldX + zazor, -oldY+bYstart);
+
+                bYpos = bYstart;
 
 
-                    bXpos += cennics->lastCorner().x();
+                bXpos += cennics->lastCorner().x();
                 }
                 maxYadd = cennics->lastCorner().y();
 
