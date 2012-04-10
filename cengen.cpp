@@ -170,6 +170,10 @@ void cengen::make_actions() {
     action_load_tovar_list_from_clipboard = new QAction(tr("Load tovar list from clipboard"), this);
     connect (action_load_tovar_list_from_clipboard, SIGNAL(triggered()),
              SLOT(on_action_load_tovar_list_in_clipboard_triggered()));
+
+    action_export_tovar_list_to_clipboard = new QAction(tr("Export tovar list to clipboard"), this);
+    connect (action_export_tovar_list_to_clipboard, SIGNAL(triggered()),
+             SLOT(on_action_export_tovar_list_to_clipboard()));
 }
 
 void cengen::make_toolBar() {
@@ -213,6 +217,8 @@ void cengen::make_mainMenu() {
     menuEdit->addSeparator();
     menuEdit->addAction(action_search_by_tnomer_in_clipboard);
     menuEdit->addAction(action_load_tovar_list_from_clipboard);
+    menuEdit->addSeparator();
+    menuEdit->addAction(action_export_tovar_list_to_clipboard);
     menuEdit->addSeparator();
     menuEdit->addAction(action_verify_barcode);
 
@@ -2360,4 +2366,28 @@ void cengen::on_action_update_names() {
     tableWidget->load_tovar_list_into_table(spisokNew);
 
     ask_user_to_save_wrong_tovar_list(spisokWrong);
+}
+
+void cengen::on_action_export_tovar_list_to_clipboard() {
+    QString str, tmp;
+    str = tr("# ") + "\t" + tr("Tnomer") +" \t"
+            + tr("Name") +" \t" + tr("Barcode") + " \t"
+            + tr("Quantity") + "\t" + tr("Price1") + " \t"
+            + tr("Price2") + "\n";
+    QList<Tovar> tovar = tableWidget->get_tovar_list("x");
+    Tovar tvr;
+    for (int i = 0; i<tovar.count(); i++) {
+        tvr = tovar.at(i);
+        tmp = QString::number(i+1) + "\t";
+        tmp+= QString::number(tvr.nomer_of_tovar) + "\t";
+        tmp+= tvr.name_of_tovar + "\t";
+        tmp+= tvr.barcode + "\t";
+        tmp+= QString::number(tvr.quantity) + "\t";
+        tmp+= QString::number(tvr.price1) + "\t";
+        tmp+= QString::number(tvr.price2) + "\t";
+        tmp+= "\n";
+        str += tmp;
+    }
+    QClipboard *pcb = QApplication::clipboard();
+    pcb->setText(str);
 }

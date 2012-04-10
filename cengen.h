@@ -289,6 +289,7 @@ private:
     QAction* action_update_names;
     QAction* action_search_by_tnomer_in_clipboard;
     QAction* action_load_tovar_list_from_clipboard;
+    QAction* action_export_tovar_list_to_clipboard;
     QAction* action_on_off_filter;
 
 private slots:
@@ -311,6 +312,7 @@ private slots:
     void on_interchange_prices_in_table_triggered();
     void on_action_search_by_tnomer_in_clipboard_triggered();
     void on_action_load_tovar_list_in_clipboard_triggered();
+    void on_action_export_tovar_list_to_clipboard();
     void on_action_verify_barcode();
     void on_action_update_prices();
     void on_action_update_prices_in_minus();
