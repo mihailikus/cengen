@@ -4,6 +4,7 @@
 #include "barcode.h"
 #include <QDebug>
 #include <QFileDialog>
+#include <QDesktopWidget>
 //#include <QGraphicsLineItem>
 #include "cen_viewer.h"
 
@@ -1201,8 +1202,7 @@ void cengen::writeSettings()
 
     //сохранение параметров отображения окна
     m_settings.beginGroup("/Window");
-    m_settings.setValue("width", this->width());
-    m_settings.setValue("heith", this->height());
+    m_settings.setValue("geometry", geometry());
     m_settings.endGroup();
 
     int mainTableCount = tableWidget->horizontalHeader()->count();
@@ -1222,9 +1222,11 @@ void cengen::writeSettings()
 
 void cengen::readSettings() {
     //устанавливаем геометрию окна
-    int bWidth = m_settings.value("/Settings/Window/width", 950).toInt();
-    int bHeith = m_settings.value("/Settings/Window/heith", 500).toInt();
-    this->resize(bWidth, bHeith);
+    QRect rect = m_settings.value("/Settings/Window/geometry", QRect(0, 20, 950, 500)).toRect();
+    resize(rect.size());
+    QRect r = this->geometry();
+    r.moveCenter(QApplication::desktop()->availableGeometry().center());
+    setGeometry(r);
 
     int mainTableCount = m_settings.value("/Settings/mainTableCount", 0).toInt();
 
