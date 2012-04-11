@@ -98,11 +98,13 @@ void About::printCopyright()
                                                  +"<p>"
                                                  + "<b>" + tr("e-mail") + "</b>: <a href=\"%2\">%2"
                                                  + "<p>"
-                                                 + "<b>" + tr("phone") + "</b>: %3"
+                                                + "<b>" + tr("Web site") + "</b>: <a href=\"%5\">%5"
+                                                + "<p>"
+                                                + "<b>" + tr("phone") + "</b>: %3"
                                                  + "<p>"
                                                  + "<b>" + tr("License") + "</b>: %4";
 
-        copyrightView->setText(text.arg(m_author).arg(m_mail).arg(m_phone).arg(m_license));
+        copyrightView->setText(text.arg(m_author).arg(m_mail).arg(m_phone).arg(m_license).arg(m_site));
 }
 
 void About::printThanks ()

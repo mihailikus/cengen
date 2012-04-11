@@ -31,6 +31,7 @@ private:
         //QIcon   *m_author_photo;
         QString m_mail;
         QString m_phone;
+        QString m_site;
         QString m_license;
 
         QList<QStringList> m_thanks;
@@ -52,6 +53,9 @@ public:
 
         void setPhone(const QString& phone)
         {m_phone = phone; printCopyright();}
+
+        void setSite(const QString& site)
+        {m_site = site; printCopyright();}
 
         void setLicense(const QString& license)
         {m_license = license; printCopyright();}

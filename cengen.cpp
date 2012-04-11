@@ -2087,6 +2087,7 @@ void cengen::on_action_about_triggered()
 
     d.setAuthor(tr("Michael Volkov"));
     d.setMail("miha@mihol.ru");
+    d.setSite("http://mihol.ru/cengen");
     d.setAuthorPhoto(QIcon(":/share/images/resources/my.png"));
     d.setPhone("+7-960-88-44-777");
     d.setLicense("GNU GPL v3");
