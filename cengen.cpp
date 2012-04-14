@@ -1075,9 +1075,6 @@ void cengen::on_action_scaleDown_triggered()
 
 void cengen::on_action_print_triggered()
 {
-    //qDebug() << "Point X and Y is: " << pages.at(0).width() << "; " << pages.at(0).height();
-
-
     QPrinter printer(QPrinter::HighResolution);
 
     if (pageSize == "A4") {
@@ -1111,16 +1108,19 @@ void cengen::on_action_print_triggered()
 
         int min, max;
         min = dlg.fromPage();
-        max = dlg.maxPage();
+        max = dlg.toPage();
 
         if (min > pages.count()) {
             min--;
         }
 
-        for (int i = min; i< max; i++) {
+        if (min>0) min--;
+        if (max <= pages.count()) max--;
+
+        for (int i = min; i<= max; i++) {
             QRect current = pages.at(i).toRect();
             currentScene->render(&painter, region, current, Qt::KeepAspectRatio);
-            if (i<(max-1)) {
+            if (i<max) {
                 printer.newPage();
             }
 
