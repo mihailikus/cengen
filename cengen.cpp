@@ -1045,7 +1045,7 @@ void cengen::generate_preview() {
                 bXstart += zoomedPageW;
                 bXpos = bXstart;
                 //bYstart не меняется - делаем все странички в строчку
-                items->setPos(zoomedPageW-oldX + zazor, -oldY+bYstart);
+                items->setPos(zoomedPageW*(pages.count()-1)-oldX + zazor, -oldY+bYstart);
 
                 bYpos = bYstart;
 
