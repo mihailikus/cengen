@@ -1347,6 +1347,7 @@ void cengen::readSettings() {
     if (ind > ui_tabWidget->count()-1) {
         ind = 0;
     }
+    if (ind == TabsOrder::Preview) ind = TabsOrder::Search;
     ui_tabWidget->setCurrentIndex(ind);
 
     ui_spinLimit->setMaximum(my_informer->get_maximum());
