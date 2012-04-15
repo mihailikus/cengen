@@ -1,11 +1,9 @@
 #include "cengen.h"
-//#include "ui_cengen.h"
 #include "tinformer.h"
 #include "barcode.h"
 #include <QDebug>
 #include <QFileDialog>
 #include <QDesktopWidget>
-//#include <QGraphicsLineItem>
 #include "cen_viewer.h"
 
 
@@ -175,6 +173,14 @@ void cengen::make_actions() {
     action_export_tovar_list_to_clipboard = new QAction(tr("Export tovar list to clipboard"), this);
     connect (action_export_tovar_list_to_clipboard, SIGNAL(triggered()),
              SLOT(on_action_export_tovar_list_to_clipboard()));
+
+    intellect_interchange_prices_in_table = new QAction(tr("Intellect exchange prices"), this);
+    connect (intellect_interchange_prices_in_table, SIGNAL(triggered()),
+             SLOT(on_intellect_interchange_prices_in_table_triggered()));
+
+    action_set_special_shablon_to_zero_price2 = new QAction(tr("Set special shablon for zero price2"), this);
+    connect (action_set_special_shablon_to_zero_price2, SIGNAL(triggered()),
+             SLOT(on_action_set_special_shablon_to_zero_price2()));
 }
 
 void cengen::make_toolBar() {
@@ -212,9 +218,12 @@ void cengen::make_mainMenu() {
     menuEdit->addAction(action_on_off_filter);
     menuEdit->addSeparator();
     menuEdit->addAction(interchange_prices_in_table);
+    menuEdit->addAction(intellect_interchange_prices_in_table);
     menuEdit->addAction(action_update_prices);
     menuEdit->addAction(action_update_prices_in_minus);
     menuEdit->addAction(action_update_names);
+    menuEdit->addSeparator();
+    menuEdit->addAction(action_set_special_shablon_to_zero_price2);
     menuEdit->addSeparator();
     menuEdit->addAction(action_search_by_tnomer_in_clipboard);
     menuEdit->addAction(action_load_tovar_list_from_clipboard);
@@ -2145,6 +2154,13 @@ void cengen::on_interchange_prices_in_table_triggered() {
     }
 }
 
+void cengen::on_intellect_interchange_prices_in_table_triggered() {
+    tableWidget->intellect_interchange_prices_in_table();
+    if (ui_tabWidget->currentIndex() == TabsOrder::Preview) {
+        on_action_make_triggered();
+    }
+}
+
 void cengen::on_action_verify_barcode() {
     Barcode *barc = new Barcode;
     QString text = ui_lineEdit->text();
@@ -2405,4 +2421,32 @@ void cengen::on_action_export_tovar_list_to_clipboard() {
     }
     QClipboard *pcb = QApplication::clipboard();
     pcb->setText(str);
+}
+
+void cengen::on_action_set_special_shablon_to_zero_price2() {
+    QDialog *dlg = new QDialog(this);
+    QGridLayout *lay = new QGridLayout;
+    QPushButton *butOK = new QPushButton(tr("OK"));
+    QPushButton *butNO = new QPushButton(tr("Cancel"));
+    QLabel *lb1 = new QLabel(tr("Set special shablon for zero price2"));
+    QLabel *lb2 = new QLabel(tr("Select shablon: "));
+    QComboBox *bx = new QComboBox;
+    bx->addItems(tableWidget->get_shablon_list());
+    bx->setCurrentIndex(shablonBox->currentIndex());
+
+    lay->addWidget(lb1, 0, 0, 1, 2);
+    lay->addWidget(lb2, 1, 0);
+    lay->addWidget(bx, 1, 1);
+    lay->addWidget(butOK, 2, 1);
+    lay->addWidget(butNO, 2, 0);
+
+    connect(butOK, SIGNAL(clicked()), dlg, SLOT(accept()));
+    connect(butNO, SIGNAL(clicked()), dlg, SLOT(reject()));
+
+    dlg->setLayout(lay);
+
+    if (dlg->exec()) {
+        tableWidget->set_special_shablon_for_zero_price2(bx->currentIndex());
+    }
+
 }

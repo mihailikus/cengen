@@ -335,8 +335,11 @@ void MainTableWidget::selectAllItems() {
 
 void MainTableWidget::set_shablon_list(QStringList shablonList) {
     this->shablonList.clear();
-    //this->shablonList << tr("Default");
     this->shablonList << shablonList;
+}
+
+QStringList MainTableWidget::get_shablon_list() {
+    return shablonList;
 }
 
 void MainTableWidget::set_shablon_current(int shablon) {
@@ -363,6 +366,30 @@ void MainTableWidget::interchange_prices_in_table() {
     }
 }
 
+void MainTableWidget::intellect_interchange_prices_in_table() {
+    if (price1 == 0 || price2 == 0) {
+        //одна из цен не представлена в таблице - делать нечего
+        return;
+    }
+
+    float pr1, pr2;
+    for (int i = 0; i<rowCount(); i++){
+        pr1 = item(i, price1)->text().toFloat();
+        pr2 = item(i, price2)->text().toFloat();
+        if (pr1 && pr1>pr2) {
+            item(i, price1)->setText(QString::number(pr2));
+            item(i, price2)->setText(QString::number(pr1));
+        }
+        if (!pr1) {
+            item(i, price1)->setText(QString::number(pr2));
+            item(i, price2)->setText("0.00");
+        }
+        if (pr2 == pr1) {
+            item(i, price2)->setText("0.00");
+        }
+    }
+}
+
 void MainTableWidget::set_focus_on_price2() {
     set_editing_price2(true);
     if (rowCount()) {
@@ -370,4 +397,17 @@ void MainTableWidget::set_focus_on_price2() {
         setFocus();
     }
 
+}
+
+void MainTableWidget::set_special_shablon_for_zero_price2(int shablon) {
+    if (!shField) return;
+    float pr;
+    QComboBox* box;
+    for (int i = 0; i<rowCount(); i++) {
+        pr = item(i, price2)->text().toFloat();
+        if (!pr) {
+            box = ((QComboBox*)cellWidget(i, shField));
+            box->setCurrentIndex(shablon);
+        }
+    }
 }

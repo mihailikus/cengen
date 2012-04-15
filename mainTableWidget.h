@@ -30,7 +30,10 @@ public:
     void set_method_view(int method);
 
     void set_shablon_list(QStringList shablonList);
+    QStringList get_shablon_list();
     void set_shablon_current(int shablon);
+
+    void set_special_shablon_for_zero_price2(int shablon);
 
     void set_focus_on_price2();
 
@@ -38,6 +41,7 @@ public:
 public slots:
     void selectAllItems();
     void interchange_prices_in_table();
+    void intellect_interchange_prices_in_table();
     void set_editing_price2(bool status = false);
 
 private:
