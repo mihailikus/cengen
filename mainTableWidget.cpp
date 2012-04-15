@@ -376,7 +376,7 @@ void MainTableWidget::intellect_interchange_prices_in_table() {
     for (int i = 0; i<rowCount(); i++){
         pr1 = item(i, price1)->text().toFloat();
         pr2 = item(i, price2)->text().toFloat();
-        if (pr1 && pr1>pr2) {
+        if (pr2 && pr1>pr2) {
             item(i, price1)->setText(QString::number(pr2));
             item(i, price2)->setText(QString::number(pr1));
         }
