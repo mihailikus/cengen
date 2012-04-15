@@ -10,6 +10,7 @@
 #include <QtGui/QPalette>
 #include <QtGui/QToolButton>
 #include <QtGui/QStyle>
+#include <QDebug>
 
 #include "about.h"
 
@@ -104,7 +105,7 @@ void About::printCopyright()
                                                  + "<p>"
                                                  + "<b>" + tr("License") + "</b>: %4";
 
-        copyrightView->setText(text.arg(m_author).arg(m_mail).arg(m_phone).arg(m_license).arg(m_site));
+        copyrightView->setHtml(text.arg(m_author).arg(m_mail).arg(m_phone).arg(m_license).arg(m_site));
 }
 
 void About::printThanks ()
