@@ -412,7 +412,7 @@ void cengen::make_source_tab() {
     laySQL->addWidget(ui_mysql_table_selector_comboBox, 4, 2, 1, 2);
 
     ui_groupSQL->setLayout(laySQL);
-    layTab4->addWidget(ui_groupSQL, 0, 0);
+    layTab4->addWidget(ui_groupSQL, 0, 0, 1, 2);
 
     ui_groupDBF = new QGroupBox(tr("DBF file config"));
     ui_groupDBF->setCheckable(true);
@@ -427,7 +427,7 @@ void cengen::make_source_tab() {
     layDBF->addWidget(label16, 1, 0, 1, 3);
     layDBF->addWidget(labelDBFname, 2, 0, 1, 3);
     ui_groupDBF->setLayout(layDBF);
-    layTab4->addWidget(ui_groupDBF, 1, 0);
+    layTab4->addWidget(ui_groupDBF, 1, 0, 1, 2);
 
 
     ui_groupOpisateli = new QGroupBox(tr("Placement of DBF fields"));
@@ -457,7 +457,15 @@ void cengen::make_source_tab() {
 
     ui_groupOpisateli->setLayout(layOpisateli);
 
-    layTab4->addWidget(ui_groupOpisateli, 0, 1, 2, 1);
+    layTab4->addWidget(ui_groupOpisateli, 0, 2, 2, 1);
+
+    saveSourceButton = new QPushButton (tr("Save settings to file"));
+    loadSourceButton = new QPushButton (tr("Load settings from file"));
+    connect (saveSourceButton, SIGNAL(clicked()), SLOT(on_saveSourceButton()));
+    connect (loadSourceButton, SIGNAL(clicked()), SLOT(on_loadSourceButton()));
+    layTab4->addWidget(saveSourceButton, 2, 0);
+    layTab4->addWidget(loadSourceButton, 2, 1);
+
 
     tab4->setLayout(layTab4);
     ui_tabWidget->insertTab(TabsOrder::Source, tab4, tr("Data source"));
@@ -583,6 +591,12 @@ void cengen::make_filter_tab() {
     label23 = new QLabel(tr("value"));
     label23a = new QLabel(" ");
 
+    saveFilterSettings = new QPushButton (tr("Save filter settings"));
+    loadFilterSettings = new QPushButton (tr("Load filter settings"));
+    connect (saveFilterSettings, SIGNAL(clicked()), SLOT(on_saveFilterSettings()));
+    connect (loadFilterSettings, SIGNAL(clicked()), SLOT(on_loadFilterSettings()));
+
+
     ui_filterFileSelectButton = new QPushButton (tr("Select file"));
     connect (ui_filterFileSelectButton, SIGNAL(clicked()), SLOT(on_filterFileSelectButton_clicked()));
 
@@ -644,10 +658,15 @@ void cengen::make_filter_tab() {
     filBoxCheck->setLayout(filCheckLay);
     laytab5g1->addWidget(filBoxCheck, 4, 0, 1, 4);
 
+    laytab5g1->addWidget(saveFilterSettings, 5, 0);
+    laytab5g1->addWidget(loadFilterSettings, 5, 1);
+
+
 
 
     ui_filterBox = new QGroupBox(tr("Filter") + tr(" - version alpha, just DBF"));
     ui_filterBox->setCheckable(true);
+    ui_filterBox->setChecked(false);
     connect(ui_filterBox, SIGNAL(toggled(bool)), SLOT(on_filterBox_toggled(bool)));
     ui_filterBox->setLayout(laytab5g1);
 
@@ -1118,6 +1137,8 @@ void cengen::on_action_print_triggered()
         int min, max;
         min = dlg.fromPage();
         max = dlg.toPage();
+
+        if (!max) max = pages.count();
 
         if (min > pages.count()) {
             min--;
@@ -2448,5 +2469,212 @@ void cengen::on_action_set_special_shablon_to_zero_price2() {
     if (dlg->exec()) {
         tableWidget->set_special_shablon_for_zero_price2(bx->currentIndex());
     }
+
+}
+
+void cengen::on_saveSourceButton() {
+    qDebug() << "Saving source settings";
+    //Сохранение настроек источника данных
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save source data"), "" , tr("Source settings (*.das)"));
+
+    if (fileName != "") {
+    bool ckeck = false;
+    int ind = fileName.lastIndexOf(".das", -1, Qt::CaseInsensitive);
+    if (ind + 4 != fileName.length() || ind == -1) {
+        fileName += ".das";
+        ckeck = true;
+    }
+
+    QFile file(fileName);
+    if (ckeck && file.exists()) {
+        ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
+        dlg->setMessage(tr("File exist. Rewrite?"));
+        if (dlg->exec()) {
+            ckeck = false;
+        } else {
+            //приделать повторный выбор имени файла
+            return;
+        }
+    } else {
+        ckeck = false;
+    }
+
+    if(!ckeck && file.open(QIODevice::WriteOnly)) {
+        QString settings;
+        settings = this->dbf->fileName + "\n";
+        settings += QString::number(config_index[0]) + "\n";
+        settings += QString::number(config_index[1]) + "\n";
+        settings += QString::number(config_index[2]) + "\n";
+        settings += QString::number(config_index[3]) + "\n";
+
+        QTextStream out(&file);
+        out.setCodec("UTF-8");
+        out << settings;
+        file.close();
+    }
+}
+}
+
+void cengen::on_loadSourceButton() {
+    qDebug() << "Load source settings";
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open source data"), "", tr("Source settings (*.das)"));
+    if (fileName == "") {
+        qDebug() << "Please select file name";
+        return;
+    }
+
+    QFile file;
+    file.setFileName(fileName);
+
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream fstream(&file);
+        fstream.setCodec("UTF-8");
+
+        QString line;
+
+        //первая строка - название файла
+        line = fstream.readLine();
+        this->dbf->fileName = line;
+
+        db_source = 0;
+
+        if (dbf->fileName != "") {
+            //если имя файла не пусто - продолжаем
+            my_informer->set_tb_name(dbf->fileName);
+            labelDBFname->setText(dbf->fileName);
+            this->opisateli.clear();
+            opisateli = my_informer->tb_describe("DBF");
+
+            //вызываем функцию выбора и установки описателей
+            this->update_ui_db_controls();
+
+            ui_spinLimit->setMaximum(my_informer->get_maximum());
+
+        }
+
+        //последующие четыре строки - описатели полей предыдущего файла
+        line = fstream.readLine();
+        config_index[0] = line.toInt();
+        qDebug() << "Start n_tov" << config_index[0];
+        line = fstream.readLine();
+        config_index[1] = line.toInt();
+        line = fstream.readLine();
+        config_index[2] = line.toInt();
+        line = fstream.readLine();
+        config_index[3] = line.toInt();
+
+        describer_is_ready = true;
+        config.tnomer = opisateli.at(config_index[0]);
+        config.tname = opisateli.at(config_index[1]);
+        config.tbarcode = opisateli.at(config_index[2]);
+        config.tprice = opisateli.at(config_index[3]);
+        my_informer->set_fields(&config);
+
+        update_ui_tb_fields(opisateli);
+
+
+        //set_opisateli_from_settings();
+        update_ui_db_controls();
+    }
+}
+
+void cengen::on_saveFilterSettings() {
+    qDebug() << "Saving filter ";
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save filter data"), "" , tr("Filter settings (*.fli)"));
+
+    if (fileName != "") {
+    bool ckeck = false;
+    int ind = fileName.lastIndexOf(".fli", -1, Qt::CaseInsensitive);
+    if (ind + 4 != fileName.length() || ind == -1) {
+        fileName += ".fli";
+        ckeck = true;
+    }
+
+    QFile file(fileName);
+    if (ckeck && file.exists()) {
+        ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
+        dlg->setMessage(tr("File exist. Rewrite?"));
+        if (dlg->exec()) {
+            ckeck = false;
+        } else {
+            //приделать повторный выбор имени файла
+            return;
+        }
+    } else {
+        ckeck = false;
+    }
+
+    if(!ckeck && file.open(QIODevice::WriteOnly)) {
+        QString settings;
+        //записываем название файла
+        settings = filterDbf.fileName + "\n";
+        settings += QString::number(ui_filterWhatBox->currentIndex()) + "\n";
+        settings += QString::number(ui_filterWhereBox->currentIndex()) + "\n";
+        //строка поиска
+        settings += ui_filterLineText->text() + "\n";
+        //ключ поиска - товарный номер, штрихкод и т.п. (в виде индекса)
+        settings += QString::number(ui_filterWhatToFoundBox->currentIndex()) + "\n";
+        //метод фильтрации - равно, больше, меньше и т.п. (в виде индекса)
+        settings += QString::number(ui_filterMethodBox->currentIndex()) + "\n";
+        settings += QString::number(filterCheckInBox->currentIndex()) + "\n";
+
+        QTextStream out(&file);
+        out.setCodec("UTF-8");
+        out << settings;
+        file.close();
+    }
+}
+}
+
+void cengen::on_loadFilterSettings() {
+    qDebug() << "load filter";
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open filter settings"), "", tr("Filter settings (*.fli)"));
+    if (fileName == "") {
+        qDebug() << "Please select file name";
+        return;
+    }
+
+    QFile file;
+    file.setFileName(fileName);
+
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream fstream(&file);
+        fstream.setCodec("UTF-8");
+
+        QString line;
+
+        //первая строка - название файла
+        line = fstream.readLine();
+        filterDbf.fileName = line;
+        if (filterDbf.fileName == "") {
+            this->file_is_ready = false;
+            ui_statusLabel->setText(tr("Wrong shablon"));
+            return;
+        }
+
+        on_filterFileName_changed();
+
+        line = fstream.readLine();
+        ui_filterWhatBox->setCurrentIndex(line.toInt());
+        line = fstream.readLine();
+        ui_filterWhereBox->setCurrentIndex(line.toInt());
+
+        line = fstream.readLine();
+        ui_filterLineText->setText(line);
+
+        line = fstream.readLine();
+        ui_filterWhatToFoundBox->setCurrentIndex(line.toInt());
+
+        line = fstream.readLine();
+        ui_filterMethodBox->setCurrentIndex(line.toInt());
+
+        line = fstream.readLine();
+        filterCheckInBox->setCurrentIndex(line.toInt());
+
+
+
+
+    }
+
 
 }

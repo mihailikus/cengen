@@ -170,6 +170,7 @@ private:
     //а эти для определения, где в таблице какое поле
     QComboBox *ui_comboTnomer, *ui_comboTname, *ui_comboTbarcode, *ui_comboTprice;
     QLabel *label12, *label13, *label14, *label15;
+    QPushButton *saveSourceButton, *loadSourceButton;
 
 
     //виджеты вкладки фильтра
@@ -187,6 +188,7 @@ private:
     QGridLayout *filCheckLay;
     QLabel *label30, *label31;
     QComboBox *filterCheckOutBox, *filterCheckInBox;
+    QPushButton *saveFilterSettings, *loadFilterSettings;
 
 
 
@@ -331,6 +333,10 @@ private slots:
     void update_ui_tb_fields(QStringList list);
     void update_ui_db_controls();
     void update_ui_connection_established();
+    void on_saveSourceButton();
+    void on_loadSourceButton();
+    void on_saveFilterSettings();
+    void on_loadFilterSettings();
 
     QList<Tovar> show_found_items(QList<Tovar> inputList);
     QList<Tovar> apply_filter(QList<Tovar> inputList);
