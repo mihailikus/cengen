@@ -297,7 +297,7 @@ int Barcode::correctSymbol(QChar symbol) {
 
 QString Barcode::found_lost_digit(QString text) {
     QStringList items = text.split("*");
-    if (items.count() >5 || items.count() <2) {
+    if (items.count() >6 || items.count() <2) {
         return QWidget::tr("Too many lost digits");
     }
     if (text.length() != 13)
