@@ -238,768 +238,815 @@
 <context>
     <name>cengen</name>
     <message>
-        <location filename="cengen.cpp" line="685"/>
-        <location filename="cengen.cpp" line="766"/>
+        <location filename="cengen.cpp" line="755"/>
+        <location filename="cengen.cpp" line="836"/>
         <source>COUNT: </source>
         <comment>ITOGO</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="687"/>
-        <location filename="cengen.cpp" line="2449"/>
+        <location filename="cengen.cpp" line="757"/>
+        <location filename="cengen.cpp" line="2549"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="69"/>
+        <location filename="cengen.cpp" line="72"/>
         <source>New tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="71"/>
+        <location filename="cengen.cpp" line="74"/>
         <source>Create new tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="76"/>
+        <location filename="cengen.cpp" line="79"/>
         <source>Load new list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="78"/>
+        <location filename="cengen.cpp" line="81"/>
         <source>Load and append tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="83"/>
+        <location filename="cengen.cpp" line="86"/>
         <source>Save current list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="85"/>
+        <location filename="cengen.cpp" line="88"/>
         <source>Save current tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="90"/>
+        <location filename="cengen.cpp" line="93"/>
         <source>MakeUp cennic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="91"/>
+        <location filename="cengen.cpp" line="94"/>
         <source>Make up cennic for tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="98"/>
+        <location filename="cengen.cpp" line="101"/>
         <source>Print</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="99"/>
+        <location filename="cengen.cpp" line="102"/>
         <source>Send previewed to printer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="106"/>
+        <location filename="cengen.cpp" line="109"/>
         <source>Scale UP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="110"/>
+        <location filename="cengen.cpp" line="113"/>
         <source>Scale DOWN</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="119"/>
+        <location filename="cengen.cpp" line="122"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="124"/>
+        <location filename="cengen.cpp" line="127"/>
         <source>About program</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="128"/>
+        <location filename="cengen.cpp" line="131"/>
         <source>Minus tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="133"/>
+        <location filename="cengen.cpp" line="136"/>
         <source>Apply filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="134"/>
+        <location filename="cengen.cpp" line="137"/>
         <source>Apply filter on current tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="187"/>
+        <location filename="cengen.cpp" line="196"/>
         <source>Main toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="235"/>
+        <location filename="cengen.cpp" line="247"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="262"/>
-        <location filename="cengen.cpp" line="338"/>
-        <location filename="cengen.cpp" line="438"/>
-        <location filename="cengen.cpp" line="2425"/>
+        <location filename="cengen.cpp" line="274"/>
+        <location filename="cengen.cpp" line="350"/>
+        <location filename="cengen.cpp" line="450"/>
+        <location filename="cengen.cpp" line="2525"/>
         <source>Barcode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="263"/>
-        <location filename="cengen.cpp" line="336"/>
-        <location filename="cengen.cpp" line="436"/>
-        <location filename="cengen.cpp" line="609"/>
-        <location filename="cengen.cpp" line="2424"/>
+        <location filename="cengen.cpp" line="275"/>
+        <location filename="cengen.cpp" line="348"/>
+        <location filename="cengen.cpp" line="448"/>
+        <location filename="cengen.cpp" line="621"/>
+        <location filename="cengen.cpp" line="714"/>
+        <location filename="cengen.cpp" line="2524"/>
         <source>Tnomer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="340"/>
-        <location filename="cengen.cpp" line="2427"/>
+        <location filename="cengen.cpp" line="352"/>
+        <location filename="cengen.cpp" line="2527"/>
         <source>Price2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="257"/>
+        <location filename="cengen.cpp" line="269"/>
         <source>Search</source>
         <comment>Button for search</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="139"/>
+        <location filename="cengen.cpp" line="142"/>
         <source>Interchange prices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="140"/>
+        <location filename="cengen.cpp" line="143"/>
         <source>Intercange OLD and NEW prices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="144"/>
+        <location filename="cengen.cpp" line="147"/>
         <source>Verify or correct barcode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="148"/>
+        <location filename="cengen.cpp" line="151"/>
         <source>Update price1 for current tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="169"/>
+        <location filename="cengen.cpp" line="172"/>
         <source>Load tovar list from clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="164"/>
+        <location filename="cengen.cpp" line="167"/>
         <source>Filter ON</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="152"/>
+        <location filename="cengen.cpp" line="155"/>
         <source>Update price1 for current tovar list after re-pricing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="156"/>
+        <location filename="cengen.cpp" line="159"/>
         <source>Update names for current tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="160"/>
+        <location filename="cengen.cpp" line="163"/>
         <source>Search by tnomer in clip-board</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="173"/>
+        <location filename="cengen.cpp" line="176"/>
         <source>Export tovar list to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="177"/>
+        <location filename="cengen.cpp" line="180"/>
         <source>Intellect exchange prices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="181"/>
-        <location filename="cengen.cpp" line="2451"/>
+        <location filename="cengen.cpp" line="184"/>
+        <location filename="cengen.cpp" line="2551"/>
         <source>Set special shablon for zero price2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="217"/>
+        <location filename="cengen.cpp" line="188"/>
+        <source>Apply filter by sold tovars</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="226"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="264"/>
-        <location filename="cengen.cpp" line="337"/>
-        <location filename="cengen.cpp" line="2425"/>
+        <location filename="cengen.cpp" line="244"/>
+        <source>Sell control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="276"/>
+        <location filename="cengen.cpp" line="349"/>
+        <location filename="cengen.cpp" line="2525"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="265"/>
+        <location filename="cengen.cpp" line="277"/>
         <source>FREE</source>
         <comment>uses for NULL search</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="272"/>
+        <location filename="cengen.cpp" line="284"/>
         <source>Method for tovar search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="285"/>
+        <location filename="cengen.cpp" line="297"/>
         <source>max</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="290"/>
+        <location filename="cengen.cpp" line="302"/>
         <source>Search limit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="302"/>
+        <location filename="cengen.cpp" line="314"/>
         <source>SEARCH</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="316"/>
+        <location filename="cengen.cpp" line="328"/>
         <source>PREVIEW</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="323"/>
+        <location filename="cengen.cpp" line="335"/>
         <source>Used fileds:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="327"/>
+        <location filename="cengen.cpp" line="339"/>
         <source>Describer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="330"/>
+        <location filename="cengen.cpp" line="342"/>
         <source>Default value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="341"/>
-        <location filename="cengen.cpp" line="2426"/>
+        <location filename="cengen.cpp" line="353"/>
+        <location filename="cengen.cpp" line="717"/>
+        <location filename="cengen.cpp" line="2526"/>
         <source>Quantity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="360"/>
+        <location filename="cengen.cpp" line="372"/>
         <source> </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="365"/>
+        <location filename="cengen.cpp" line="377"/>
         <source>Fields</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="375"/>
+        <location filename="cengen.cpp" line="387"/>
         <source>MySQL config</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="382"/>
+        <location filename="cengen.cpp" line="394"/>
         <source>Not used yet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="386"/>
+        <location filename="cengen.cpp" line="398"/>
         <source>DB Host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="387"/>
+        <location filename="cengen.cpp" line="399"/>
         <source>DB port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="388"/>
+        <location filename="cengen.cpp" line="400"/>
         <source>DB name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="389"/>
+        <location filename="cengen.cpp" line="401"/>
         <source>User name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="390"/>
+        <location filename="cengen.cpp" line="402"/>
         <source>User password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="391"/>
+        <location filename="cengen.cpp" line="403"/>
         <source>Select table from MySQL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="403"/>
+        <location filename="cengen.cpp" line="415"/>
         <source>Connect to MySQL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="417"/>
+        <location filename="cengen.cpp" line="429"/>
         <source>DBF file config</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="422"/>
+        <location filename="cengen.cpp" line="434"/>
         <source>DBF file selected is:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="424"/>
+        <location filename="cengen.cpp" line="436"/>
         <source>Select DBF file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="433"/>
+        <location filename="cengen.cpp" line="445"/>
         <source>Placement of DBF fields</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="437"/>
+        <location filename="cengen.cpp" line="449"/>
         <source>Name of tovar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="462"/>
+        <location filename="cengen.cpp" line="474"/>
         <source>Save settings to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="463"/>
+        <location filename="cengen.cpp" line="475"/>
         <source>Load settings from file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="594"/>
+        <location filename="cengen.cpp" line="606"/>
         <source>Save filter settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="595"/>
+        <location filename="cengen.cpp" line="607"/>
         <source>Load filter settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1724"/>
-        <location filename="cengen.cpp" line="2490"/>
-        <location filename="cengen.cpp" line="2595"/>
+        <location filename="cengen.cpp" line="699"/>
+        <source>Select file with sell records</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="703"/>
+        <source>Selected file: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="715"/>
+        <source>Date of sell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="716"/>
+        <source>Time of sell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="738"/>
+        <source>From date: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="739"/>
+        <source>To date: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="748"/>
+        <source>Sell settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="1824"/>
+        <location filename="cengen.cpp" line="2590"/>
+        <location filename="cengen.cpp" line="2695"/>
         <source>File exist. Rewrite?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2190"/>
-        <location filename="cengen.cpp" line="2326"/>
+        <location filename="cengen.cpp" line="2290"/>
+        <location filename="cengen.cpp" line="2426"/>
         <source>FOUND </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2190"/>
+        <location filename="cengen.cpp" line="2290"/>
         <source>Do you want to search them in database?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2227"/>
-        <location filename="cengen.cpp" line="2269"/>
-        <location filename="cengen.cpp" line="2311"/>
-        <location filename="cengen.cpp" line="2403"/>
+        <location filename="cengen.cpp" line="2327"/>
+        <location filename="cengen.cpp" line="2369"/>
+        <location filename="cengen.cpp" line="2411"/>
+        <location filename="cengen.cpp" line="2503"/>
         <source>NOT FOUND </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2236"/>
+        <location filename="cengen.cpp" line="2336"/>
         <source>Price changed </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2327"/>
+        <location filename="cengen.cpp" line="2427"/>
         <source> wrong tovars.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2328"/>
+        <location filename="cengen.cpp" line="2428"/>
         <source>If you want to save them into file, click OK button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2424"/>
+        <location filename="cengen.cpp" line="2524"/>
         <source># </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2426"/>
+        <location filename="cengen.cpp" line="2526"/>
         <source>Price1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2450"/>
+        <location filename="cengen.cpp" line="2550"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2452"/>
+        <location filename="cengen.cpp" line="2552"/>
         <source>Select shablon: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2477"/>
+        <location filename="cengen.cpp" line="2577"/>
         <source>Save source data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2477"/>
-        <location filename="cengen.cpp" line="2519"/>
+        <location filename="cengen.cpp" line="2577"/>
+        <location filename="cengen.cpp" line="2619"/>
         <source>Source settings (*.das)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2519"/>
+        <location filename="cengen.cpp" line="2619"/>
         <source>Open source data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2582"/>
+        <location filename="cengen.cpp" line="2682"/>
         <source>Save filter data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2582"/>
-        <location filename="cengen.cpp" line="2630"/>
+        <location filename="cengen.cpp" line="2682"/>
+        <location filename="cengen.cpp" line="2730"/>
         <source>Filter settings (*.fli)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2630"/>
+        <location filename="cengen.cpp" line="2730"/>
         <source>Open filter settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="339"/>
-        <location filename="cengen.cpp" line="439"/>
-        <location filename="cengen.cpp" line="612"/>
+        <location filename="cengen.cpp" line="351"/>
+        <location filename="cengen.cpp" line="451"/>
+        <location filename="cengen.cpp" line="624"/>
         <source>Price</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="471"/>
+        <location filename="cengen.cpp" line="483"/>
         <source>Data source</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="342"/>
-        <location filename="cengen.cpp" line="478"/>
-        <location filename="cengen.cpp" line="483"/>
-        <location filename="cengen.cpp" line="574"/>
+        <location filename="cengen.cpp" line="354"/>
+        <location filename="cengen.cpp" line="490"/>
+        <location filename="cengen.cpp" line="495"/>
+        <location filename="cengen.cpp" line="586"/>
         <source>Shablon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="485"/>
+        <location filename="cengen.cpp" line="497"/>
         <source>Open shablon in built-in editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="488"/>
+        <location filename="cengen.cpp" line="500"/>
         <source>List of other shablons in current directory:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="504"/>
+        <location filename="cengen.cpp" line="516"/>
         <source>Page setup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="507"/>
+        <location filename="cengen.cpp" line="519"/>
         <source>Paper A4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="508"/>
+        <location filename="cengen.cpp" line="520"/>
         <source>Paper A5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="523"/>
-        <location filename="cengen.cpp" line="524"/>
+        <location filename="cengen.cpp" line="535"/>
+        <location filename="cengen.cpp" line="536"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="525"/>
+        <location filename="cengen.cpp" line="537"/>
         <source>in mkm</source>
         <comment>Size in mikro-millimeters</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="526"/>
+        <location filename="cengen.cpp" line="538"/>
         <source>in cennic&apos;s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="527"/>
+        <location filename="cengen.cpp" line="539"/>
         <source>Paper orientation:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="528"/>
+        <location filename="cengen.cpp" line="540"/>
         <source> </source>
         <comment>Zero label</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="536"/>
+        <location filename="cengen.cpp" line="548"/>
         <source>orientation: portrate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="537"/>
+        <location filename="cengen.cpp" line="549"/>
         <source>orientation: landscape</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="207"/>
-        <location filename="cengen.cpp" line="585"/>
+        <location filename="cengen.cpp" line="216"/>
+        <location filename="cengen.cpp" line="597"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="546"/>
+        <location filename="cengen.cpp" line="558"/>
         <source>Zoom of cennic&apos;s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="556"/>
+        <location filename="cengen.cpp" line="568"/>
         <source>Otstup from Top of the page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="565"/>
+        <location filename="cengen.cpp" line="577"/>
         <source>Expand tovar list for each item prices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="586"/>
+        <location filename="cengen.cpp" line="598"/>
         <source>File not selected yet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="587"/>
+        <location filename="cengen.cpp" line="599"/>
         <source>What to find2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="588"/>
+        <location filename="cengen.cpp" line="600"/>
         <source>Where is it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="589"/>
+        <location filename="cengen.cpp" line="601"/>
         <source>Column for compare</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="590"/>
+        <location filename="cengen.cpp" line="602"/>
         <source>Method of compare</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="591"/>
+        <location filename="cengen.cpp" line="603"/>
         <source>value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="600"/>
+        <location filename="cengen.cpp" line="612"/>
         <source>Select file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="610"/>
+        <location filename="cengen.cpp" line="622"/>
         <source>barcode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="611"/>
+        <location filename="cengen.cpp" line="623"/>
         <source>name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="615"/>
+        <location filename="cengen.cpp" line="627"/>
         <source>==</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="616"/>
+        <location filename="cengen.cpp" line="628"/>
         <source>&lt;&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="617"/>
+        <location filename="cengen.cpp" line="629"/>
         <source>&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="618"/>
+        <location filename="cengen.cpp" line="630"/>
         <source>&lt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="619"/>
+        <location filename="cengen.cpp" line="631"/>
         <source>LIKE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="639"/>
+        <location filename="cengen.cpp" line="651"/>
         <source>Use filter for update fields</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="645"/>
+        <location filename="cengen.cpp" line="657"/>
         <source>Use found field: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="646"/>
+        <location filename="cengen.cpp" line="658"/>
         <source>for update field in main table:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="667"/>
-        <location filename="cengen.cpp" line="676"/>
+        <location filename="cengen.cpp" line="679"/>
+        <location filename="cengen.cpp" line="689"/>
         <source>Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="667"/>
+        <location filename="cengen.cpp" line="679"/>
         <source> - version alpha, just DBF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="343"/>
+        <location filename="cengen.cpp" line="355"/>
         <source>DELETE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="480"/>
-        <location filename="cengen.cpp" line="782"/>
+        <location filename="cengen.cpp" line="492"/>
+        <location filename="cengen.cpp" line="852"/>
         <source>Select shablon file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="782"/>
+        <location filename="cengen.cpp" line="852"/>
         <source>CEN-files (*.cen)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="809"/>
+        <location filename="cengen.cpp" line="879"/>
         <source>Please select file</source>
         <comment>If no file selected</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="814"/>
+        <location filename="cengen.cpp" line="884"/>
         <source>Shablon OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1391"/>
-        <location filename="cengen.cpp" line="2650"/>
+        <location filename="cengen.cpp" line="1491"/>
+        <location filename="cengen.cpp" line="2750"/>
         <source>Wrong shablon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="893"/>
+        <location filename="cengen.cpp" line="963"/>
         <source>Select proper file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="734"/>
+        <location filename="cengen.cpp" line="804"/>
         <source>NOT FOUND</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="821"/>
+        <location filename="cengen.cpp" line="891"/>
         <source>*.cen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="978"/>
+        <location filename="cengen.cpp" line="1048"/>
         <source>Total: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="980"/>
+        <location filename="cengen.cpp" line="1050"/>
         <source> cennic&apos;s on one page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="986"/>
+        <location filename="cengen.cpp" line="1056"/>
         <source>File is not ready</source>
         <comment>If file shablon is not ready</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1697"/>
+        <location filename="cengen.cpp" line="1797"/>
         <source>Cannot open shablon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1711"/>
+        <location filename="cengen.cpp" line="1811"/>
         <source>Save tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1711"/>
-        <location filename="cengen.cpp" line="1751"/>
-        <location filename="cengen.cpp" line="1891"/>
+        <location filename="cengen.cpp" line="1811"/>
+        <location filename="cengen.cpp" line="1851"/>
+        <location filename="cengen.cpp" line="1991"/>
         <source>Tovar lists (*.tov)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1751"/>
+        <location filename="cengen.cpp" line="1851"/>
         <source>Open tovar list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1875"/>
+        <location filename="cengen.cpp" line="1975"/>
         <source>COUNT: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1891"/>
+        <location filename="cengen.cpp" line="1991"/>
         <source>Select tovar list for minus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2118"/>
+        <location filename="cengen.cpp" line="2218"/>
         <source>Michael Volkov</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2132"/>
+        <location filename="cengen.cpp" line="2232"/>
         <source>UG_Dvor_34</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2132"/>
+        <location filename="cengen.cpp" line="2232"/>
         <source>Encouragement</source>
         <translation type="unfinished"></translation>
     </message>

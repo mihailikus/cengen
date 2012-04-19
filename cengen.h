@@ -20,6 +20,7 @@
 #include <QSpinBox>
 #include <QRadioButton>
 #include <QLineEdit>
+#include <QCalendarWidget>
 #include <QToolBar>
 #include <QStatusBar>
 #include <QMenuBar>
@@ -205,11 +206,16 @@ private:
     //виджеты вкладки для управления файлом продаж
     QWidget *tab7;
     QGridLayout *layTab7;
-    QLabel *lb1, *lb2, *lb3;
+    QLabel *lb1, *lb2, *lb3, *lb4, *lb5, *lb6, *lb7, *lb8, *lb9;
     QComboBox *sellNomerBox, *sellDateBox, *sellTimeBox, *sellKolBox;
     QPushButton *selectSellFileButton;
     QPushButton *saveSellSettingsButton;
     QString sellFileName;
+    QStringList sellOpisateli;
+    QCalendarWidget *dateStart, *dateStop;
+    bool sell_file_is_checked;
+    Tinformer *sell_informer;
+
 
 
 
@@ -352,6 +358,7 @@ private slots:
     void on_saveFilterSettings();
     void on_loadFilterSettings();
     void on_selectSellFileButtonClicked();
+    void check_sell_file();
     void on_saveSellSettingsButtonClicked();
     void updateSellTab();
 

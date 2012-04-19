@@ -24,7 +24,7 @@ public slots:
     bool file_is_ready();
     QStringList get_dbf_header(QString filename);
     QList<Tovar> found_record_in_dbf(QString searchText, QString method, int limit,
-                                     int startPos, int endPos,
+                                     int startPos = 0, int endPos = -1,
                                      bool FromStartToEnd = true);
     int last_found_record();
 
@@ -37,6 +37,7 @@ private:
     QFile file;
     QTextCodec *codec;
     int last_record;
+    bool first_time;
 
 
 

@@ -18,6 +18,10 @@ Tinformer::Tinformer() {
 
 }
 
+Tinformer::~Tinformer() {
+    delete dbf_info;
+}
+
 bool Tinformer::prepare(SqlConfig *sql) {
 
     this->datasource = MySQL;

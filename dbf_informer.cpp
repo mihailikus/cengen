@@ -4,6 +4,11 @@
 
 dbf_informer::dbf_informer() {
     codec = QTextCodec::codecForName("IBM 866");
+    first_time = true;
+}
+
+dbf_informer::~dbf_informer() {
+    file.close();
 }
 
 bool dbf_informer::file_is_ready() {
@@ -94,19 +99,13 @@ bool dbf_informer::describe_dbf() {
 QStringList dbf_informer::get_dbf_header(QString filename) {
     file.setFileName(filename);
     file.open(QIODevice::ReadOnly);
+    first_time = true;
 
     QStringList list;
     if (this->describe_dbf()) {
         for (int i = 0; i<fields.count(); i++) {
             list << fields.at(i).name;
         }
-
-        //да сразу и прочитаем весь файл от начала до конца в буфер
-        file.seek(this->length_of_header_structure);
-        int fileSize = this->number_of_records * this->length_of_each_record;
-        this->all_records = new char[fileSize];
-        file.read(this->all_records, fileSize);
-        file.seek(this->length_of_header_structure);
     }
     return list;
 }
@@ -123,12 +122,6 @@ QString dbf_informer::get_one_cell(int offset, int lenth) {
 QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString method, int limit,
                                                int startPos, int endPos,
                                                bool FromStartToEnd) {
-    Tovar tovar;
-    QList<Tovar> tovarList;
-    tovar.price2 = 0;
-    tovar.quantity = 0;
-    tovar.shablon = 0;
-
     int maximum;
     if (endPos == -1) {
         maximum = number_of_records;
@@ -136,13 +129,35 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
         maximum = endPos;
     }
 
+    if (first_time) {
+        //да сразу и прочитаем весь файл от начала до конца в буфер
+
+
+
+        file.seek(this->length_of_header_structure + startPos*length_of_each_record);
+        int fileSize = (maximum - startPos) * this->length_of_each_record;
+        this->all_records = new char[fileSize];
+        file.read(this->all_records, fileSize);
+        file.seek(this->length_of_header_structure);
+        first_time = false;
+    }
+
+
+    Tovar tovar;
+    QList<Tovar> tovarList;
+    tovar.price2 = 0;
+    tovar.quantity = 0;
+    tovar.shablon = 0;
+
+
+
     int offset;
     int i;
     if (FromStartToEnd) {
-        offset = 1 + dbf_fields[method].offset + length_of_each_record*startPos;
+        offset = 1 + dbf_fields[method].offset;
         i = startPos;
     } else {
-        offset = 1 + dbf_fields[method].offset + length_of_each_record*(maximum-1);
+        offset = 1 + dbf_fields[method].offset + length_of_each_record*(maximum-startPos-1);
         i = maximum-1;
     }
 
