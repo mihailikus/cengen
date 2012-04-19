@@ -1067,8 +1067,11 @@ void cengen::generate_preview() {
                 //начали новую строчку - а вдруг надо новую страницу?
 
                 //начинаем новую страницу
+                if (pages.count() == 1) {
+                    view->fitInView(page, Qt::KeepAspectRatio);
+                }
                 QRectF page(zoomedPageW*pages.count()-1, 0,
-                            zoomedPageW, pageH);
+                            zoomedPageW, zoomedPageH);
                 pages << page;
                 bXstart += zoomedPageW;
                 bXpos = bXstart;
