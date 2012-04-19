@@ -33,6 +33,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     this->make_source_tab();
     this->make_filter_tab();
     this->make_fieldList_tab();
+    this->make_sellSettings_tab();
 
     tableWidget->set_editing_price2(false);
     tableWidget->set_tovar_searched(false);
@@ -181,6 +182,12 @@ void cengen::make_actions() {
     action_set_special_shablon_to_zero_price2 = new QAction(tr("Set special shablon for zero price2"), this);
     connect (action_set_special_shablon_to_zero_price2, SIGNAL(triggered()),
              SLOT(on_action_set_special_shablon_to_zero_price2()));
+
+    action_sell_filter = new QAction(tr("Apply filter by sold tovars"), this);
+    action_sell_filter->setShortcut(QKeySequence("F10"));
+    connect (action_sell_filter, SIGNAL(triggered()),
+             SLOT(on_action_sell_filter_triggered()));
+
 }
 
 void cengen::make_toolBar() {
@@ -231,6 +238,9 @@ void cengen::make_mainMenu() {
     menuEdit->addAction(action_export_tovar_list_to_clipboard);
     menuEdit->addSeparator();
     menuEdit->addAction(action_verify_barcode);
+
+    menuSell = mainMenu->addMenu((tr("Sell control")));
+    menuSell->addAction(action_sell_filter);
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_about);
@@ -677,6 +687,28 @@ void cengen::make_filter_tab() {
     ui_tabWidget->insertTab(TabsOrder::Filter, tab5, tr("Filter"));
 
 
+
+}
+
+void cengen::make_sellSettings_tab() {
+    tab7 = new QWidget;
+    layTab7 = new QGridLayout;
+
+    selectSellFileButton = new QPushButton (tr("Select file with sell records"));
+    layTab7->addWidget(selectSellFileButton, 0, 0);
+    connect(selectSellFileButton, SIGNAL(clicked()), SLOT(on_selectSellFileButtonClicked()));
+
+    lb1 = new QLabel(tr("Selected file: "));
+    lb2 = new QLabel("");
+
+    layTab7->addWidget(lb1, 0, 1);
+    layTab7->addWidget(lb2, 0, 2);
+
+
+
+
+    tab7->setLayout(layTab7);
+    ui_tabWidget->insertTab(TabsOrder::Sell, tab7, tr("Sell settings"));
 
 }
 
@@ -1230,6 +1262,13 @@ void cengen::writeSettings()
 
     }
 
+    //сохраняем настройки о файле продаж
+    m_settings.beginGroup("/Sell");
+    m_settings.setValue("sellFileName", sellFileName);
+
+
+    m_settings.endGroup();
+
     //указываем текущую вкладку
     m_settings.setValue("tabIndex", ui_tabWidget->currentIndex());
 
@@ -1374,6 +1413,10 @@ void cengen::readSettings() {
         //ui_filterBox->setChecked(false);
         on_filterBox_toggled(false);
     }
+
+    //читаем информацию о файле продаж
+    sellFileName = m_settings.value("/Settings/Sell/sellFileName", "").toString();
+    updateSellTab();
 
     //читаем номер текущей вкладки (по умолчанию - вкладка с источником данных)
     int ind = m_settings.value("/Settings/tabIndex", "3").toInt();
@@ -2679,5 +2722,111 @@ void cengen::on_loadFilterSettings() {
 
     }
 
+
+}
+
+void cengen::on_action_sell_filter_triggered() {
+    qDebug() << "Sell action";
+
+    Tinformer *sell_informer = new Tinformer;
+    DbfConfig sellDb;
+    sellDb.fileName = sellFileName;
+
+    QFileInfo fi;
+    fi.setFile(sellFileName);
+    if (!fi.exists()) {
+        qDebug() << "File not exists";
+        return;
+    }
+
+
+    sell_informer->prepare(&sellDb);
+
+    sell_informer->set_tb_name(sellDb.fileName);
+    QStringList opisat = sell_informer->tb_describe("DBF");
+
+    dbTranslator sellConfig;
+    sellConfig.tbarcode = opisat[13];
+    sellConfig.tnomer =   opisat[1];
+    sellConfig.tname =    opisat[14];
+    sellConfig.tprice =   opisat[4];
+
+    sell_informer->set_fields(&sellConfig);
+
+    sell_informer->set_limit_search(1);
+    QList<Tovar> tb1, tb2, tb3, curTb, newTb;
+
+    QString curDate;// = "20101209";
+    QDate dt1;
+    dt1.setDate(2012, 03, 11);
+
+    //dt1 = QDate::currentDate().addMonths(-10);
+    curDate =  dt1.toString("yyyyMMdd");
+    qDebug() << curDate;
+
+    tb1 = sell_informer->info(curDate, "tbarcode", 0, -1, 0, true);
+    qDebug() << "1 cell " << tb1.at(0).nomer_of_tovar;
+
+    //int max = sell_informer->get_maximum();
+
+    int cur = sell_informer->last_found_record_number();
+
+    cur--;
+
+    //dt1 = QDate::currentDate().addMonths(-8);
+    curDate = dt1.toString("yyyyMMdd");
+    qDebug() << curDate;
+
+    tb2 = sell_informer->info(curDate, "tbarcode", cur, -1, 0, false);
+
+    qDebug() << "last cell " << tb2.at(0).nomer_of_tovar;
+
+    int last = sell_informer->last_found_record_number();
+    last++;
+    last++;
+
+    qDebug() << "cur rec " << last;
+
+    curTb = tableWidget->get_tovar_list("x");
+
+    int count;
+    Tovar tovar;
+    for (int i = 0; i<curTb.count(); i++) {
+        tovar = curTb.at(i);
+        tb3 = sell_informer->info(QString::number(tovar.nomer_of_tovar), "tnomer", cur, last, last-cur, true);
+        count = 0;
+        for (int j = 0; j<tb3.count(); j++) {
+            count += tb3.at(j).price1;
+        }
+        //qDebug() << "Last sell at " << tb3.last().name_of_tovar;
+        tovar.quantity = count;
+        newTb << tovar;
+    }
+
+
+
+    on_action_new_triggered();
+    tableWidget->load_tovar_list_into_table(newTb);
+
+
+
+
+
+}
+
+void cengen::on_selectSellFileButtonClicked() {
+    //выбор DBF-файла
+    QString str = QFileDialog::getOpenFileName(0, "Select FILTER file", sellFileName, "DBF-files (*.dbf)");
+    sellFileName = str;
+    updateSellTab();
+
+}
+
+void cengen::on_saveSellSettingsButtonClicked() {
+    qDebug() << "Saving sell settings";
+}
+
+void cengen::updateSellTab() {
+    lb2->setText(sellFileName);
 
 }

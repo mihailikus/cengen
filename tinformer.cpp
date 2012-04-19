@@ -14,6 +14,7 @@ Tinformer::Tinformer() {
     this->tb_is_ready = false;
     this->limit_search = 10;
     fields = new dbTranslator;
+    last_record = 0;
 
 }
 
@@ -57,7 +58,9 @@ bool Tinformer::prepare(DbfConfig *dbf) {
 }
 
 
-QList<Tovar> Tinformer::info(QString searchText, QString method = "tbarcode") {
+QList<Tovar> Tinformer::info(QString searchText, QString method,
+                             int startPos, int endPos, int limit,
+                             bool FromStartToEnd) {
 
     Tovar tovar;
     QList<Tovar> tovarList;
@@ -68,6 +71,8 @@ QList<Tovar> Tinformer::info(QString searchText, QString method = "tbarcode") {
     tovar.price2 = 0;
     tovar.shablon = 0;
     tovar.quantity = 0;
+
+    if (!limit) limit = limit_search;
 
     if (method == "any") {
         //не для поиска, а для создания пустой строки
@@ -125,8 +130,10 @@ QList<Tovar> Tinformer::info(QString searchText, QString method = "tbarcode") {
 
     if (datasource == Tinformer::DBF) {
         if (this->tb_is_ready) {
-            tovarList = dbf_info->found_record_in_dbf(searchText, method, limit_search);
-
+            tovarList = dbf_info->found_record_in_dbf(searchText, method, limit,
+                                                      startPos, endPos,
+                                                      FromStartToEnd);
+            last_record = dbf_info->last_found_record();
         }
 
 
@@ -251,3 +258,8 @@ int Tinformer::get_maximum() {
         break;
     }
 }
+
+int Tinformer::last_found_record_number() {
+    return last_record;
+}
+

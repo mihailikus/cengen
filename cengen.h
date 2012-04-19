@@ -79,6 +79,7 @@ public:
     void make_source_tab();
     void make_filter_tab();
     void make_fieldList_tab();
+    void make_sellSettings_tab();
     void make_status_bar();
     void set_org_name(QString org, QString prog);
     void trigger_source_selection(bool state);
@@ -92,6 +93,7 @@ public:
         static int const Source = 3;
         static int const fList = 4;
         static int const Filter = 5;
+        static int const Sell = 6;
     };
 
 protected:
@@ -200,6 +202,16 @@ private:
     QMap<QString, bool> fullFieldsList; //список вообще всех полей
 
 
+    //виджеты вкладки для управления файлом продаж
+    QWidget *tab7;
+    QGridLayout *layTab7;
+    QLabel *lb1, *lb2, *lb3;
+    QComboBox *sellNomerBox, *sellDateBox, *sellTimeBox, *sellKolBox;
+    QPushButton *selectSellFileButton;
+    QPushButton *saveSellSettingsButton;
+    QString sellFileName;
+
+
 
     QSettings m_settings;
     int mainTableWidth, mainTableHeith;
@@ -271,7 +283,7 @@ private:
 
     QToolBar* ui_mainToolBar;
     QMenuBar* mainMenu;
-    QMenu *menuFile, *menuEdit, *menuHelp;
+    QMenu *menuFile, *menuEdit, *menuSell, *menuHelp;
 
     QAction* action_new; //новый файл
     QAction* action_exit; //выход
@@ -295,6 +307,7 @@ private:
     QAction* action_export_tovar_list_to_clipboard;
     QAction* action_on_off_filter;
     QAction* action_set_special_shablon_to_zero_price2;
+    QAction* action_sell_filter;
 
 private slots:
     //void on_tableWidget_cellClicked(int row, int column);
@@ -323,6 +336,7 @@ private slots:
     void on_action_update_prices_in_minus();
     void on_action_update_names();
     void on_action_set_special_shablon_to_zero_price2();
+    void on_action_sell_filter_triggered();
     void on_lineEdit_returnPressed();
     void tovar_search();
     void new_line_ready();
@@ -337,6 +351,9 @@ private slots:
     void on_loadSourceButton();
     void on_saveFilterSettings();
     void on_loadFilterSettings();
+    void on_selectSellFileButtonClicked();
+    void on_saveSellSettingsButtonClicked();
+    void updateSellTab();
 
     QList<Tovar> show_found_items(QList<Tovar> inputList);
     QList<Tovar> apply_filter(QList<Tovar> inputList);

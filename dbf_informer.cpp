@@ -120,21 +120,40 @@ QString dbf_informer::get_one_cell(int offset, int lenth) {
     return codec->toUnicode(arr).trimmed();
 }
 
-QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString method, int limit) {
+QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString method, int limit,
+                                               int startPos, int endPos,
+                                               bool FromStartToEnd) {
     Tovar tovar;
     QList<Tovar> tovarList;
     tovar.price2 = 0;
     tovar.quantity = 0;
     tovar.shablon = 0;
+
+    int maximum;
+    if (endPos == -1) {
+        maximum = number_of_records;
+    } else {
+        maximum = endPos;
+    }
+
     int offset;
-    offset = 1 + dbf_fields[method].offset;
-    int i = 0;
+    int i;
+    if (FromStartToEnd) {
+        offset = 1 + dbf_fields[method].offset + length_of_each_record*startPos;
+        i = startPos;
+    } else {
+        offset = 1 + dbf_fields[method].offset + length_of_each_record*(maximum-1);
+        i = maximum-1;
+    }
+
     int count = 0;
     int curLength;
     QString value;
     bool found = false;
 
-    while (i<number_of_records && count < limit)
+    int j = startPos;
+
+    while (j<maximum && count < limit)
     {
         value = this->get_one_cell(offset, dbf_fields[method].length);
         if ((method == "tbarcode"
@@ -165,11 +184,23 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
             tovarList << tovar;
             count++;
         }
-    i++;
-    found = false;
-    offset += this->length_of_each_record;
+        if (FromStartToEnd) {
+            i++;
+            offset += this->length_of_each_record;
+        } else {
+            i--;
+            offset -= this->length_of_each_record;
+        }
+        j++;
+        found = false;
+
     }
 
+    this->last_record = i;
     return tovarList;
 
+}
+
+int dbf_informer::last_found_record() {
+    return last_record;
 }

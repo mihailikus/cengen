@@ -29,7 +29,10 @@ public:
     bool set_tb_name(QString tbName);
     int get_maximum();
 
-    QList<Tovar> info (QString text, QString method);
+    QList<Tovar> info (QString text, QString method = "tbarcode",
+                       int startPos = 0, int endPos = -1, int limit = 0,
+                       bool FromStartToEnd = true);
+    int last_found_record_number();
     QStringList db_describe();
     QStringList tb_describe(QString tbName);
     void set_limit_search(int number);
@@ -45,6 +48,7 @@ private:
     dbTranslator* fields;       //для понимания полей SQLтаблицы
     dbf_informer* dbf_info;     //класс для работы с DBF-файлами
     int limit_search;           //ограничение поиска
+    int last_record;
 
 //public slots:
 
