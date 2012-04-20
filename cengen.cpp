@@ -2051,7 +2051,6 @@ void cengen::on_filterBox_toggled(bool arg1)
     filter_is_on = arg1;
     apply_filter_on_current_list->setEnabled(arg1);
     if (arg1) {
-        qDebug() << "Enabled filter";
         this->read_filter_settings();
     }
 }

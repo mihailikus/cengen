@@ -3,6 +3,8 @@
 
 int main(int argc, char *argv[])
 {
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+
     QString org_file_name;
     org_file_name = "org_name.conf";
     for (int i = 0; i<argc; i++) {
@@ -10,11 +12,10 @@ int main(int argc, char *argv[])
             if (argv[i][1] == 'c') {
                     //ключ c - передается файл с названием организации
                     qDebug() << "tovar file " << i << argv[i+1];
-                    org_file_name = argv[i+1];
+                    org_file_name = codec->toUnicode(argv[i+1]);
             }
             i++;
         }
-
     }
 
     bool get_name = false;
@@ -67,12 +68,6 @@ int main(int argc, char *argv[])
     fi->setFile(org_file_name);
 
     QString path = fi->absolutePath();
-    qDebug() << path;
-
-
-    //QString path = fi->absoluteDir();
-    //path += "cengen_ru.qm"
-
 
     QApplication a(argc, argv);
 
@@ -87,34 +82,26 @@ int main(int argc, char *argv[])
         if (argv[i][0]=='-') {
             if (argv[i][1] == 'd') {
                 //ключ d - передаются настройки источника данных
-                    qDebug() << "source file " << i << argv[i+1];
-                    QString sourceFile = argv[i+1];
-                    qDebug() << sourceFile;
+                    QString sourceFile = codec->toUnicode(argv[i+1]);
                     w.load_source_settings_file(sourceFile);
             }
 
             if (argv[i][1] == 'f') {
                 //ключ f - передаются настройки фильтра
-                    qDebug() << "filter file " << i << argv[i+1];
-                    QString filterFile = argv[i+1];
-                    qDebug() << filterFile;
+                    QString filterFile;
+                    filterFile = codec->toUnicode(argv[i+1]);
                     w.turn_filter_ON();
                     w.load_filter_settings_file(filterFile);
             }
 
             if (argv[i][1] == 't') {
                     //ключ t - передается список товаров
-                    qDebug() << "tovar file " << i << argv[i+1];
-                    QString tovarFile = argv[i+1];
-                    qDebug() << tovarFile;
+                    QString tovarFile = codec->toUnicode(argv[i+1]);
                     w.open_tovar_list(tovarFile);
             }
-
             i++;
         }
-
     }
-
 
     w.show();
     return a.exec();
