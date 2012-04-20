@@ -21,7 +21,7 @@ public:
     bool is_editing_price2();
 
     QList<Tovar> get_tovar_list(QString priznak);
-    void load_tovar_list_into_table(QList<Tovar> tovarList);
+    void load_tovar_list_into_table(QList<Tovar> tovarList, bool ToBottom = true);
     int get_tableTab_width(int col);
     void set_tableTab_width(int col, int size);
 

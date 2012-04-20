@@ -1853,9 +1853,9 @@ void cengen::on_action_open_triggered()
         qDebug() << "Please select file name";
         return;
     }
+}
+void cengen::open_tovar_list(QString fileName) {
     QDomDocument doc;
-    //QDomElement domElement;
-
     QFile file;
     file.setFileName(fileName);
 
@@ -1863,12 +1863,12 @@ void cengen::on_action_open_triggered()
         if (doc.setContent(&file)) {
             QList<Tovar> tovarList;
             tovarList = convert_xml_into_tovar_list(doc);
-            tableWidget->load_tovar_list_into_table(tovarList);
+            tableWidget->load_tovar_list_into_table(tovarList, false);
 
         }
     } else {
         //error что файл не открывается
-        qDebug() << "cant open file";
+        qDebug() << "cant open file: " << fileName;
         return;
     }
 
@@ -2054,6 +2054,10 @@ void cengen::on_filterBox_toggled(bool arg1)
         qDebug() << "Enabled filter";
         this->read_filter_settings();
     }
+}
+
+void cengen::turn_filter_ON() {
+    on_filterBox_toggled(true);
 }
 
 void cengen::on_filterFileSelectButton_clicked()
@@ -2621,11 +2625,16 @@ void cengen::on_loadSourceButton() {
         qDebug() << "Please select file name";
         return;
     }
+    load_source_settings_file(fileName);
+}
+
+void cengen::load_source_settings_file(QString fileName) {
 
     QFile file;
     file.setFileName(fileName);
 
     if (file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Loading souce file: " << fileName;
         QTextStream fstream(&file);
         fstream.setCodec("UTF-8");
 
@@ -2654,7 +2663,6 @@ void cengen::on_loadSourceButton() {
         //последующие четыре строки - описатели полей предыдущего файла
         line = fstream.readLine();
         config_index[0] = line.toInt();
-        qDebug() << "Start n_tov" << config_index[0];
         line = fstream.readLine();
         config_index[1] = line.toInt();
         line = fstream.readLine();
@@ -2671,9 +2679,9 @@ void cengen::on_loadSourceButton() {
 
         update_ui_tb_fields(opisateli);
 
-
-        //set_opisateli_from_settings();
         update_ui_db_controls();
+    } else {
+        qDebug() << "Cannot open this file: " << fileName;
     }
 }
 
@@ -2732,11 +2740,15 @@ void cengen::on_loadFilterSettings() {
         qDebug() << "Please select file name";
         return;
     }
+    load_filter_settings_file(fileName);
+}
 
+void cengen::load_filter_settings_file(QString fileName) {
     QFile file;
     file.setFileName(fileName);
 
     if (file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Load file: " << fileName;
         QTextStream fstream(&file);
         fstream.setCodec("UTF-8");
 
@@ -2769,10 +2781,8 @@ void cengen::on_loadFilterSettings() {
 
         line = fstream.readLine();
         filterCheckInBox->setCurrentIndex(line.toInt());
-
-
-
-
+    } else {
+        qDebug() << "Cannot open file: " << fileName;
     }
 
 

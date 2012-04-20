@@ -254,7 +254,7 @@ void MainTableWidget::add_table_item(int position, Tovar tovar) {
 
 }
 
-void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList) {
+void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool ToBottom) {
     //загружаем список товаров в таблицу генератора ценников
     add_flag = true;
     if (tovarList.count()) tovar_searched = true;
@@ -264,7 +264,11 @@ void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList) {
         add_table_item(position, tovarList.at(position-count));
     }
     emit row_count_changed();
-    scrollToBottom();
+    if (ToBottom) {
+        scrollToBottom();
+    } else {
+        scrollToTop();
+    }
     add_flag = false;
     editing_price2 = true;
     tovar_searched = true;

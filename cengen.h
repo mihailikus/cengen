@@ -84,6 +84,10 @@ public:
     void make_status_bar();
     void set_org_name(QString org, QString prog);
     void trigger_source_selection(bool state);
+    void load_source_settings_file(QString fileName);
+    void load_filter_settings_file(QString fileName);
+    void turn_filter_ON();
+    void open_tovar_list(QString fileName);
 
     //порядок вкладок
     struct TabsOrder
