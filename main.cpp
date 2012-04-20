@@ -3,7 +3,14 @@
 
 int main(int argc, char *argv[])
 {
+    // Под Windows устанавливаем кодировку cp1251
+    #ifdef Q_WS_WIN
+    QTextCodec *codec = QTextCodec::codecForName("Windows-1251");
+    // Под остальными ОС - utf8
+    #else
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    #endif
+
 
     QString org_file_name;
     org_file_name = "org_name.conf";
