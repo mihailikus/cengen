@@ -26,6 +26,7 @@ void MainTableWidget::init() {
     //подключаем слоты к сигналам
     connect(this, SIGNAL(cellClicked(int,int)), SLOT(on_tableWidget_cellClicked(int,int)));
     connect(this, SIGNAL(cellChanged(int,int)), SLOT(on_tableWidget_cellChanged(int,int)));
+    connect(this, SIGNAL(itemActivated(QTableWidgetItem*)), SLOT(on_cell_entered()));
 
 }
 
@@ -414,4 +415,10 @@ void MainTableWidget::set_special_shablon_for_zero_price2(int shablon) {
             box->setCurrentIndex(shablon);
         }
     }
+}
+
+void MainTableWidget::on_cell_entered() {
+    editing_price2 = false;
+    tovar_searched = false;
+    emit row_count_changed();
 }

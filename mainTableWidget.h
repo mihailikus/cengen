@@ -72,6 +72,7 @@ private slots:
     void on_tableWidget_cellChanged(int,int);
     void delete_line_from_table(int pos);
     void add_table_item(int position, Tovar tovar);
+    void on_cell_entered ();
 
 
 signals:
