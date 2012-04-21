@@ -1,5 +1,6 @@
 #include <QtGui/QApplication>
 #include "cengen.h"
+#include "file_worker.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,17 +12,15 @@ int main(int argc, char *argv[])
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     #endif
 
+    QString param;
 
     QString org_file_name;
     org_file_name = "org_name.conf";
     for (int i = 0; i<argc; i++) {
-        if (argv[i][0]=='-') {
-            if (argv[i][1] == 'c') {
+        param = codec->toUnicode(argv[i]);
+        if (check_extention(param, ".conf")) {
                     //ключ c - передается файл с названием организации
-                    qDebug() << "tovar file " << i << argv[i+1];
-                    org_file_name = codec->toUnicode(argv[i+1]);
-            }
-            i++;
+                    org_file_name = param;
         }
     }
 
@@ -86,27 +85,17 @@ int main(int argc, char *argv[])
     w.set_org_name(org_name, app_name);
 
     for (int i = 0; i<argc; i++) {
-        if (argv[i][0]=='-') {
-            if (argv[i][1] == 'd') {
-                //ключ d - передаются настройки источника данных
-                    QString sourceFile = codec->toUnicode(argv[i+1]);
-                    w.load_source_settings_file(sourceFile);
-            }
+        param = codec->toUnicode(argv[i]);
 
-            if (argv[i][1] == 'f') {
-                //ключ f - передаются настройки фильтра
-                    QString filterFile;
-                    filterFile = codec->toUnicode(argv[i+1]);
-                    w.turn_filter_ON();
-                    w.load_filter_settings_file(filterFile);
-            }
-
-            if (argv[i][1] == 't') {
-                    //ключ t - передается список товаров
-                    QString tovarFile = codec->toUnicode(argv[i+1]);
-                    w.open_tovar_list(tovarFile);
-            }
-            i++;
+        if (check_extention(param, ".tov")) {
+            w.open_tovar_list(param);
+        }
+        if (check_extention(param, ".fli")) {
+            w.turn_filter_ON();
+            w.load_filter_settings_file(param);
+        }
+        if (check_extention(param, ".das")) {
+            w.load_source_settings_file(param);
         }
     }
 

@@ -57,7 +57,7 @@ About::About(QWidget *parent, Qt::WFlags f)
         copyrightView = new QTextEdit(this);
         copyrightView->setReadOnly(true);
         copyrightView->setWordWrapMode(QTextOption::NoWrap);
-        copyrightView->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        copyrightView->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
         copyrightView->setPalette(palette);
 
         tabWidget->addTab(copyrightView, tr("Copyright"));

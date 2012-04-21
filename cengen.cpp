@@ -2226,11 +2226,13 @@ void cengen::on_action_about_triggered()
     d.setLicense("GNU GPL v3");
 
     {
-            QFile file("LICENSE.GPL3");
-            if (file.open(QFile::ReadOnly)) {
-                    d.setLicenseText(QString(file.readAll()));
-                    file.close();
-            }
+        QFileInfo fi(QApplication::applicationFilePath());
+        fi.setFile(fi.absoluteDir(), "LICENSE.GPL3");
+        QFile file(fi.absoluteFilePath());
+        if (file.open(QFile::ReadOnly)) {
+                d.setLicenseText(QString(file.readAll()));
+                file.close();
+        }
     }
     d.addThanks(tr("UG_Dvor_34"), "", tr ("Encouragement"));
     d.exec();

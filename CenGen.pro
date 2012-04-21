@@ -44,7 +44,8 @@ HEADERS += cengen.h \
     imagebox.h \
     about.h \
     mainTableWidget.h \
-    tnvalidator.h
+    tnvalidator.h \
+    file_worker.h
 FORMS += \
     addlinemaster.ui
 
