@@ -294,12 +294,13 @@ private:
     QToolBar* ui_mainToolBar;
     QMenuBar* mainMenu;
     QMenu *menuFile, *menuEdit, *menuSell, *menuHelp;
+    QMenu *cenMenu;
 
     QAction* action_new; //новый файл
     QAction* action_exit; //выход
     QAction* action_save; //сохранить
     QAction* action_open; //загрузить список
-    QAction* ui_actionMake; //сформировать ценники
+    QAction* action_make; //сформировать ценники
     QAction* action_scale_up;
     QAction* action_scale_down;    //масштаб - меньше и больше
     QAction* action_print;
@@ -318,6 +319,7 @@ private:
     QAction* action_on_off_filter;
     QAction* action_set_special_shablon_to_zero_price2;
     QAction* action_sell_filter;
+    QAction* action_render_in_external_app;
 
 private slots:
     //void on_tableWidget_cellClicked(int row, int column);
@@ -347,6 +349,7 @@ private slots:
     void on_action_update_names();
     void on_action_set_special_shablon_to_zero_price2();
     void on_action_sell_filter_triggered();
+    void on_action_render_in_external_app();
     void on_lineEdit_returnPressed();
     void tovar_search();
     void new_line_ready();

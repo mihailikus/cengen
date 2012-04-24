@@ -89,11 +89,11 @@ void cengen::make_actions() {
     connect(action_save, SIGNAL(triggered()), SLOT(on_action_save_triggered()));
 
     //сформировать ценники
-    ui_actionMake = new QAction(QIcon(":/share/images/resources/apply.png"),
+    action_make = new QAction(QIcon(":/share/images/resources/apply.png"),
                                 tr("MakeUp cennic"), this);
-    ui_actionMake->setToolTip(tr("Make up cennic for tovar list"));
-    ui_actionMake->setShortcut(QKeySequence("F12"));
-    connect(ui_actionMake, SIGNAL(triggered()), SLOT(on_action_make_triggered()));
+    action_make->setToolTip(tr("Make up cennic for tovar list"));
+    action_make->setShortcut(QKeySequence("F12"));
+    connect(action_make, SIGNAL(triggered()), SLOT(on_action_make_triggered()));
 
 
     //вывод на печать
@@ -190,6 +190,10 @@ void cengen::make_actions() {
     connect (action_sell_filter, SIGNAL(triggered()),
              SLOT(on_action_sell_filter_triggered()));
 
+    action_render_in_external_app = new QAction(tr("Render in external prog"), this);
+    connect(action_render_in_external_app, SIGNAL(triggered()),
+            SLOT(on_action_render_in_external_app()));
+
 }
 
 void cengen::make_toolBar() {
@@ -200,7 +204,7 @@ void cengen::make_toolBar() {
     ui_mainToolBar->addAction(action_save);
     ui_mainToolBar->addSeparator();
     ui_mainToolBar->addAction(apply_filter_on_current_list);
-    ui_mainToolBar->addAction(ui_actionMake);
+    ui_mainToolBar->addAction(action_make);
     ui_mainToolBar->addSeparator();
     ui_mainToolBar->addAction(action_print);
     ui_mainToolBar->addAction(action_scale_up);
@@ -243,6 +247,11 @@ void cengen::make_mainMenu() {
 
     menuSell = mainMenu->addMenu((tr("Sell control")));
     menuSell->addAction(action_sell_filter);
+
+    cenMenu = mainMenu->addMenu(tr("Cennic's"));
+    cenMenu->addAction(action_make);
+    cenMenu->addSeparator();
+    cenMenu->addAction(action_render_in_external_app);
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_about);
@@ -2939,4 +2948,20 @@ void cengen::on_saveSellSettingsButtonClicked() {
 
 void cengen::updateSellTab() {
     lb2->setText(sellFileName);
+}
+
+
+void cengen::on_action_render_in_external_app() {
+    qDebug() << "Going to use external application";
+
+    QString extName = "./QDBFRedactor";
+
+    QStringList args;
+    args << "/home/michael/temp/CenGen.my/Result.dbf";
+
+    QProcess proc;
+
+    proc.setParent(this);
+
+    proc.execute(extName, args);
 }
