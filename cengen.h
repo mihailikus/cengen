@@ -86,8 +86,11 @@ public:
     void trigger_source_selection(bool state);
     void load_source_settings_file(QString fileName);
     void load_filter_settings_file(QString fileName);
+    void save_source_settings_file(QString fileName);
     void turn_filter_ON();
     void open_tovar_list(QString fileName);
+    void load_all_records();
+    void set_ext_shablon_name(QString fileName);
 
     //порядок вкладок
     struct TabsOrder
@@ -219,6 +222,13 @@ private:
     QCalendarWidget *dateStart, *dateStop;
     bool sell_file_is_checked;
     Tinformer *sell_informer;
+
+    //виджеты вкладки настроек внешней программы
+    QWidget *tab8;
+    QGridLayout *layTab8;
+
+    QString ext_shablon_name;
+    QString ext_app_name;
 
 
 

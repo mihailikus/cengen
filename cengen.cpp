@@ -191,6 +191,7 @@ void cengen::make_actions() {
              SLOT(on_action_sell_filter_triggered()));
 
     action_render_in_external_app = new QAction(tr("Render in external prog"), this);
+    action_render_in_external_app->setShortcut(QKeySequence("F8"));
     connect(action_render_in_external_app, SIGNAL(triggered()),
             SLOT(on_action_render_in_external_app()));
 
@@ -784,6 +785,15 @@ void cengen::changeEvent(QEvent *e)
     }
 }
 
+void cengen::load_all_records() {
+    QList<Tovar> tovarAll;
+    my_informer->set_limit_search(my_informer->get_maximum());
+    tovarAll = my_informer->info("", "tname");
+    tableWidget->load_tovar_list_into_table(tovarAll);
+    tableWidget->repaint();
+    tableWidget->scrollToTop();
+}
+
 void cengen::tovar_search() {
     QList<Tovar> tovarListFull;
     tovarListFull = my_informer->info(ui_lineEdit->text(), this->method);
@@ -939,7 +949,7 @@ QRectF cengen::get_shablon_rect(const QDomNode &node) {
     QRectF rect;// = new QRectF();
     rect.setWidth(10);
     rect.setHeight(10);
-    
+
     if (!file_is_ready) {
             return rect;
     }
@@ -2204,7 +2214,7 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
             }
             if (itemfound) filteredList <<tovarItem;
 
-        }        
+        }
     }
 
     statusBar->removeWidget(progressBar);
@@ -2592,6 +2602,11 @@ void cengen::on_saveSourceButton() {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save source data"), "" , tr("Source settings (*.das)"));
 
     if (fileName != "") {
+        this->save_source_settings_file(fileName);
+    }
+}
+
+void cengen::save_source_settings_file(QString fileName) {
     bool ckeck = false;
     int ind = fileName.lastIndexOf(".das", -1, Qt::CaseInsensitive);
     if (ind + 4 != fileName.length() || ind == -1) {
@@ -2627,7 +2642,6 @@ void cengen::on_saveSourceButton() {
         file.close();
     }
 }
-}
 
 void cengen::on_loadSourceButton() {
     qDebug() << "Load source settings";
@@ -2641,6 +2655,9 @@ void cengen::on_loadSourceButton() {
 
 void cengen::load_source_settings_file(QString fileName) {
 
+    if (fileName == "_$dbf") {
+        fileName = "C:\\Prog\\cengen\\result.das";
+    }
     QFile file;
     file.setFileName(fileName);
 
@@ -2950,18 +2967,30 @@ void cengen::updateSellTab() {
     lb2->setText(sellFileName);
 }
 
-
 void cengen::on_action_render_in_external_app() {
     qDebug() << "Going to use external application";
 
-    QString extName = "./QDBFRedactor";
+    ext_shablon_name = "d:\\ug-base\\prog\\per\\CENNIK.frf";
+
+    QString dbf_tmp_name = "d:\\ug-base\\prog\\per\\result.dbf";
+
+    QString extName = "d:\\ug-base\\prog\\per\\Pshtrich.exe";
 
     QStringList args;
-    args << "/home/michael/temp/CenGen.my/Result.dbf";
+    args << dbf_tmp_name;
+    args << ext_shablon_name;
+
+    qDebug() << "app name " << extName;
 
     QProcess proc;
 
     proc.setParent(this);
 
     proc.execute(extName, args);
+
+}
+
+void cengen::set_ext_shablon_name(QString fileName) {
+    this->ext_shablon_name = fileName;
+    qDebug() << "Need update tab";
 }
