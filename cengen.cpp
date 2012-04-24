@@ -2656,7 +2656,7 @@ void cengen::on_loadSourceButton() {
 void cengen::load_source_settings_file(QString fileName) {
 
     if (fileName == "_$dbf") {
-        fileName = "C:\\Prog\\cengen\\result.das";
+        fileName = "/home/michael/SRC/QT-testing/launcher/tmp.das";
     }
     QFile file;
     file.setFileName(fileName);
