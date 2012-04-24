@@ -1853,6 +1853,7 @@ void cengen::on_action_open_triggered()
         qDebug() << "Please select file name";
         return;
     }
+    open_tovar_list(fileName);
 }
 void cengen::open_tovar_list(QString fileName) {
     QDomDocument doc;
