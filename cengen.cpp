@@ -2959,8 +2959,6 @@ void cengen::on_action_render_in_external_app() {
     QStringList args;
     args << "/home/michael/temp/CenGen.my/Result.dbf";
 
-    args << "cennik.frf";
-
     QProcess proc;
 
     proc.setParent(this);
