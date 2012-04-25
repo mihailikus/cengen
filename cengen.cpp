@@ -3038,9 +3038,15 @@ void cengen::on_action_render_in_external_app() {
 
     qDebug() << "app name " << extName;
 
-    QProcess proc;
+    QList<Tovar> allGoods = tableWidget->get_tovar_list("x");
 
-    proc.execute(extName, args);
+    if (save_tovar_list_into_dbf(dbf_tmp_name, allGoods)) {
+        QProcess proc;
+
+        proc.execute(extName, args);
+
+    }
+
 
 }
 
@@ -3065,4 +3071,19 @@ void cengen::select_ext_shablon_button_clicked() {
     QFileInfo fi(ext_shablon_name_edit->text());
     QString fileName = QFileDialog::getOpenFileName(this, tr("Choose external shablon location"), fi.path() , tr("Fast report shablons (*.frf)"));
     ext_shablon_name_edit->setText(fileName);
+}
+
+bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
+    QFile file;
+    file.setFileName(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        qDebug() << "Cannot open dbf file: " << fileName;
+        return false;
+    }
+    //значит файл открылся
+
+
+
+    file.close();
+    return false;
 }

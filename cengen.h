@@ -426,6 +426,8 @@ private slots:
 
     void ask_user_to_save_wrong_tovar_list(QList<Tovar> spisok);
 
+    bool save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok);
+
 };
 
 #endif // CENGEN_H
