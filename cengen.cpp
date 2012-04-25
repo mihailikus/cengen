@@ -3074,6 +3074,7 @@ void cengen::select_ext_shablon_button_clicked() {
 }
 
 bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
+    return true;
     QFile file;
     file.setFileName(fileName);
     if (!file.open(QIODevice::WriteOnly)) {
