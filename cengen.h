@@ -145,6 +145,7 @@ private:
     QPushButton *ui_show_editor_button;
     QLabel *label24;
     QComboBox *shablonBox;
+    bool previewed;
 
 
     QGridLayout *layBoxT2B3;
@@ -330,6 +331,7 @@ private:
     QAction* action_set_special_shablon_to_zero_price2;
     QAction* action_sell_filter;
     QAction* action_render_in_external_app;
+    QAction* action_expand_list;
 
 private slots:
     //void on_tableWidget_cellClicked(int row, int column);
@@ -360,6 +362,7 @@ private slots:
     void on_action_set_special_shablon_to_zero_price2();
     void on_action_sell_filter_triggered();
     void on_action_render_in_external_app();
+    void on_action_expand_triggered(bool);
     void on_lineEdit_returnPressed();
     void tovar_search();
     void new_line_ready();
@@ -381,6 +384,7 @@ private slots:
     void select_ext_conf_button_clicked();
     void select_ext_app_button_clicked();
     void select_ext_shablon_button_clicked();
+    void on_data_changed();
 
     QList<Tovar> show_found_items(QList<Tovar> inputList);
     QList<Tovar> apply_filter(QList<Tovar> inputList);

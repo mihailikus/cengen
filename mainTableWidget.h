@@ -77,6 +77,7 @@ private slots:
 
 signals:
     void row_count_changed();
+    void data_changed();
 
 };
 

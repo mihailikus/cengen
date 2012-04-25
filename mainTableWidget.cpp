@@ -173,6 +173,7 @@ void MainTableWidget::on_tableWidget_cellClicked(int row, int column)
 
 void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
 {
+    emit data_changed();
     if (method) return; //если не 0, то ничего не редактируем
     if (editing_price2) {
         editing_price2 = false;

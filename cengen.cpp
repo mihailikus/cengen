@@ -11,8 +11,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
 {
     shablonList.clear();
 
-    //this->set_org_name();
-
     //создаем основные рюшечки приложения
     this->make_actions();
     this->make_toolBar();
@@ -53,6 +51,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     filterInformer = new Tinformer();
 
     sell_file_is_checked = false;
+    previewed = false;
 
     //После создания всех форм - читаем настройки из конфига
     this->readSettings();
@@ -103,7 +102,7 @@ void cengen::make_actions() {
     action_print->setToolTip(tr("Send previewed to printer"));
     action_print->setShortcut(QKeySequence("Ctrl+P"));
     connect(action_print, SIGNAL(triggered()), SLOT(on_action_print_triggered()));
-    action_print->setEnabled(false);
+    //action_print->setEnabled(false);
 
     //масштаб - больше и меньше
     action_scale_up = new QAction(QIcon(":/share/images/resources/up.png"),
@@ -196,6 +195,12 @@ void cengen::make_actions() {
     connect(action_render_in_external_app, SIGNAL(triggered()),
             SLOT(on_action_render_in_external_app()));
 
+    action_expand_list = new QAction(tr("Expand tovar list for each item prices"), this);
+    action_expand_list->setCheckable(true);
+    action_expand_list->setChecked(false);
+    connect(action_expand_list, SIGNAL(triggered(bool)),
+            SLOT(on_action_expand_triggered(bool)));
+
 }
 
 void cengen::make_toolBar() {
@@ -254,6 +259,7 @@ void cengen::make_mainMenu() {
     cenMenu->addAction(action_make);
     cenMenu->addSeparator();
     cenMenu->addAction(action_render_in_external_app);
+    cenMenu->addAction(action_expand_list);
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_about);
@@ -319,6 +325,7 @@ void cengen::make_search_tab() {
     tableWidget = new MainTableWidget();
     tableWidget->set_method_view(0);    //0 - удаление
     connect (tableWidget, SIGNAL(row_count_changed()), SLOT(new_line_ready()));
+    connect (tableWidget, SIGNAL(data_changed()), SLOT(on_data_changed()));
     layTab1->addWidget(tableWidget, 2, 0, 1, 6);
 
     tab1->setLayout(layTab1);
@@ -891,12 +898,18 @@ void cengen::new_line_ready() {
     ui_lineEdit->setFocus();
 }
 
+void cengen::on_data_changed()
+{
+    previewed = false;
+}
+
 void cengen::on_action_make_triggered()
 {
     //функция для формирования ценников
     ui_tabWidget->setCurrentIndex(TabsOrder::Preview);
     this->generate_preview();
-    action_print->setEnabled(true);
+    //action_print->setEnabled(true);
+    previewed = true;
 }
 
 void cengen::on_selectShablonButton_clicked()
@@ -1109,6 +1122,7 @@ void cengen::generate_preview() {
         return;
     }
 
+    ui_statusLabel->setText(tr("Rendering cennic's"));
     currentScene->clear();
 
     pages.clear();
@@ -1211,6 +1225,8 @@ void cengen::generate_preview() {
 
     delete cennics;
     statusBar->removeWidget(progressBar);
+    previewed =  true;
+    ui_statusLabel->setText(tr("Result: ") + QString::number(pages.count()) + tr(" pages"));
 }
 
 void cengen::on_action_scaleUp_triggered()
@@ -1227,6 +1243,8 @@ void cengen::on_action_scaleDown_triggered()
 
 void cengen::on_action_print_triggered()
 {
+    if (!previewed) generate_preview();
+
     QPrinter printer(QPrinter::HighResolution);
 
     if (pageSize == "A4") {
@@ -2040,7 +2058,7 @@ void cengen::on_action_new_triggered()
 {
     ui_countLabel->setText(tr("COUNT: ") + "0");
     tableWidget->setRowCount(0);
-    action_print->setEnabled(false);
+    //action_print->setEnabled(false);
     currentScene->clear();
     ui_tabWidget->setCurrentIndex(TabsOrder::Search);
 
@@ -3038,9 +3056,14 @@ void cengen::on_action_render_in_external_app() {
 
     qDebug() << "app name " << extName;
 
-    QList<Tovar> allGoods = tableWidget->get_tovar_list("x");
+    QList<Tovar> spisok =  tableWidget->get_tovar_list("x");
+    if (expandBox->isChecked()) {
+        qDebug() << "Expanding ";
+        spisok = expand(spisok);
 
-    if (save_tovar_list_into_dbf(dbf_tmp_name, allGoods)) {
+    }
+
+    if (save_tovar_list_into_dbf(dbf_tmp_name, spisok)) {
         QProcess proc;
 
         proc.execute(extName, args);
@@ -3322,4 +3345,9 @@ bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
 
     file.close();
     return true;
+}
+
+void cengen::on_action_expand_triggered(bool value) {
+    expandBox->setChecked(value);
+    previewed = false;
 }
