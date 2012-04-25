@@ -3074,7 +3074,6 @@ void cengen::select_ext_shablon_button_clicked() {
 }
 
 bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
-    return true;
     QFile file;
     file.setFileName(fileName);
     if (!file.open(QIODevice::WriteOnly)) {
@@ -3082,9 +3081,245 @@ bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
         return false;
     }
     //значит файл открылся
+    int max_name_length=0;
+    for (int i = 0; i<spisok.count(); i++) {
+        if (max_name_length < spisok.at(i).name_of_tovar.length()) {
+            max_name_length = spisok.at(i).name_of_tovar.length();
+        }
+    }
 
 
+    QByteArray header;
+
+    //байт 1 - простая таблица
+    header.append(3);
+
+    //байты 2, 3, 4 год, месяц и день редактирования
+    QDate curdate = QDate::currentDate();
+    header.append(curdate.year()-1900);
+    header.append(curdate.month());
+    header.append(curdate.day());
+
+    //байты 5 6 7 8 число записей в таблице
+    int records_count = spisok.count();
+    qDebug() << "count " << records_count;
+
+    int tmp = records_count / 256;
+    int bit1 = records_count - tmp*256;
+    int tmp2 = tmp / 256;
+    int bit2 = tmp - tmp2*256;
+    int tmp3 = tmp2 / 256;
+    int bit3 = tmp2 - tmp3*256;
+    int tmp4 = tmp3 / 256;
+    int bit4 = tmp3 - tmp4*256;
+
+    header.append(bit1);
+    header.append(bit2);
+    header.append(bit3);
+    header.append(bit4);
+
+    char zeroh = 0;
+
+    //байты 8 9 размер заголовка в байтах, заранее неизвестен
+    header.append(zeroh);
+    header.append(zeroh);
+
+    //байт 10 и 11 - размер записи в байтах, тоже пока неизвестен
+    header.append(zeroh);
+    header.append(zeroh);
+
+    //два байта 12 и 13 - зарезервировано (будет использоваться в 2050 году, когда Россия создаст поселение на Марсе)
+    header.append(zeroh);
+    header.append(zeroh);
+
+    //байт 14 - признак незваршенной транзацкии, у нас 0
+    header.append(zeroh);
+
+    //байт 15 - а не закодирована ли таблица
+    header.append(zeroh);
+
+    //байт 16-27 включительно многопользовательский режим
+    for (int i = 0; i<12; i++) header.append(zeroh);
+
+    //байт 28 - содержание поля МЕМО. У нас нет
+    header.append(zeroh);
+
+    //байт 29 - код драйвера языка. У нас ОЕМ, т.е. 0
+    header.append(zeroh);
+
+    //байт 30 и 31 - зарезервировано. И нафига? :)
+    header.append(zeroh);
+    header.append(zeroh);
+
+    file.write(header);
+
+    QStringList fields;
+    fields << "N_TOV"
+           << "NAME_T"
+           << "KOL"
+           << "CHENA"
+           << "SHKOD"
+           << "DATE_VV";
+
+    int length_of_header_structure = 0;
+    int record_length = 0;
+    for (int i = 0; i<fields.count(); i++) {
+        QString field;
+        field = fields.at(i);
+        QByteArray head;
+
+        //байты 0-11 название колонки, завершающеся нулями
+        for (int j = 0; j<field.toAscii().length(); j++) {
+            head.append(field[j].toAscii());
+        }
+        for (int j = field.toAscii().length(); j<11; j++) {
+            head.append('\0');
+        }
+
+        //байт 12 - тип записи (ну там число, текст)
+        char type = 'C';
+        if (field == "NAME_T" || field == "SHKOD")
+            type = 'C';
+        if (field == "N_TOV" || field == "KOL" || field == "CHENA")
+            type = 'N';
+        if (field == "DATE_VV")
+            type = 'D';
+        head.append(type);
+
+        //байты 12 13 14 15 - адрес поля в памяти. не исп.
+        head.append(zeroh);
+        head.append(zeroh);
+        head.append(zeroh);
+        head.append(zeroh);
+
+        //байт 16 - размер (ширина) колонки
+        int len = 1;
+        if (field == "NAME_T")
+            len = max_name_length;
+        if (field == "N_TOV" || field == "KOL" || field == "CHENA" )
+            len = 8;
+        if (field == "SHKOD")
+            len = 13;
+        if (field == "DATE_VV")
+            len = 8;
+        record_length += len;
+        head.append(len);
+
+        //байт 17 - количество знаков после запятой
+        int zap = 0;
+        if (field == "CHENA")
+            zap = 2;
+        head.append(zap);
+
+        //байты 18 и 19 зарезервированы
+        head.append(zeroh);
+        head.append(zeroh);
+
+        //байт 20 - идентификатор рабочей области, не используется
+        head.append(zeroh);
+
+        //байты 21 и 22 - многопользовательский байт, у нас однопользов.
+        head.append(zeroh);
+        head.append(zeroh);
+
+        //байт 23 - устаноленные поля. ХЗ.
+        head.append(zeroh);
+
+        //байты 24-30 зарезервированы
+        for (int i = 24; i<=30; i++)
+            head.append(zeroh);
+
+        //байт 31 а не включено ли поле в .mdx индекс
+        head.append(zeroh);
+
+        length_of_header_structure += head.count();
+        file.write(head);
+
+    }
+
+    file.putChar(0x0D);
+
+    QTextCodec *codec = QTextCodec::codecForName("IBM 866");
+    QTextEncoder *decoder = new QTextEncoder(codec);
+
+
+    zeroh = ' ';
+    for (int i = 0; i<records_count; i++) {
+        //теперь записываем строчки, одну за одной
+        Tovar tovar;
+        tovar = spisok.at(i);
+
+        tovar.name_of_tovar = decoder->fromUnicode(tovar.name_of_tovar);
+
+        //tovar.price1 = tovar.price1*100;    //это сразу чтоб дробные записать
+        QByteArray head;
+
+        //байт 0 - признак, не удалена ли строчка. Таких не держим
+        head.append(zeroh);
+
+        for (int j = 0; j<fields.count(); j++) {
+            QString field = fields.at(j);
+            //и теперь в каждой строчке - по ячейке
+            int len = 1;
+            if (field == "NAME_T")
+                len = max_name_length;
+            if (field == "N_TOV" || field == "KOL" || field == "CHENA" )
+                len = 8;
+            if (field == "SHKOD")
+                len = 13;
+            if (field == "DATE_VV")
+                len = 8;
+
+            QString zap = "";
+            if (field == "N_TOV")
+                zap = QString::number(tovar.nomer_of_tovar);
+            if (field == "KOL")
+                zap = QString::number(tovar.quantity);
+            if (field == "CHENA")
+                zap = QString::number(tovar.price1);
+            if (field == "NAME_T")
+                zap = tovar.name_of_tovar;
+            if (field == "SHKOD")
+                zap = tovar.barcode;
+            if (field == "DATE_VV")
+                zap = QDate::currentDate().toString("yyyyMMdd");
+
+            if (field == "NAME_T") {
+                for (int k = 0; k<zap.length(); k++)
+                    head.append(zap[k].toAscii());
+                for (int k = 0; k<len-zap.length(); k++)
+                    head.append(zeroh);
+            } else {
+                for (int k = 0; k<len-zap.length(); k++)
+                    head.append(zeroh);
+                for (int k = 0; k<zap.length(); k++)
+                    head.append(zap[k].toAscii());
+            }
+
+        }
+    file.write(head);
+    }
+
+    //запишем длину структуры заголовка
+    length_of_header_structure += 33;
+    file.seek(8);
+    tmp = length_of_header_structure / 256;
+    bit1 = length_of_header_structure - tmp*256;
+    tmp2 = tmp / 256;
+    bit2 = tmp - tmp2*256;
+    file.putChar(bit1);
+    file.putChar(bit2);
+
+    //запишем длину каждой записи
+    record_length++;
+    file.seek(10);
+    tmp = record_length / 256;
+    bit1 = record_length - tmp*256;
+    tmp2 = tmp / 256;
+    bit2 = tmp - tmp2*256;
+    file.putChar(bit1);
+    file.putChar(bit2);
 
     file.close();
-    return false;
+    return true;
 }
