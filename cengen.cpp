@@ -256,10 +256,11 @@ void cengen::make_mainMenu() {
     menuSell->addAction(action_sell_filter);
 
     cenMenu = mainMenu->addMenu(tr("Cennic's"));
-    cenMenu->addAction(action_make);
-    cenMenu->addSeparator();
-    cenMenu->addAction(action_render_in_external_app);
     cenMenu->addAction(action_expand_list);
+    cenMenu->addSeparator();
+    cenMenu->addAction(action_make);
+//    cenMenu->addSeparator();
+    cenMenu->addAction(action_render_in_external_app);
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_about);
@@ -2342,10 +2343,15 @@ void cengen::on_fieldListBox_checked(bool status) {
 
 QList<Tovar> cengen::expand(QList<Tovar> list) {
     QList<Tovar> newList;
+    Tovar tovar;
+    int quant;
     for (int i = 0; i<list.count(); i++) {
-        newList << list.at(i);
-        if (list.at(i).quantity>1) {
-            for (int j=0; j<list.at(i).quantity-1; j++) newList<<list.at(i);
+        tovar = list.at(i);
+        quant = tovar.quantity;
+        tovar.quantity = 1;
+        newList << tovar;
+        if (quant>1) {
+            for (int j=0; j<quant-1; j++) newList<<tovar;
         }
     }
     return newList;
@@ -2663,7 +2669,7 @@ void cengen::on_action_set_special_shablon_to_zero_price2() {
 void cengen::on_saveSourceButton() {
     qDebug() << "Saving source settings";
     //Сохранение настроек источника данных
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save source data"), "" , tr("Source settings (*.das)"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save source data"), QApplication::applicationDirPath() , tr("Source settings (*.das)"));
 
     if (fileName != "") {
         this->save_source_settings_file(fileName);
@@ -2709,7 +2715,7 @@ void cengen::save_source_settings_file(QString fileName) {
 
 void cengen::on_loadSourceButton() {
     qDebug() << "Load source settings";
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open source data"), "", tr("Source settings (*.das)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open source data"), QApplication::applicationDirPath(), tr("Source settings (*.das)"));
     if (fileName == "") {
         qDebug() << "Please select file name";
         return;
@@ -2781,7 +2787,7 @@ bool cengen::load_source_settings_file(QString fileName) {
 
 void cengen::on_saveFilterSettings() {
     qDebug() << "Saving filter ";
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save filter data"), "" , tr("Filter settings (*.fli)"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save filter data"), QApplication::applicationDirPath() , tr("Filter settings (*.fli)"));
 
     if (fileName != "") {
     bool ckeck = false;
@@ -2829,7 +2835,7 @@ void cengen::on_saveFilterSettings() {
 
 void cengen::on_loadFilterSettings() {
     qDebug() << "load filter";
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open filter settings"), "", tr("Filter settings (*.fli)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open filter settings"), QApplication::applicationDirPath(), tr("Filter settings (*.fli)"));
     if (fileName == "") {
         qDebug() << "Please select file name";
         return;
