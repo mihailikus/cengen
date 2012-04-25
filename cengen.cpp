@@ -34,6 +34,7 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     this->make_filter_tab();
     this->make_fieldList_tab();
     this->make_sellSettings_tab();
+    this->make_ext_app_tab();
 
     tableWidget->set_editing_price2(false);
     tableWidget->set_tovar_searched(false);
@@ -759,6 +760,37 @@ void cengen::make_sellSettings_tab() {
 
 }
 
+void cengen::make_ext_app_tab() {
+    tab8 = new QWidget;
+    layTab8 = new QGridLayout;
+
+    ext_prog_name_edit = new QLineEdit();
+    select_ext_app_button = new QPushButton(tr("Select ext app"));
+
+    layTab8->addWidget(ext_prog_name_edit, 0, 0);
+    layTab8->addWidget(select_ext_app_button, 0, 1);
+
+    ext_conf_edit = new QLineEdit();
+    select_ext_conf_file = new QPushButton(tr("Select conf settings file"));
+
+    layTab8->addWidget(ext_conf_edit, 1, 0);
+    layTab8->addWidget(select_ext_conf_file, 1, 1);
+
+    ext_shablon_name_edit = new QLineEdit();
+    select_ext_shablon_button = new QPushButton(tr("Select external shablon"));
+
+    layTab8->addWidget(ext_shablon_name_edit, 2, 0);
+    layTab8->addWidget(select_ext_shablon_button, 2, 1);
+
+    tab8->setLayout(layTab8);
+
+    ui_tabWidget->insertTab(TabsOrder::App, tab8, tr("External application"));
+
+    connect(select_ext_conf_file, SIGNAL(clicked()), SLOT(select_ext_conf_button_clicked()));
+    connect(select_ext_app_button, SIGNAL(clicked()), SLOT(select_ext_app_button_clicked()));
+    connect(select_ext_shablon_button, SIGNAL(clicked()), SLOT(select_ext_shablon_button_clicked()));
+}
+
 void cengen::make_status_bar() {
     //создаем строку состояния
     statusBar = new QStatusBar(this);
@@ -792,6 +824,7 @@ void cengen::load_all_records() {
     tableWidget->load_tovar_list_into_table(tovarAll);
     tableWidget->repaint();
     tableWidget->scrollToTop();
+    ui_tabWidget->setCurrentIndex(TabsOrder::Search);
 }
 
 void cengen::tovar_search() {
@@ -1348,6 +1381,10 @@ void cengen::writeSettings()
     }
     m_settings.endGroup();
 
+    m_settings.setValue("extAppConf", ext_conf_edit->text());
+    m_settings.setValue("extAppName", ext_prog_name_edit->text());
+    m_settings.setValue("extShablon", ext_shablon_name_edit->text());
+
     //закрываем вообще settings
     m_settings.endGroup();
 
@@ -1500,6 +1537,14 @@ void cengen::readSettings() {
 
     ui_spinLimit->setMaximum(my_informer->get_maximum());
     ui_spinLimit->setValue(m_settings.value("/Settings/SearchLimit", "10").toInt());
+
+    m_settings.setValue("extAppConf", select_ext_conf_file->text());
+
+    ext_conf_edit->setText(m_settings.value("/Settings/extAppConf", "").toString());
+    ext_prog_name_edit->setText(m_settings.value("/Settings/extAppName", "").toString());
+    ext_shablon_name_edit->setText(m_settings.value("/Settings/extShablon", "").toString());
+
+
 }
 
 void cengen::read_filter_settings() {
@@ -1703,6 +1748,7 @@ void cengen::on_selectSourceDBF_file_button_clicked()
     my_informer->set_tb_name(str);
     QStringList list = my_informer->tb_describe(str);
     this->update_ui_tb_fields(list);
+    ui_spinLimit->setMaximum(my_informer->get_maximum());
 
 }
 
@@ -2653,10 +2699,10 @@ void cengen::on_loadSourceButton() {
     load_source_settings_file(fileName);
 }
 
-void cengen::load_source_settings_file(QString fileName) {
+bool cengen::load_source_settings_file(QString fileName) {
 
     if (fileName == "_$dbf") {
-        fileName = "/home/michael/SRC/QT-testing/launcher/tmp.das";
+        fileName = ext_conf_edit->text();
     }
     QFile file;
     file.setFileName(fileName);
@@ -2710,7 +2756,9 @@ void cengen::load_source_settings_file(QString fileName) {
         update_ui_db_controls();
     } else {
         qDebug() << "Cannot open this file: " << fileName;
+        return false;
     }
+    return true;
 }
 
 void cengen::on_saveFilterSettings() {
@@ -2970,11 +3018,19 @@ void cengen::updateSellTab() {
 void cengen::on_action_render_in_external_app() {
     qDebug() << "Going to use external application";
 
-    ext_shablon_name = "d:\\ug-base\\prog\\per\\CENNIK.frf";
+    QString ext_shablon_name = ext_shablon_name_edit->text();
 
-    QString dbf_tmp_name = "d:\\ug-base\\prog\\per\\result.dbf";
+    QString dbf_tmp_name;
+    dbf_tmp_name = QApplication::applicationDirPath();
+    #ifdef Q_WS_WIN
+    dbf_tmp_name += "\\";
+    #else
+    dbf_tmp_name += "/";
+    #endif
+    dbf_tmp_name += "result.dbf";
+    qDebug() << "tmp DBF file is: " << dbf_tmp_name;
 
-    QString extName = "d:\\ug-base\\prog\\per\\Pshtrich.exe";
+    QString extName = ext_prog_name_edit->text();
 
     QStringList args;
     args << dbf_tmp_name;
@@ -2984,13 +3040,29 @@ void cengen::on_action_render_in_external_app() {
 
     QProcess proc;
 
-    proc.setParent(this);
-
     proc.execute(extName, args);
 
 }
 
 void cengen::set_ext_shablon_name(QString fileName) {
-    this->ext_shablon_name = fileName;
-    qDebug() << "Need update tab";
+    ext_shablon_name_edit->setText(fileName);
+}
+
+void cengen::select_ext_conf_button_clicked() {
+    QFileInfo fi(ext_conf_edit->text());
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose config location"), fi.path() , tr("CenGen config (tmp.das)"));
+    ext_conf_edit->setText(fileName);
+
+}
+
+void cengen::select_ext_app_button_clicked() {
+    QFileInfo fi(ext_prog_name_edit->text());
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose external application location"), fi.path() , tr("Executable files (*.exe)"));
+    ext_prog_name_edit->setText(fileName);
+}
+
+void cengen::select_ext_shablon_button_clicked() {
+    QFileInfo fi(ext_shablon_name_edit->text());
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose external shablon location"), fi.path() , tr("Fast report shablons (*.frf)"));
+    ext_shablon_name_edit->setText(fileName);
 }

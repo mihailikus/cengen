@@ -81,10 +81,11 @@ public:
     void make_filter_tab();
     void make_fieldList_tab();
     void make_sellSettings_tab();
+    void make_ext_app_tab();
     void make_status_bar();
     void set_org_name(QString org, QString prog);
     void trigger_source_selection(bool state);
-    void load_source_settings_file(QString fileName);
+    bool load_source_settings_file(QString fileName);
     void load_filter_settings_file(QString fileName);
     void save_source_settings_file(QString fileName);
     void turn_filter_ON();
@@ -102,6 +103,7 @@ public:
         static int const fList = 4;
         static int const Filter = 5;
         static int const Sell = 6;
+        static int const App = 7;
     };
 
 protected:
@@ -226,10 +228,8 @@ private:
     //виджеты вкладки настроек внешней программы
     QWidget *tab8;
     QGridLayout *layTab8;
-
-    QString ext_shablon_name;
-    QString ext_app_name;
-
+    QLineEdit *ext_prog_name_edit, *ext_conf_edit, *ext_shablon_name_edit;
+    QPushButton *select_ext_app_button, *select_ext_conf_file, *select_ext_shablon_button;
 
 
 
@@ -378,6 +378,9 @@ private slots:
     void check_sell_file();
     void on_saveSellSettingsButtonClicked();
     void updateSellTab();
+    void select_ext_conf_button_clicked();
+    void select_ext_app_button_clicked();
+    void select_ext_shablon_button_clicked();
 
     QList<Tovar> show_found_items(QList<Tovar> inputList);
     QList<Tovar> apply_filter(QList<Tovar> inputList);

@@ -100,14 +100,14 @@ int main(int argc, char *argv[])
         if (check_extention(param, ".dbf")) {
             qDebug() << "Trying to load dbf file";
             w.save_source_settings_file("_$tmp.das");
-            w.load_source_settings_file("_$dbf");
-            w.load_all_records();
+            bool good = w.load_source_settings_file("_$dbf");
+            if (good) w.load_all_records();
             w.load_source_settings_file("_$tmp.das");
             w.repaint();
         }
-//        if (check_extention(param, "frf")) {
-//            w.set_ext_shablon_name(param);
-//        }
+        if (check_extention(param, "frf")) {
+            w.set_ext_shablon_name(param);
+        }
     }
 
     w.show();
