@@ -1378,8 +1378,9 @@ void cengen::writeSettings()
     m_settings.setValue("date", sellDateBox->currentIndex());
     m_settings.setValue("time", sellTimeBox->currentIndex());
     m_settings.setValue("kol", sellKolBox->currentIndex());
-
-
+    m_settings.setValue("lastDate", last_known_date);
+    m_settings.setValue("lastPos", last_known_pos);
+    m_settings.setValue("lastFile", last_known_file);
     m_settings.endGroup();
 
     //указываем текущую вкладку
@@ -1545,6 +1546,17 @@ void cengen::readSettings() {
     sellDateBox->setCurrentIndex(m_settings.value("/Settings/Sell/date", "0").toInt());
     sellTimeBox->setCurrentIndex(m_settings.value("/Settings/Sell/time", "0").toInt());
     sellKolBox->setCurrentIndex(m_settings.value("/Settings/Sell/kol", "0").toInt());
+//    m_settings.setValue("lastDate", last_known_date);
+//    m_settings.setValue("lastPos", last_known_pos);
+//    m_settings.setValue("lastFile", last_known_file);
+    last_known_file = m_settings.value("/Settings/Sell/lastFile", "").toString();
+    if (last_known_file == sellFileName) {
+        last_known_date = m_settings.value("/Settings/Sell/lastDate", "").toDate();
+        last_known_pos = m_settings.value("/Settings/Sell/lastPos", "").toInt();
+    } else {
+        last_known_date = QDate::currentDate().addYears(-50);
+        last_known_pos = 0;
+    }
 
     //читаем номер текущей вкладки (по умолчанию - вкладка с источником данных)
     int ind = m_settings.value("/Settings/tabIndex", "3").toInt();
@@ -2908,35 +2920,48 @@ void cengen::on_action_sell_filter_triggered() {
 
     QString curDate;
     QDate dt1;
+    int init_pos;
     dt1 = dateStart->selectedDate();
-    qDebug() << "last date is " << dt1.toString("yyyyMMdd");
-    dt1 = dt1.addDays(-1);
-    //dt1 = QDate::currentDate();
-
-    curDate =  dt1.toString("yyyyMMdd");
-//    curDate = "20120310";
-    qDebug() << curDate;
+    qDebug() << "Dates is " << dt1 << last_known_date;
+    if (dt1 >= last_known_date) {
+        qDebug() << "Using last known position";
+        init_pos = last_known_pos;
+    } else {
+        qDebug() << "Found last date";
+        init_pos = 0;
+    }
     int startPos;
-//    startPos = 374150;
-    tb1 = sell_informer->info(curDate, "tbarcode", 0, -1, 0, false);
+    //dt1 = dt1.addDays(-1);
+    curDate =  dt1.toString("yyyyMMdd");
+    qDebug() << "cur date " << curDate;
+    tb1 = sell_informer->info(curDate, "tbarcode", init_pos, -1, 1, true);
 
+    //dt1 = dt1.addDays(1);
 
     if (!tb1.count()) {
         startPos = 0;
-
     } else {
         startPos = sell_informer->last_found_record_number();
-        startPos++;
-        startPos++;
+        startPos--;
+        //startPos++;
+        if (dt1 > last_known_date) {
+            last_known_pos = startPos;
+            QString dt = tb1.at(0).barcode;
+            last_known_date = QDate::fromString(dt, "yyyyMMdd").addDays(1);
+            last_known_file = sellFileName;
+            qDebug() << "We know now: " << startPos << last_known_date;
+        }
     }
-    qDebug() << "Start position " << startPos;
+    qDebug() << "Start pos will be: " << startPos;
+    //qDebug() << "Date delta is " << last_known_date.daysTo(dt1);
+
 
 
     curDate = dateStop->selectedDate().toString("yyyyMMdd");
 //    curDate = "20120311";
     qDebug() << curDate;
 
-    tb2 = sell_informer->info(curDate, "tbarcode", startPos, -1, 0, false);
+    tb2 = sell_informer->info(curDate, "tbarcode", init_pos, -1, 0, false);
     int lastPos;
     //lastPos = 374904;
     int max = sell_informer->get_maximum();

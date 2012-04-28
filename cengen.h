@@ -225,6 +225,9 @@ private:
     QCalendarWidget *dateStart, *dateStop;
     bool sell_file_is_checked;
     Tinformer *sell_informer;
+    QDate last_known_date;
+    int last_known_pos;
+    QString last_known_file;
 
     //виджеты вкладки настроек внешней программы
     QWidget *tab8;

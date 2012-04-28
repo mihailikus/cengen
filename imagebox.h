@@ -16,7 +16,7 @@ public:
     ~ImageBox();
 
 public slots:
-    QRectF imagebox(QFont font, QString textline);
+    QRectF imagebox(QFont font, QString textline, QGraphicsScene *scene);
 
 };
 

@@ -190,7 +190,7 @@ QGraphicsItemGroup * Barcode::render(QGraphicsScene *scene, QRectF* inputRect)
     QList<int> systemLines;
     systemLines << 0 << 1<<  2 << 45 << 46 << 47 << 48 << 49 << 94 << 93 << 92;
 
-    QRectF font_size = imagebox(font, this->barcode.at(0));
+    QRectF font_size = imagebox(font, this->barcode.at(0), scene);
     float left_otstup = font_size.width();
     float text_size = font_size.height();
 

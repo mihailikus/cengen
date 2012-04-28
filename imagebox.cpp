@@ -8,9 +8,9 @@ ImageBox::~ImageBox() {
 
 }
 
-QRectF ImageBox::imagebox(QFont font, QString textline) {
-    QGraphicsScene* scene = new QGraphicsScene;
+QRectF ImageBox::imagebox(QFont font, QString textline, QGraphicsScene *scene) {
     QGraphicsTextItem* item = scene->addText(textline, font);
-    return item->boundingRect();
-    //delete scene;
+    QRectF rect = item->boundingRect();
+    delete item;
+    return rect;
 }

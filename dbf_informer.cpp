@@ -161,11 +161,12 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
 
     int offset;
     int i;
+    int method_offset = dbf_fields[method].offset;
     if (FromStartToEnd) {
-        offset = 1 + dbf_fields[method].offset + (-file_read_start+startPos)*length_of_each_record;
+        offset = 1 + method_offset + (-file_read_start+startPos)*length_of_each_record;
         i = startPos;
     } else {
-        offset = 1 + dbf_fields[method].offset + length_of_each_record*(maximum-startPos-1);
+        offset = 1 + method_offset + length_of_each_record*(maximum-startPos-1);
         i = maximum-1;
     }
 
@@ -193,7 +194,8 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
         }
         if (found)
         {
-            curLength = (i-startPos)*this->length_of_each_record +1;
+            //curLength = (i-startPos)*this->length_of_each_record +1;
+            curLength = offset - method_offset;
 
             tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + curLength,
                              dbf_fields["tname"].length);

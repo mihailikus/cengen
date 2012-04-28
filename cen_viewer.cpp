@@ -106,7 +106,7 @@ QGraphicsItemGroup* Cennic::render(QGraphicsScene *scene, float X, float Y) {
                 if (!preview) {
                     //печать названия товара - в несколько строк и по центру
 
-                    QStringList lines =  this->split_text(width, ctovar->name_of_tovar, font);
+                    QStringList lines =  this->split_text(width, ctovar->name_of_tovar, font, scene);
 
                     //рассчитываем высоту прямоугольника, чтобы расположить название
                     //вертикально по центру независимо от числа строк в названии
@@ -125,7 +125,7 @@ QGraphicsItemGroup* Cennic::render(QGraphicsScene *scene, float X, float Y) {
                     for (int j=0; j<lines_count; j++) {
                         //располагаем первую строчку по центру
                         //qDebug() << "imagebox";
-                        QRectF coord = imagebox(font, lines.at(j));
+                        QRectF coord = imagebox(font, lines.at(j), scene);
                         //qDebug() << "imagebox fixed";
                         Xtemp << coord.width() / 2;
                         Ytemp << coord.height();
@@ -266,7 +266,7 @@ QStringList Cennic::mysplit(QString text) {
     return goodlines;
 }
 
-QStringList Cennic::split_text(float maxlen, QString text, QFont font) {
+QStringList Cennic::split_text(float maxlen, QString text, QFont font, QGraphicsScene *scene) {
     QStringList lines = this->mysplit(text);
     QStringList sep_lines;
 
@@ -287,7 +287,7 @@ QStringList Cennic::split_text(float maxlen, QString text, QFont font) {
             line_old = line;
             line += lines.at(i);
 
-            text_l = imagebox(font, line).width();
+            text_l = imagebox(font, line, scene).width();
             i++;
         }
         if (text_l <= maxlen) {
