@@ -35,6 +35,7 @@ private slots:
 
 private:
     QFile file;
+    int file_upload_start, file_upload_end;
     QTextCodec *codec;
     int last_record;
     bool first_time;
