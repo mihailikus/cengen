@@ -2914,7 +2914,7 @@ void cengen::on_action_sell_filter_triggered() {
     //dt1 = QDate::currentDate();
 
     curDate =  dt1.toString("yyyyMMdd");
-    curDate = "20110310";
+//    curDate = "20120310";
     qDebug() << curDate;
     int startPos;
     startPos = 374150;
@@ -2933,7 +2933,7 @@ void cengen::on_action_sell_filter_triggered() {
 
 
     curDate = dateStop->selectedDate().toString("yyyyMMdd");
-    curDate = "20120311";
+//    curDate = "20120311";
     qDebug() << curDate;
 
     tb2 = sell_informer->info(curDate, "tbarcode", startPos, -1, 0, false);
@@ -2977,7 +2977,6 @@ void cengen::on_action_sell_filter_triggered() {
         count = 0;
         for (int j = 0; j<tb3.count(); j++) {
             count += tb3.at(j).price1;
-            qDebug() << "Item " << tovar.nomer_of_tovar << tb3.at(j).barcode << tb3.at(j).name_of_tovar;
         }
         tovar.quantity = count;
         newTb << tovar;
