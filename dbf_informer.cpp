@@ -129,17 +129,25 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
         maximum = endPos;
     }
 
+    if (!first_time && file_read_start > startPos) {
+        file_read_start = startPos;
+        first_time = true;
+    }
+    if (!first_time && file_read_end < maximum) {
+        file_read_end = maximum;
+        first_time = true;
+    }
+
     if (first_time) {
-        //да сразу и прочитаем весь файл от начала до конца в буфер
-
-
-
+        //прочитаем необходему часть файла в буфер
         file.seek(this->length_of_header_structure + startPos*length_of_each_record);
         int fileSize = (maximum - startPos) * this->length_of_each_record;
         this->all_records = new char[fileSize];
         file.read(this->all_records, fileSize);
-        file.seek(this->length_of_header_structure);
+        //file.seek(this->length_of_header_structure);
         first_time = false;
+        file_read_start = startPos;
+        file_read_end = maximum;
     }
 
 
@@ -154,7 +162,7 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
     int offset;
     int i;
     if (FromStartToEnd) {
-        offset = 1 + dbf_fields[method].offset;
+        offset = 1 + dbf_fields[method].offset + (-file_read_start+startPos)*length_of_each_record;
         i = startPos;
     } else {
         offset = 1 + dbf_fields[method].offset + length_of_each_record*(maximum-startPos-1);

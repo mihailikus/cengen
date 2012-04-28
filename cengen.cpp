@@ -2917,7 +2917,7 @@ void cengen::on_action_sell_filter_triggered() {
 //    curDate = "20120310";
     qDebug() << curDate;
     int startPos;
-    startPos = 374150;
+//    startPos = 374150;
     tb1 = sell_informer->info(curDate, "tbarcode", 0, -1, 0, false);
 
 
@@ -2972,8 +2972,8 @@ void cengen::on_action_sell_filter_triggered() {
                  lastPos,
                  lastPos-startPos,
                  true);
-        qDebug() << i << " Last found number" << sell_informer->last_found_record_number();
-
+        //qDebug() << i << " Last found number" << sell_informer->last_found_record_number();
+        QApplication::processEvents();
         count = 0;
         for (int j = 0; j<tb3.count(); j++) {
             count += tb3.at(j).price1;

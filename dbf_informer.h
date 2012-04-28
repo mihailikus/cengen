@@ -35,6 +35,8 @@ private slots:
 
 private:
     QFile file;
+    int file_read_start;
+    int file_read_end;
     QTextCodec *codec;
     int last_record;
     bool first_time;
