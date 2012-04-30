@@ -26,7 +26,6 @@ public slots:
     QPoint lastCorner();
 
 private slots:
-    QStringList mysplit(QString text);
     QStringList split_text(float maxlen, QString text, QFont font, QGraphicsScene *scene);
     void set_preview_mode(bool mode);
     bool preview_mode();

@@ -17,7 +17,8 @@ public:
 
 public slots:
     QRectF imagebox(QFont font, QString textline, QGraphicsScene *scene);
-
+    QStringList mysplit(QString text);
+    QString superSplit(QString text);
 };
 
 #endif // IMAGEBOX_H

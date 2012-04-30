@@ -64,7 +64,8 @@ namespace Ui {
     class cengen;
 }
 
-class cengen : public QMainWindow {
+class cengen : public QMainWindow, public ImageBox
+{
     Q_OBJECT
 public:
     cengen(QWidget *parent = 0);
@@ -309,6 +310,7 @@ private:
     QMenuBar* mainMenu;
     QMenu *menuFile, *menuEdit, *menuSell, *menuHelp;
     QMenu *cenMenu;
+    QMenu *selectFoundMethodMenu;
 
     QAction* action_new; //новый файл
     QAction* action_exit; //выход
@@ -335,6 +337,10 @@ private:
     QAction* action_sell_filter;
     QAction* action_render_in_external_app;
     QAction* action_expand_list;
+    QAction* action_select_method_barcode;
+    QAction* action_select_method_tnomer;
+    QAction* action_select_method_tname;
+
 
 private slots:
     //void on_tableWidget_cellClicked(int row, int column);
@@ -366,6 +372,10 @@ private slots:
     void on_action_sell_filter_triggered();
     void on_action_render_in_external_app();
     void on_action_expand_triggered(bool);
+    void on_action_select_method_barcode();
+    void on_action_select_method_tnomer();
+    void on_action_select_method_tname();
+
     void on_lineEdit_returnPressed();
     void tovar_search();
     void new_line_ready();

@@ -165,6 +165,7 @@ void cengen::make_actions() {
             SLOT(on_action_search_by_tnomer_in_clipboard_triggered()));
 
     action_on_off_filter = new QAction(tr("Filter ON"), this);
+    action_on_off_filter->setShortcut(QKeySequence("Ctrl+F"));
     action_on_off_filter->setCheckable(true);
     connect(action_on_off_filter, SIGNAL(triggered(bool)),
             SLOT(on_filterBox_toggled(bool)));
@@ -200,6 +201,21 @@ void cengen::make_actions() {
     action_expand_list->setChecked(false);
     connect(action_expand_list, SIGNAL(triggered(bool)),
             SLOT(on_action_expand_triggered(bool)));
+
+    action_select_method_barcode = new QAction(tr("Use barcode for seeaking"), this);
+    action_select_method_barcode->setShortcut(QKeySequence("Ctrl+1"));
+    connect(action_select_method_barcode, SIGNAL(triggered()),
+            SLOT(on_action_select_method_barcode()));
+
+    action_select_method_tnomer = new QAction(tr("Use tnomer for seeaking"), this);
+    action_select_method_tnomer->setShortcut(QKeySequence("Ctrl+2"));
+    connect(action_select_method_tnomer, SIGNAL(triggered()),
+            SLOT(on_action_select_method_tnomer()));
+
+    action_select_method_tname = new QAction(tr("Use tname for seeaking"), this);
+    action_select_method_tname->setShortcut(QKeySequence("Ctrl+3"));
+    connect(action_select_method_tname, SIGNAL(triggered()),
+            SLOT(on_action_select_method_tname()));
 
 }
 
@@ -256,11 +272,17 @@ void cengen::make_mainMenu() {
     menuSell->addAction(action_sell_filter);
 
     cenMenu = mainMenu->addMenu(tr("Cennic's"));
+    selectFoundMethodMenu = cenMenu->addMenu(tr("Method for tovar search"));
+    cenMenu->addSeparator();
     cenMenu->addAction(action_expand_list);
     cenMenu->addSeparator();
     cenMenu->addAction(action_make);
-//    cenMenu->addSeparator();
     cenMenu->addAction(action_render_in_external_app);
+
+    selectFoundMethodMenu->addAction(action_select_method_barcode);
+    selectFoundMethodMenu->addAction(action_select_method_tnomer);
+    selectFoundMethodMenu->addAction(action_select_method_tname);
+
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_about);
@@ -3343,8 +3365,10 @@ bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
                 zap = QString::number(tovar.quantity);
             if (field == "CHENA")
                 zap = QString::number(tovar.price1);
-            if (field == "NAME_T")
+            if (field == "NAME_T"){
+                //zap = superSplit(tovar.name_of_tovar);
                 zap = tovar.name_of_tovar;
+            }
             if (field == "SHKOD")
                 zap = tovar.barcode;
             if (field == "DATE_VV")
@@ -3393,4 +3417,14 @@ bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
 void cengen::on_action_expand_triggered(bool value) {
     expandBox->setChecked(value);
     previewed = false;
+}
+
+void cengen::on_action_select_method_barcode() {
+    ui_radioButton_1->click();
+}
+void cengen::on_action_select_method_tnomer() {
+    ui_radioButton_2->click();
+}
+void cengen::on_action_select_method_tname() {
+    ui_radioButton_3->click();
 }
