@@ -9,6 +9,7 @@ MainTableWidget::MainTableWidget(QWidget *pwgt)
     method = 0;
     price1=0;
     price2=0;
+    quantity = 0;
     set_method_view(method);
     connect(this, SIGNAL(cellClicked(int,int)), SLOT(set_editing_price2()));
     connect(this, SIGNAL(cellDoubleClicked(int,int)), SLOT(set_editing_price2()));
@@ -49,6 +50,9 @@ void MainTableWidget::set_tableFields(QMap<QString, bool> list) {
             }
             if (tm1 == tr("Price")) {
                 price1 = i;
+            }
+            if (tm1 == tr("Quantity")) {
+                quantity = i;
             }
             if (tm1 == tr("Price2")) {
                 price2 = i;
@@ -435,4 +439,14 @@ void MainTableWidget::on_cell_entered() {
     editing_price2 = false;
     tovar_searched = false;
     emit row_count_changed();
+}
+
+float MainTableWidget::sum_of_tovar() {
+    qDebug() << "Method " << method;
+    float sum = 0;
+    for (int i = 0; i<rowCount(); i++) {
+        sum += item(i, price1)->text().toFloat() * item(i, quantity)->text().toInt();
+    }
+    return sum;
+
 }

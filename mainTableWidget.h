@@ -43,6 +43,7 @@ public slots:
     void interchange_prices_in_table();
     void intellect_interchange_prices_in_table();
     void set_editing_price2(bool status = false);
+    float sum_of_tovar();
 
 private:
     QHeaderView* tableHeader;
@@ -62,6 +63,7 @@ private:
     int shablonCurrent;
 
     int price1, price2; //порядковые номера, где цена1, где старая цена
+    int quantity;
 
 
 private slots:

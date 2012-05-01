@@ -217,6 +217,10 @@ void cengen::make_actions() {
     connect(action_select_method_tname, SIGNAL(triggered()),
             SLOT(on_action_select_method_tname()));
 
+    action_get_sum_of_tovar = new QAction(tr("Get sum of tovar"), this);
+    connect(action_get_sum_of_tovar, SIGNAL(triggered()),
+            SLOT(on_action_get_sum_of_tovar()));
+
 }
 
 void cengen::make_toolBar() {
@@ -270,6 +274,8 @@ void cengen::make_mainMenu() {
 
     menuSell = mainMenu->addMenu((tr("Sell control")));
     menuSell->addAction(action_sell_filter);
+    menuSell->addSeparator();
+    menuSell->addAction(action_get_sum_of_tovar);
 
     cenMenu = mainMenu->addMenu(tr("Cennic's"));
     selectFoundMethodMenu = cenMenu->addMenu(tr("Method for tovar search"));
@@ -924,6 +930,7 @@ void cengen::new_line_ready() {
                            + QString::number(tableWidget->rowCount()));
     ui_lineEdit->clear();
     ui_lineEdit->setFocus();
+
 }
 
 void cengen::on_data_changed()
@@ -3024,8 +3031,9 @@ void cengen::on_action_sell_filter_triggered() {
                  "tnomer",
                  startPos,
                  lastPos,
-                 lastPos-startPos,
-                 true);
+                 -1,
+                 true,
+                 false);
         //qDebug() << i << " Last found number" << sell_informer->last_found_record_number();
         QApplication::processEvents();
         count = 0;
@@ -3434,4 +3442,9 @@ void cengen::on_action_select_method_tnomer() {
 }
 void cengen::on_action_select_method_tname() {
     ui_radioButton_3->click();
+}
+
+void cengen::on_action_get_sum_of_tovar() {
+        ui_statusLabel->setText(tr("Sum of tovar: " ) +
+                                QString::number(tableWidget->sum_of_tovar()));
 }

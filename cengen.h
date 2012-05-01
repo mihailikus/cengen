@@ -340,6 +340,7 @@ private:
     QAction* action_select_method_barcode;
     QAction* action_select_method_tnomer;
     QAction* action_select_method_tname;
+    QAction* action_get_sum_of_tovar;
 
 
 private slots:
@@ -375,6 +376,7 @@ private slots:
     void on_action_select_method_barcode();
     void on_action_select_method_tnomer();
     void on_action_select_method_tname();
+    void on_action_get_sum_of_tovar();
 
     void on_lineEdit_returnPressed();
     void tovar_search();
