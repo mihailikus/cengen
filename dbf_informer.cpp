@@ -123,8 +123,8 @@ QString dbf_informer::get_one_cell(int offset, int lenth) {
     tmp = one_cell;
 
     //qDebug() << "tmp value is " << tmp;
-    return tmp.trimmed();
-    //return codec->toUnicode(arr).trimmed();
+    //return tmp.trimmed();
+    return codec->toUnicode(one_cell).trimmed();
 }
 
 QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString method, int limit,
@@ -159,7 +159,11 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
     tovar.shablon = 0;
 
     if (method == "tnomer" || method == "tbarcode") {
-        limit = 1;
+        if (limit != -1) {
+                limit = 1;
+        } else {
+            limit = maximum-startPos;
+        }
     }
 
 
@@ -210,7 +214,9 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
             arr.clear();
             arr.insert(0, get_one_cell(dbf_fields["tname"].offset + curLength,
                                        dbf_fields["tname"].length));
-            tovar.name_of_tovar = codec->toUnicode(arr);
+            //tovar.name_of_tovar = codec->toUnicode(arr);
+            tovar.name_of_tovar= get_one_cell(dbf_fields["tname"].offset + curLength,
+                                              dbf_fields["tname"].length);
 
             tovar.nomer_of_tovar = get_one_cell(dbf_fields["tnomer"].offset + curLength,
                                                 dbf_fields["tnomer"].length).toInt();
@@ -301,10 +307,12 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
     if (tnomer < maximum_tnomer) {
         tovar.price1 = prices[tnomer];
         int offset = offsets[tnomer];
-        QByteArray arr;
-        arr.insert(0, get_one_cell(dbf_fields["tname"].offset + offset,
-                                   dbf_fields["tname"].length));
-        tovar.name_of_tovar = codec->toUnicode(arr);
+//        QByteArray arr;
+//        arr.insert(0, get_one_cell(dbf_fields["tname"].offset + offset,
+//                                   dbf_fields["tname"].length));
+//        tovar.name_of_tovar = codec->toUnicode(arr);
+        tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + offset,
+                                                   dbf_fields["tname"].length);
 
         tovar.barcode = get_one_cell(dbf_fields["tbarcode"].offset + offset,
                                      dbf_fields["tbarcode"].length);
