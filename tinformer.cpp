@@ -64,7 +64,8 @@ bool Tinformer::prepare(DbfConfig *dbf) {
 
 QList<Tovar> Tinformer::info(QString searchText, QString method,
                              int startPos, int endPos, int limit,
-                             bool FromStartToEnd) {
+                             bool FromStartToEnd,
+                             bool AllowFastSearch) {
 
     Tovar tovar;
     QList<Tovar> tovarList;
@@ -134,10 +135,16 @@ QList<Tovar> Tinformer::info(QString searchText, QString method,
 
     if (datasource == Tinformer::DBF) {
         if (this->tb_is_ready) {
-            tovarList = dbf_info->found_record_in_dbf(searchText, method, limit,
-                                                      startPos, endPos,
-                                                      FromStartToEnd);
-            last_record = dbf_info->last_found_record();
+
+            if (AllowFastSearch && method == "tnomer" ) {
+                tovarList = dbf_info->found_by_tnomer(searchText.toInt());
+                last_record = 0;
+            } else {
+                tovarList = dbf_info->found_record_in_dbf(searchText, method, limit,
+                                                          startPos, endPos,
+                                                          FromStartToEnd);
+                last_record = dbf_info->last_found_record();
+            }
         }
 
 

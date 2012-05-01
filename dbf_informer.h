@@ -26,11 +26,13 @@ public slots:
     QList<Tovar> found_record_in_dbf(QString searchText, QString method, int limit,
                                      int startPos = 0, int endPos = -1,
                                      bool FromStartToEnd = true);
+    QList<Tovar> found_by_tnomer(int tnomer);
     int last_found_record();
 
 private slots:
     bool describe_dbf();
     QString get_one_cell(int offset, int lenth);
+    void read_file(int startPos, int endPos);
 
 
 private:
@@ -38,12 +40,16 @@ private:
     int file_read_start;
     int file_read_end;
     QTextCodec *codec;
+    QTextEncoder *decoder;
+    QTextDecoder *decodec;
     int last_record;
     bool first_time;
+    QByteArray one_cell;
 
-
-
-
+    bool first_tnomer_search;
+    int maximum_tnomer;
+    float *prices;
+    int *offsets;
 
 
 };

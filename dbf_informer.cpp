@@ -4,7 +4,10 @@
 
 dbf_informer::dbf_informer() {
     codec = QTextCodec::codecForName("IBM 866");
+    decoder = new QTextEncoder(codec);
+    decodec = new QTextDecoder(codec);
     first_time = true;
+    first_tnomer_search = true;
 }
 
 dbf_informer::~dbf_informer() {
@@ -111,12 +114,17 @@ QStringList dbf_informer::get_dbf_header(QString filename) {
 }
 
 QString dbf_informer::get_one_cell(int offset, int lenth) {
-    QByteArray arr;
-    arr.resize(lenth);
+    one_cell.clear();
+    one_cell.resize(lenth);
     for (int j = 0; j<lenth; j++) {
-        arr[j] = this->all_records[j+offset];
+        one_cell[j] = this->all_records[j+offset];
     }
-    return codec->toUnicode(arr).trimmed();
+    QString tmp;
+    tmp = one_cell;
+
+    //qDebug() << "tmp value is " << tmp;
+    return tmp.trimmed();
+    //return codec->toUnicode(arr).trimmed();
 }
 
 QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString method, int limit,
@@ -139,15 +147,8 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
     }
 
     if (first_time) {
+        this->read_file(startPos, maximum);
         //прочитаем необходему часть файла в буфер
-        file.seek(this->length_of_header_structure + startPos*length_of_each_record);
-        int fileSize = (maximum - startPos) * this->length_of_each_record;
-        this->all_records = new char[fileSize];
-        file.read(this->all_records, fileSize);
-        //file.seek(this->length_of_header_structure);
-        first_time = false;
-        file_read_start = startPos;
-        file_read_end = maximum;
     }
 
 
@@ -156,6 +157,10 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
     tovar.price2 = 0;
     tovar.quantity = 0;
     tovar.shablon = 0;
+
+    if (method == "tnomer" || method == "tbarcode") {
+        limit = 1;
+    }
 
 
 
@@ -177,6 +182,7 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
 
     int j = startPos;
 
+    QByteArray arr;
     while (j<maximum && count < limit)
     {
         value = this->get_one_cell(offset, dbf_fields[method].length);
@@ -184,6 +190,10 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
              || method == "tnomer") &&
                 (value == searchText) ) found = true;
         if (method == "tname") {
+            arr.clear();
+            arr.insert(0, value);
+            value = codec->toUnicode(arr);
+            //tmp = decoder->fromUnicode(searchText);
             QStringList searches = searchText.split(" ");
             found = true;
             for (int j = 0; j<searches.count(); j++) {
@@ -197,8 +207,11 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
             //curLength = (i-startPos)*this->length_of_each_record +1;
             curLength = offset - method_offset;
 
-            tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + curLength,
-                             dbf_fields["tname"].length);
+            arr.clear();
+            arr.insert(0, get_one_cell(dbf_fields["tname"].offset + curLength,
+                                       dbf_fields["tname"].length));
+            tovar.name_of_tovar = codec->toUnicode(arr);
+
             tovar.nomer_of_tovar = get_one_cell(dbf_fields["tnomer"].offset + curLength,
                                                 dbf_fields["tnomer"].length).toInt();
             tovar.price1 = get_one_cell(dbf_fields["tprice"].offset + curLength,
@@ -228,4 +241,87 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
 
 int dbf_informer::last_found_record() {
     return last_record;
+}
+
+QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
+    Tovar tovar;
+    tovar.nomer_of_tovar = tnomer;
+    tovar.quantity = 0;
+    tovar.price1 = 0;
+    tovar.price2 = 0;
+    tovar.name_of_tovar = "NOT implemented yet";
+    tovar.barcode = "0";
+
+    if (first_time) {
+        first_time = false;
+        read_file(0, number_of_records);
+    }
+
+    if (first_tnomer_search) {
+        first_tnomer_search = false;
+        //int size = file_read_end - file_read_start;
+        int i = 1;
+        prices=(float*)malloc((i+1)*sizeof(float));
+        int curLen =file_read_start * length_of_each_record + 1;
+        int nomer;
+
+        for (int j = file_read_start; j<=file_read_end; j++) {
+            nomer = get_one_cell(dbf_fields["tnomer"].offset + curLen,
+                                     dbf_fields["tnomer"].length).toInt();
+            if (nomer>i) i = nomer;
+            curLen += length_of_each_record;
+        }
+        qDebug() <<"Maximum is " << i;
+        prices=(float*)malloc((i+1)*sizeof(float));
+        offsets=(int*) malloc((i+1)*sizeof(int));
+        maximum_tnomer = i;
+
+        for (int j = 0; j<=i; j++) {
+            prices[j] = 0.0;
+            offsets[j] = 0;
+        }
+
+        curLen =file_read_start * length_of_each_record + 1;
+        for (int j = file_read_start; j<=file_read_end; j++) {
+            nomer = get_one_cell(dbf_fields["tnomer"].offset + curLen,
+                                     dbf_fields["tnomer"].length).toInt();
+            prices[nomer] = get_one_cell(dbf_fields["tprice"].offset + curLen,
+                                                        dbf_fields["tprice"].length).toFloat();
+            offsets[nomer] = curLen;
+            if (nomer == tnomer) {
+                qDebug() << "price: " << get_one_cell(dbf_fields["tprice"].offset + curLen,
+                                         dbf_fields["tprice"].length).toFloat();
+            }
+            curLen += length_of_each_record;
+
+        }
+    }
+
+    QList<Tovar> spisok;
+    if (tnomer < maximum_tnomer) {
+        tovar.price1 = prices[tnomer];
+        int offset = offsets[tnomer];
+        QByteArray arr;
+        arr.insert(0, get_one_cell(dbf_fields["tname"].offset + offset,
+                                   dbf_fields["tname"].length));
+        tovar.name_of_tovar = codec->toUnicode(arr);
+
+        tovar.barcode = get_one_cell(dbf_fields["tbarcode"].offset + offset,
+                                     dbf_fields["tbarcode"].length);
+
+        spisok << tovar;
+    }
+
+
+    return spisok;
+}
+
+void dbf_informer::read_file(int startPos, int maximum) {
+    file.seek(this->length_of_header_structure + startPos*length_of_each_record);
+    int fileSize = (maximum - startPos) * this->length_of_each_record;
+    this->all_records = new char[fileSize];
+    file.read(this->all_records, fileSize);
+    first_time = false;
+    file_read_start = startPos;
+    file_read_end = maximum;
 }

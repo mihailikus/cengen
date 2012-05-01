@@ -859,7 +859,12 @@ void cengen::load_all_records() {
 
 void cengen::tovar_search() {
     QList<Tovar> tovarListFull;
+    QTime tm1 = QTime::currentTime();
+    qDebug() << "Current time is " << tm1;
     tovarListFull = my_informer->info(ui_lineEdit->text(), this->method);
+    QTime tm2 = QTime::currentTime();
+    qDebug() << "Current time is " << tm2;
+    qDebug() << "Delta time is " << tm1.msecsTo(tm2);
 
     if (filter_is_on) {
         tovarListFull = apply_filter(tovarListFull);
@@ -2258,11 +2263,13 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
         tovarItem = inputList.at(i);
 
         QString searchText, searchMethod;
+        bool FastSearch = false;
         //в зависимости от выбранного ищем по номеру, цене и т.п.
         switch (WhatToFound) {
         case 0:
             searchText = QString::number(tovarItem.nomer_of_tovar);
             searchMethod = "tnomer";
+            FastSearch = true;
             break;
         case 1:
             searchText = tovarItem.barcode;
@@ -2281,7 +2288,7 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
             break;
         }
 
-        QList<Tovar> foundList = filterInformer->info(searchText, searchMethod);
+        QList<Tovar> foundList = filterInformer->info(searchText, searchMethod, 0, -1, 1, true, FastSearch);
         if (foundList.count()) {
             itemfound = false;
             tovarFound = foundList.at(0);
