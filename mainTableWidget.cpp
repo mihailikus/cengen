@@ -89,6 +89,7 @@ void MainTableWidget::set_tableFields(QMap<QString, bool> list) {
 QList<Tovar> MainTableWidget::get_tovar_list(QString priznak) {
     QList<Tovar> spisok;
     Tovar tovar;
+    tovar.shablon = shablonCurrent;
     QComboBox* box; //вынесено из цикла для работы со списком шаблонов
     for (int i = 0; i<rowCount(); i++) {
         if (item(i, delfield)->text() == priznak) {
@@ -124,7 +125,7 @@ QList<Tovar> MainTableWidget::get_tovar_list(QString priznak) {
                     if (tm == tr("Quantity")) {
                         tovar.quantity = item(i, j)->text().toInt();
                     }
-                    if (tm == tr("Shablon")) {
+                    if (tm == tr("Shablon") && rowCount()<=500) {
                         box = ((QComboBox*)cellWidget(i, j));
                         tovar.shablon = box->currentIndex();
                         //qDebug() << "Shablon " << tovar.shablon;
@@ -194,7 +195,12 @@ void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
     setCurrentCell(row, column);
 }
 
-void MainTableWidget::add_table_item(int position, Tovar tovar) {
+void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool ToBottom) {
+    //загружаем список товаров в таблицу генератора ценников
+    add_flag = true;
+    if (tovarList.count()) tovar_searched = true;
+    int rowsCount = rowCount();
+    setRowCount(rowsCount + tovarList.count());
     QMap<QString, bool>::iterator it = fieldList.begin();
     int j = 0;
     for (; it != fieldList.end(); ++it) {
@@ -202,69 +208,74 @@ void MainTableWidget::add_table_item(int position, Tovar tovar) {
         if (it.value()) {
             QString tm = tmp.toString().split(QRegExp("[0-9] ")).at(1);
             if (tm == tr("Name")) {
-                QTableWidgetItem* item = new QTableWidgetItem(tovar.name_of_tovar);
-                setItem(position, j, item);
+                    for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
+                        QTableWidgetItem* item = new QTableWidgetItem(tovarList.at(position-rowsCount).name_of_tovar);
+                        setItem(position, j, item);
+                    }
+
             }
             if (tm == tr("Tnomer")) {
-                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovar.nomer_of_tovar));
+                for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
+                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovarList.at(position-rowsCount).nomer_of_tovar));
                 setItem(position, j, item);
+                }
             }
             if (tm == tr("Barcode")) {
-                QTableWidgetItem* item = new QTableWidgetItem(tovar.barcode);
+                for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
+                QTableWidgetItem* item = new QTableWidgetItem(tovarList.at(position-rowsCount).barcode);
                 setItem(position, j, item);
+                }
 
             }
             if (tm == tr("Price")) {
-                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovar.price1));
+                for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
+                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovarList.at(position-rowsCount).price1));
                 setItem(position, j, item);
+                }
             }
             if (tm == tr("Price2")) {
-                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovar.price2));
+                for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
+                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovarList.at(position-rowsCount).price2));
                 setItem(position, j, item);
+                }
             }
             if (tm == tr("Quantity")) {
-                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovar.quantity));
+                for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
+                QTableWidgetItem* item = new QTableWidgetItem(QString::number(tovarList.at(position-rowsCount).quantity));
                 setItem(position, j, item);
+                }
             }
             if (tm == tr("DELETE")) {
+                for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
 
                 QTableWidgetItem* item = new QTableWidgetItem(method_symbol);
                 setItem(position, j, item);
                 switch (method) {
-                case 0:
-                    item->setToolTip(tr("DELETE"));
-                    item->setWhatsThis(tr("Delete line from table"));                    break;
-                case 1:
-                    item->setToolTip(tr("SELECT"));
-                    item->setWhatsThis(tr("Select item to list"));                    break;
-                default:
-                    break;
+                    case 0:
+                        item->setToolTip(tr("DELETE"));
+                        item->setWhatsThis(tr("Delete line from table"));                    break;
+                    case 1:
+                        item->setToolTip(tr("SELECT"));
+                        item->setWhatsThis(tr("Select item to list"));                    break;
+                    default:
+                        break;
+                    }
                 }
             }
-            if (tm == tr("Shablon")) {
+            if (tm == tr("Shablon") && tovarList.count() <= 500) {
+                for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
                 QComboBox *box = new QComboBox;
                 box->addItems(shablonList);
                 box->setCurrentIndex(shablonCurrent);
                 setCellWidget(position, j, box);
-                //box->show();
+                }
             }
-            j++;
+
+        j++;
+
         }
-
     }
 
-
-}
-
-void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool ToBottom) {
-    //загружаем список товаров в таблицу генератора ценников
-    add_flag = true;
-    if (tovarList.count()) tovar_searched = true;
-    int count = rowCount();
-    setRowCount(count + tovarList.count());
-    for (int position = count; position<count+tovarList.count(); position++) {
-        add_table_item(position, tovarList.at(position-count));
-    }
     emit row_count_changed();
     if (ToBottom) {
         scrollToBottom();
@@ -350,6 +361,7 @@ QStringList MainTableWidget::get_shablon_list() {
 
 void MainTableWidget::set_shablon_current(int shablon) {
     this->shablonCurrent = shablon;
+    if (rowCount() > 500) return;
     QComboBox* box;
     for (int i = 0; i<rowCount(); i++) {
         box = ((QComboBox*)cellWidget(i, shField));
@@ -407,6 +419,7 @@ void MainTableWidget::set_focus_on_price2() {
 
 void MainTableWidget::set_special_shablon_for_zero_price2(int shablon) {
     if (!shField) return;
+    if (rowCount() > 500) return;
     float pr;
     QComboBox* box;
     for (int i = 0; i<rowCount(); i++) {
