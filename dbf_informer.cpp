@@ -291,9 +291,6 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
         curLen =file_read_start * length_of_each_record + 1;
         //qDebug() << "Start curLen" << curLen;
         for (int j = file_read_start; j<=file_read_end; j++) {
-            if (j == 49549) {
-                qDebug() << "last j" << curLen;
-            }
             nomer = get_one_cell(dbf_fields["tnomer"].offset + curLen,
                                      dbf_fields["tnomer"].length).toInt();
             prices[nomer] = get_one_cell(dbf_fields["tprice"].offset + curLen,
@@ -301,14 +298,11 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
             offsets[nomer] = curLen;
 
             curLen += length_of_each_record;
-            //qDebug() << j;
-
         }
     }
 
     QList<Tovar> spisok;
     if (tnomer && tnomer <= maximum_tnomer) {
-        //qDebug() << tnomer;
         int offset = offsets[tnomer];
         if (offset >=0) {
             tovar.price1 = prices[tnomer];
@@ -321,7 +315,6 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
             spisok << tovar;
         }
     }
-
     last_record = tnomer;
     return spisok;
 }
@@ -329,7 +322,6 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
 void dbf_informer::read_file(int startPos, int maximum) {
     file.seek(this->length_of_header_structure + startPos*length_of_each_record);
     int fileSize = (1+maximum - startPos) * this->length_of_each_record;
-    //qDebug() << "File size " << fileSize;
     all_records = new char[fileSize];
 //    all_records = (char*) malloc (fileSize)*sizeof(char);
 

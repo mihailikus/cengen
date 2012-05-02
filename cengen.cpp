@@ -865,13 +865,7 @@ void cengen::load_all_records() {
 
 void cengen::tovar_search() {
     QList<Tovar> tovarListFull;
-    QTime tm1 = QTime::currentTime();
-    qDebug() << "Current time is " << tm1;
     tovarListFull = my_informer->info(ui_lineEdit->text(), this->method);
-    QTime tm2 = QTime::currentTime();
-    qDebug() << "Current time is " << tm2;
-    qDebug() << "Delta time is " << tm1.msecsTo(tm2);
-
     if (filter_is_on) {
         tovarListFull = apply_filter(tovarListFull);
     }
@@ -2231,7 +2225,7 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     filterConfig.tbarcode = filterCheckInBox->currentText();
 
     int WhatToFound = ui_filterWhatToFoundBox->currentIndex();
-    qDebug() << "What to found is " << WhatToFound;
+    //qDebug() << "What to found is " << WhatToFound;
     switch (WhatToFound) {
     case 0:
         filterConfig.tnomer = ui_filterWhatBox->currentText();
@@ -2294,12 +2288,11 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
             searchMethod = "tnomer";
             break;
         }
-
+        //qDebug() << "searching " << searchText << searchMethod;
         QList<Tovar> foundList = filterInformer->info(searchText, searchMethod, 0, -1, 1, true, FastSearch);
         if (foundList.count()) {
             itemfound = false;
             tovarFound = foundList.at(0);
-
             //проверяем, используя выбранный метод сравнения
             switch (method) {
             case 0:
