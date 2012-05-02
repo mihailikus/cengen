@@ -3452,6 +3452,11 @@ void cengen::on_action_get_sum_of_tovar() {
 
 void cengen::on_action_program_update() {
     qDebug() << "Going to update program";
+    update_dlg = new ListFoundedItemsDialog(this);
+    update_dlg->setMessage(tr("Updating. Please wait."));
+    update_dlg->show();
+
+    update_counter = 0;
     updatingPath = "http://mihol.ru/cengen/bin/" + QApplication::organizationName() + "/";
     QString file = updatingPath + "list.txt";
 
@@ -3465,12 +3470,8 @@ void cengen::on_action_program_update() {
 }
 
 void cengen::httpRequestFinished(QNetworkReply* rpl) {
-    ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
-    dlg->setMessage(tr("Updating. Please wait!"));
-    dlg->show();
-
     qDebug() <<"Ready ";
-    qDebug() << rpl->size();
+    //qDebug() << rpl->size();
     QStringList files;
     QString line;
     while (!rpl->atEnd()) {
@@ -3481,42 +3482,55 @@ void cengen::httpRequestFinished(QNetworkReply* rpl) {
 
             files << line;
     }
+    update_count = files.count();
     rpl->close();
-
+    up_files.clear();
     for (int i = 0; i<files.count(); i++) {
         manager2 = new QNetworkAccessManager(this);
         connect(manager2, SIGNAL(finished(QNetworkReply*)), SLOT(httpOneFileFinished(QNetworkReply*)));
-//        unfinishedHttp=true;
+
         QString file = updatingPath + files.at(i);
         currentUpdatingFile = files.at(i);
         qDebug() << "File: " << file;
-        manager2->get(QNetworkRequest(QUrl(file)));
-//        while (unfinishedHttp) {
+        QNetworkReply *rpl2 = manager2->get(QNetworkRequest(QUrl(file)));
+        up_files[rpl2] = currentUpdatingFile;
 
-//        }
 
     }
-    dlg->setMessage(tr("Updated successful"));
-
-
-
-
 
 }
 void cengen::httpOneFileFinished(QNetworkReply *rpl) {
     int size1, size2;
     size1 = rpl->size();
     qDebug() << size1;
-    QFileInfo fi(currentUpdatingFile);
+    QString fele = up_files[rpl];
+    QFileInfo fi(fele);
     size2 = fi.size();
     if (size1 != size2) {
-        QFile fl(currentUpdatingFile);
-        fl.rename(currentUpdatingFile+".bak");
-        fl.setFileName(currentUpdatingFile);
+        QFile fl(fele);
+        if (fi.exists()) {
+        #ifdef Q_WS_WIN
+            qDebug() << "WIN section";
+            fl.rename(fele+".bak.exe");
+        #else
+            qDebug() << "Lin section";
+            fl.rename(fele+".bak");
+        #endif
+        }
+
+        fl.setFileName(fele);
         QByteArray arr = rpl->readAll();
         fl.open(QIODevice::WriteOnly);
         fl.write(arr);
         fl.close();
+    } else {
+        qDebug() << "File " << fele << " don't need updating: size equal";
+    }
+    update_counter++;
+    if (update_counter >= update_count) {
+        //обновились все файлы - выведем сообщение
+        update_dlg->setMessage(tr("Updated successful"));
+        //update_dlg->show();
     }
     //unfinishedHttp = false;
 }

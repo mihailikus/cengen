@@ -310,8 +310,11 @@ private:
 
     //переменные для скачивания файлов обновлений
     QNetworkAccessManager *manager, *manager2;
+    int update_counter, update_count;
     QString currentUpdatingFile;
     QString updatingPath;
+    QMap<QNetworkReply*, QString> up_files;
+    ListFoundedItemsDialog* update_dlg;
 
     bool unfinishedHttp;
 
