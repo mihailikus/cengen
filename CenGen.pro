@@ -3,6 +3,7 @@
 # -------------------------------------------------
 QT += sql
 QT += xml
+QT += network
 #INCLUDEPATH += D:\\mysql\\include
 #LIBS+=-LD:\\mysql\\lib\\opt
 #LIBS+=-lmysqlclient

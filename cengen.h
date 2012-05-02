@@ -28,6 +28,9 @@
 #include <QMap>
 #include <QApplication>
 #include <QClipboard>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 #include "tinformer.h"
 #include "barcode.h"
 #include "cen_viewer.h"
@@ -305,6 +308,13 @@ private:
 
     QSpinBox* ui_spinLimit;
 
+    //переменные для скачивания файлов обновлений
+    QNetworkAccessManager *manager, *manager2;
+    QString currentUpdatingFile;
+    QString updatingPath;
+
+    bool unfinishedHttp;
+
 
     QToolBar* ui_mainToolBar;
     QMenuBar* mainMenu;
@@ -341,10 +351,13 @@ private:
     QAction* action_select_method_tnomer;
     QAction* action_select_method_tname;
     QAction* action_get_sum_of_tovar;
+    QAction* action_program_update;
 
 
 private slots:
-    //void on_tableWidget_cellClicked(int row, int column);
+    void httpRequestFinished(QNetworkReply* rpl);
+    void httpOneFileFinished(QNetworkReply* rpl);
+
     void get_method_from_ui();
 
     void on_source_changed_toDBF();
@@ -377,6 +390,7 @@ private slots:
     void on_action_select_method_tnomer();
     void on_action_select_method_tname();
     void on_action_get_sum_of_tovar();
+    void on_action_program_update();
 
     void on_lineEdit_returnPressed();
     void tovar_search();
@@ -446,6 +460,7 @@ private slots:
     void ask_user_to_save_wrong_tovar_list(QList<Tovar> spisok);
 
     bool save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok);
+
 
 };
 

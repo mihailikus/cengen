@@ -218,8 +218,13 @@ void cengen::make_actions() {
             SLOT(on_action_select_method_tname()));
 
     action_get_sum_of_tovar = new QAction(tr("Get sum of tovar"), this);
+    action_get_sum_of_tovar->setShortcut(QKeySequence("F2"));
     connect(action_get_sum_of_tovar, SIGNAL(triggered()),
             SLOT(on_action_get_sum_of_tovar()));
+
+    action_program_update = new QAction(tr("Check new version"), this);
+    connect(action_program_update, SIGNAL(triggered()),
+            SLOT(on_action_program_update()));
 
 }
 
@@ -291,6 +296,8 @@ void cengen::make_mainMenu() {
 
 
     menuHelp = mainMenu->addMenu(tr("About"));
+    menuHelp->addAction(action_program_update);
+    menuHelp->addSeparator();
     menuHelp->addAction(action_about);
 
     this->setMenuBar(mainMenu);
@@ -3441,4 +3448,75 @@ void cengen::on_action_select_method_tname() {
 void cengen::on_action_get_sum_of_tovar() {
         ui_statusLabel->setText(tr("Sum of tovar: " ) +
                                 QString::number(tableWidget->sum_of_tovar()));
+}
+
+void cengen::on_action_program_update() {
+    qDebug() << "Going to update program";
+    updatingPath = "http://mihol.ru/cengen/bin/" + QApplication::organizationName() + "/";
+    QString file = updatingPath + "list.txt";
+
+
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(httpRequestFinished(QNetworkReply*)));
+
+    manager->get(QNetworkRequest(QUrl(file)));
+
+}
+
+void cengen::httpRequestFinished(QNetworkReply* rpl) {
+    ListFoundedItemsDialog* dlg = new ListFoundedItemsDialog(this);
+    dlg->setMessage(tr("Updating. Please wait!"));
+    dlg->show();
+
+    qDebug() <<"Ready ";
+    qDebug() << rpl->size();
+    QStringList files;
+    QString line;
+    while (!rpl->atEnd()) {
+        line = rpl->readLine();
+        line = line.split("\n").at(0).trimmed();
+            qDebug() << "File is: " << line;
+
+
+            files << line;
+    }
+    rpl->close();
+
+    for (int i = 0; i<files.count(); i++) {
+        manager2 = new QNetworkAccessManager(this);
+        connect(manager2, SIGNAL(finished(QNetworkReply*)), SLOT(httpOneFileFinished(QNetworkReply*)));
+//        unfinishedHttp=true;
+        QString file = updatingPath + files.at(i);
+        currentUpdatingFile = files.at(i);
+        qDebug() << "File: " << file;
+        manager2->get(QNetworkRequest(QUrl(file)));
+//        while (unfinishedHttp) {
+
+//        }
+
+    }
+    dlg->setMessage(tr("Updated successful"));
+
+
+
+
+
+}
+void cengen::httpOneFileFinished(QNetworkReply *rpl) {
+    int size1, size2;
+    size1 = rpl->size();
+    qDebug() << size1;
+    QFileInfo fi(currentUpdatingFile);
+    size2 = fi.size();
+    if (size1 != size2) {
+        QFile fl(currentUpdatingFile);
+        fl.rename(currentUpdatingFile+".bak");
+        fl.setFileName(currentUpdatingFile);
+        QByteArray arr = rpl->readAll();
+        fl.open(QIODevice::WriteOnly);
+        fl.write(arr);
+        fl.close();
+    }
+    //unfinishedHttp = false;
 }

@@ -1,5 +1,4 @@
 #include "dialog.h"
-#include <QLabel>
 #include <QPushButton>
 #include <QDebug>
 
@@ -23,6 +22,7 @@ ListFoundedItemsDialog::ListFoundedItemsDialog (QWidget* pwgt/*= 0*/)
 
     setLayout(myLayout);
     resize(pwgt->size());
+    label = new QLabel("");
 }
 
 void ListFoundedItemsDialog::setMessage(MainTableWidget **table) {
@@ -36,7 +36,7 @@ void ListFoundedItemsDialog::setMessage(MainTableWidget **table) {
 }
 
 void ListFoundedItemsDialog::setMessage(QString error) {
-    QLabel* label = new QLabel (error);
+    label->setText(error);
     label->setAlignment(Qt::AlignCenter);
     label->setAcceptDrops(true);
     myLayout->addWidget (label, 0, 0, 1, 0);

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QGridLayout>
+#include <QLabel>
 #include <QTableWidget>
 #include "mainTableWidget.h"
 
@@ -20,6 +21,7 @@ private:
     QPushButton* buttonOK;
     QPushButton* buttonCancel;
     QPushButton* buttonSelectAll;
+    QLabel* label;
 
 public:
     ListFoundedItemsDialog (QWidget* pwgt = 0);
