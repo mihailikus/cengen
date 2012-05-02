@@ -103,6 +103,7 @@ QStringList dbf_informer::get_dbf_header(QString filename) {
     file.setFileName(filename);
     file.open(QIODevice::ReadOnly);
     first_time = true;
+    first_tnomer_search = true;
 
     QStringList list;
     if (this->describe_dbf()) {
@@ -119,8 +120,8 @@ QString dbf_informer::get_one_cell(int offset, int lenth) {
     for (int j = 0; j<lenth; j++) {
         one_cell[j] = this->all_records[j+offset];
     }
-    QString tmp;
-    tmp = one_cell;
+//    QString tmp;
+//    tmp = one_cell;
 
     //qDebug() << "tmp value is " << tmp;
     //return tmp.trimmed();
@@ -194,9 +195,9 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
              || method == "tnomer") &&
                 (value == searchText) ) found = true;
         if (method == "tname") {
-            arr.clear();
-            arr.insert(0, value);
-            value = codec->toUnicode(arr);
+//            arr.clear();
+//            arr.insert(0, value);
+//            value = codec->toUnicode(arr);
             //tmp = decoder->fromUnicode(searchText);
             QStringList searches = searchText.split(" ");
             found = true;
@@ -264,8 +265,8 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
     }
 
     if (first_tnomer_search) {
+        //qDebug() << "First tnomer search";
         first_tnomer_search = false;
-        //int size = file_read_end - file_read_start;
         int i = 1;
         prices=(float*)malloc((i+1)*sizeof(float));
         int curLen =file_read_start * length_of_each_record + 1;
@@ -277,57 +278,61 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
             if (nomer>i) i = nomer;
             curLen += length_of_each_record;
         }
-        qDebug() <<"Maximum is " << i;
         prices=(float*)malloc((i+1)*sizeof(float));
         offsets=(int*) malloc((i+1)*sizeof(int));
         maximum_tnomer = i;
 
         for (int j = 0; j<=i; j++) {
             prices[j] = 0.0;
-            offsets[j] = 0;
+            offsets[j] = -1;
         }
+        //qDebug() << "File start-stop " << file_read_start << file_read_end;
 
         curLen =file_read_start * length_of_each_record + 1;
+        //qDebug() << "Start curLen" << curLen;
         for (int j = file_read_start; j<=file_read_end; j++) {
+            if (j == 49549) {
+                qDebug() << "last j" << curLen;
+            }
             nomer = get_one_cell(dbf_fields["tnomer"].offset + curLen,
                                      dbf_fields["tnomer"].length).toInt();
             prices[nomer] = get_one_cell(dbf_fields["tprice"].offset + curLen,
                                                         dbf_fields["tprice"].length).toFloat();
             offsets[nomer] = curLen;
-            if (nomer == tnomer) {
-                qDebug() << "price: " << get_one_cell(dbf_fields["tprice"].offset + curLen,
-                                         dbf_fields["tprice"].length).toFloat();
-            }
+
             curLen += length_of_each_record;
+            //qDebug() << j;
 
         }
     }
 
     QList<Tovar> spisok;
-    if (tnomer < maximum_tnomer) {
-        tovar.price1 = prices[tnomer];
+    if (tnomer && tnomer <= maximum_tnomer) {
+        //qDebug() << tnomer;
         int offset = offsets[tnomer];
-//        QByteArray arr;
-//        arr.insert(0, get_one_cell(dbf_fields["tname"].offset + offset,
-//                                   dbf_fields["tname"].length));
-//        tovar.name_of_tovar = codec->toUnicode(arr);
-        tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + offset,
-                                                   dbf_fields["tname"].length);
+        if (offset >=0) {
+            tovar.price1 = prices[tnomer];
+            tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + offset,
+                                                       dbf_fields["tname"].length);
 
-        tovar.barcode = get_one_cell(dbf_fields["tbarcode"].offset + offset,
-                                     dbf_fields["tbarcode"].length);
+            tovar.barcode = get_one_cell(dbf_fields["tbarcode"].offset + offset,
+                                         dbf_fields["tbarcode"].length);
 
-        spisok << tovar;
+            spisok << tovar;
+        }
     }
 
-
+    last_record = tnomer;
     return spisok;
 }
 
 void dbf_informer::read_file(int startPos, int maximum) {
     file.seek(this->length_of_header_structure + startPos*length_of_each_record);
-    int fileSize = (maximum - startPos) * this->length_of_each_record;
-    this->all_records = new char[fileSize];
+    int fileSize = (1+maximum - startPos) * this->length_of_each_record;
+    //qDebug() << "File size " << fileSize;
+    all_records = new char[fileSize];
+//    all_records = (char*) malloc (fileSize)*sizeof(char);
+
     file.read(this->all_records, fileSize);
     first_time = false;
     file_read_start = startPos;

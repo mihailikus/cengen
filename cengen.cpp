@@ -3049,6 +3049,7 @@ void cengen::on_action_sell_filter_triggered() {
 
     on_action_new_triggered();
     tableWidget->load_tovar_list_into_table(newTb);
+    on_action_get_sum_of_tovar();
 
 }
 
