@@ -2326,7 +2326,6 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
 
             }
             if (itemfound) filteredList <<tovarItem;
-
         }
     }
 
@@ -3446,8 +3445,31 @@ void cengen::on_action_select_method_tname() {
 }
 
 void cengen::on_action_get_sum_of_tovar() {
+    double sum = tableWidget->sum_of_tovar();
+    int kop = sum*100 - (int)sum*100;
+    qDebug() << "kop" << kop << "sum=" << sum;
+    int rub = (int)sum;
+    float delta = sum*100 - (kop + rub*100);
+    qDebug() << "Delta " << delta;
+    kop += delta;
+
+    QString sm = "";
+    int tmp;
+    int dg;
+    while (rub) {
+        tmp = rub/10;
+        dg = rub - tmp*10;
+        rub = tmp;
+        sm = QString::number(dg) + sm;
+    }
+    if (sm == "") sm = "0";
+    QString kp = QString::number(kop);
+    if (kop<10) kp = "0" + kp;
+
+    sm += "." + kp;
+    //sm = QString::number(sum);
         ui_statusLabel->setText(tr("Sum of tovar: " ) +
-                                QString::number(tableWidget->sum_of_tovar()));
+                                sm);
 }
 
 void cengen::on_action_program_update() {

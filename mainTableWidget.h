@@ -43,7 +43,7 @@ public slots:
     void interchange_prices_in_table();
     void intellect_interchange_prices_in_table();
     void set_editing_price2(bool status = false);
-    float sum_of_tovar();
+    long double sum_of_tovar();
 
 private:
     QHeaderView* tableHeader;

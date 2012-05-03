@@ -441,11 +441,11 @@ void MainTableWidget::on_cell_entered() {
     emit row_count_changed();
 }
 
-float MainTableWidget::sum_of_tovar() {
+long double MainTableWidget::sum_of_tovar() {
     qDebug() << "Method " << method;
-    float sum = 0;
+    long double sum = 0.0;
     for (int i = 0; i<rowCount(); i++) {
-        sum += item(i, price1)->text().toFloat() * item(i, quantity)->text().toInt();
+        sum += item(i, price1)->text().toDouble() * item(i, quantity)->text().toInt();
     }
     return sum;
 

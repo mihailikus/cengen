@@ -287,6 +287,7 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
             offsets[j] = -1;
         }
         //qDebug() << "File start-stop " << file_read_start << file_read_end;
+        //qDebug() << "total and 1 size: "<< number_of_records << length_of_each_record;
 
         curLen =file_read_start * length_of_each_record + 1;
         //qDebug() << "Start curLen" << curLen;
@@ -302,9 +303,12 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
     }
 
     QList<Tovar> spisok;
+    //qDebug() << "Search " << tnomer << " Max=" << maximum_tnomer;
     if (tnomer && tnomer <= maximum_tnomer) {
+        //qDebug() << "True";
         int offset = offsets[tnomer];
         if (offset >=0) {
+            //qDebug() << "True offset";
             tovar.price1 = prices[tnomer];
             tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + offset,
                                                        dbf_fields["tname"].length);
