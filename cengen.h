@@ -357,6 +357,7 @@ private:
     QAction* action_select_method_tname;
     QAction* action_get_sum_of_tovar;
     QAction* action_program_update;
+    QAction* action_zakaz10;
 
 
 private slots:
@@ -396,6 +397,7 @@ private slots:
     void on_action_select_method_tname();
     void on_action_get_sum_of_tovar();
     void on_action_program_update();
+    void on_action_zakaz10_triggered();
 
     void on_lineEdit_returnPressed();
     void tovar_search();

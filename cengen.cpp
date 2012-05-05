@@ -226,6 +226,11 @@ void cengen::make_actions() {
     connect(action_program_update, SIGNAL(triggered()),
             SLOT(on_action_program_update()));
 
+    action_zakaz10 = new QAction(tr("Make zakaz for 10 days"), this);
+    action_zakaz10->setShortcut(QKeySequence("F3"));
+    connect(action_zakaz10, SIGNAL(triggered()),
+            SLOT(on_action_zakaz10_triggered()));
+
 }
 
 void cengen::make_toolBar() {
@@ -281,6 +286,8 @@ void cengen::make_mainMenu() {
     menuSell->addAction(action_sell_filter);
     menuSell->addSeparator();
     menuSell->addAction(action_get_sum_of_tovar);
+    menuSell->addSeparator();
+    menuSell->addAction(action_zakaz10);
 
     cenMenu = mainMenu->addMenu(tr("Cennic's"));
     selectFoundMethodMenu = cenMenu->addMenu(tr("Method for tovar search"));
@@ -3652,4 +3659,28 @@ void cengen::httpOneFileFinished(QNetworkReply *rpl) {
         //update_dlg->show();
     }
     //unfinishedHttp = false;
+}
+
+void cengen::on_action_zakaz10_triggered() {
+    qDebug() << "Going to make zakaz on 10 days";
+    QList<Tovar> tbOld, tbNew;
+    Tovar tovar;
+    int quant;
+    tbOld = tableWidget->get_tovar_list("x");
+    tbOld = apply_filter(tbOld);
+    for (int i = 0; i<tbOld.count(); i++) {
+        tovar = tbOld.at(i);
+
+        quant = ceil(tovar.price2 * 10);
+        //qDebug() << "Count on skald " << tovar.quantity << " Need: " << quant;
+        if (quant < tovar.quantity) {
+            quant = 0;
+        } else {
+            quant = quant - tovar.quantity +1;
+        }
+        tovar.quantity = quant;
+        tbNew << tovar;
+    }
+    on_action_new_triggered();
+    tableWidget->load_tovar_list_into_table(tbNew);
 }
