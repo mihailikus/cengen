@@ -2069,6 +2069,10 @@ QList<Tovar> cengen::convert_xml_into_tovar_list(QDomDocument doc) {
                             if (itemName == "tnomer") {
                                 tovarItem.nomer_of_tovar = itemValue.toInt();
                             }
+                            if (itemName == "quantity") {
+                                tovarItem.quantity = itemValue.toInt();
+                            }
+
                         }
                     }
                     nodeItem = nodeItem.nextSibling();
@@ -2116,6 +2120,11 @@ QDomDocument cengen::convert_tovar_list_into_xml(QList<Tovar> spisok) {
         QDomText dm4 = doc.createTextNode(QString::number(spisok.at(i).nomer_of_tovar));
         tnomerElement.appendChild(dm4);
         tovarElement.appendChild(tnomerElement);
+
+        QDomElement quantityElement = doc.createElement("quantity");
+        QDomText dm6 = doc.createTextNode(QString::number(spisok.at(i).quantity));
+        quantityElement.appendChild(dm6);
+        tovarElement.appendChild(quantityElement);
 
         QDomElement barcodeElement = doc.createElement("barcode");
         QDomText dm5 = doc.createTextNode(spisok.at(i).barcode);
