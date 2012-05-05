@@ -230,6 +230,9 @@ void cengen::make_actions() {
     action_zakaz10->setShortcut(QKeySequence("F3"));
     connect(action_zakaz10, SIGNAL(triggered()),
             SLOT(on_action_zakaz10_triggered()));
+    action_remove_zero_items = new QAction(tr("Remove items with zero quantity"), this);
+    connect(action_remove_zero_items, SIGNAL(triggered()),
+            SLOT(on_action_remove_zero_items()));
 
 }
 
@@ -281,6 +284,8 @@ void cengen::make_mainMenu() {
     menuEdit->addAction(action_export_tovar_list_to_clipboard);
     menuEdit->addSeparator();
     menuEdit->addAction(action_verify_barcode);
+    menuEdit->addSeparator();
+    menuEdit->addAction(action_remove_zero_items);
 
     menuSell = mainMenu->addMenu((tr("Sell control")));
     menuSell->addAction(action_sell_filter);
@@ -3683,4 +3688,8 @@ void cengen::on_action_zakaz10_triggered() {
     }
     on_action_new_triggered();
     tableWidget->load_tovar_list_into_table(tbNew);
+}
+
+void cengen::on_action_remove_zero_items() {
+    tableWidget->remove_zero_quantity();
 }

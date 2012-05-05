@@ -450,3 +450,20 @@ long double MainTableWidget::sum_of_tovar() {
     return sum;
 
 }
+
+void MainTableWidget::remove_zero_quantity() {
+    int j = rowCount();
+    int i = 0;
+    int quant = 0;
+    while (i<j) {
+        quant = item(i, quantity)->text().toInt();
+        qDebug() << "Quantity = " << quant;
+        if (!quant) {
+            removeRow(i);
+            qDebug() << "Deleted";
+            j--;
+        }
+        i++;
+    }
+    emit row_count_changed();
+}
