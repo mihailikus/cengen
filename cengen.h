@@ -206,6 +206,7 @@ private:
     QLabel *label30, *label31;
     QComboBox *filterCheckOutBox, *filterCheckInBox;
     QPushButton *saveFilterSettings, *loadFilterSettings;
+    QCheckBox *delete_filtered_box;
 
 
 
@@ -304,7 +305,6 @@ private:
     QList<QRectF> pages;    //области для постраничной печати
     QStringList opisateli;
 
-    //QGraphicsLineItem* point;
 
     QSpinBox* ui_spinLimit;
 

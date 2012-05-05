@@ -676,6 +676,7 @@ void cengen::make_filter_tab() {
                                          <<tr("barcode")
                                          <<tr("name")
                                          <<tr("Price"));
+    ui_filterWhatToFoundBox->setEnabled(false);
 
     ui_filterMethodBox->insertItems(0, QStringList()
                                     << tr("==")
@@ -724,10 +725,12 @@ void cengen::make_filter_tab() {
     filBoxCheck->setLayout(filCheckLay);
     laytab5g1->addWidget(filBoxCheck, 4, 0, 1, 4);
 
-    laytab5g1->addWidget(saveFilterSettings, 5, 0);
-    laytab5g1->addWidget(loadFilterSettings, 5, 1);
+    laytab5g1->addWidget(saveFilterSettings, 7, 0);
+    laytab5g1->addWidget(loadFilterSettings, 7, 1);
 
-
+    delete_filtered_box = new QCheckBox(tr("Delete items not found by filter"));
+    delete_filtered_box->setChecked(true);
+    laytab5g1->addWidget(delete_filtered_box, 5, 0, 1, 2);
 
 
     ui_filterBox = new QGroupBox(tr("Filter") + tr(" - version alpha, just DBF"));
@@ -2224,6 +2227,7 @@ void cengen::on_filterFileName_changed() {
 QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     QList<Tovar> filteredList;
 
+    bool delete_filtered = delete_filtered_box->isChecked();
 
     filterConfig.tnomer = ui_filterWhereBox->currentText();
     filterConfig.tprice = ui_filterWhereBox->currentText();
@@ -2326,6 +2330,10 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
 
             }
             if (itemfound) filteredList <<tovarItem;
+        } else {
+            if (!delete_filtered && !itemfound) {
+                filteredList << tovarItem;
+            }
         }
     }
 
@@ -2872,6 +2880,12 @@ void cengen::on_saveFilterSettings() {
         settings += QString::number(ui_filterMethodBox->currentIndex()) + "\n";
         settings += QString::number(filterCheckInBox->currentIndex()) + "\n";
 
+        //удалять ли ненайденные позиции
+        settings += QString::number(delete_filtered_box->isChecked()) + "\n";
+
+        //использовать ли найденное в фильтре поле для обновления значений
+        settings += QString::number(filBoxCheck->isChecked()) + "\n";
+
         QTextStream out(&file);
         out.setCodec("UTF-8");
         out << settings;
@@ -2928,6 +2942,17 @@ void cengen::load_filter_settings_file(QString fileName) {
 
         line = fstream.readLine();
         filterCheckInBox->setCurrentIndex(line.toInt());
+
+        //удалять ли ненайденные позиции
+        //settings += QString::number(delete_filtered_box->isChecked()) + "\n";
+        line = fstream.readLine();
+        delete_filtered_box->setChecked(line.toInt());
+
+        //использовать ли найденное в фильтре поле для обновления значений
+        //settings += QString::number(filBoxCheck->isChecked()) + "\n";
+        line = fstream.readLine();
+        filBoxCheck->setChecked(line.toInt());
+
     } else {
         qDebug() << "Cannot open file: " << fileName;
     }
@@ -3447,10 +3472,10 @@ void cengen::on_action_select_method_tname() {
 void cengen::on_action_get_sum_of_tovar() {
     double sum = tableWidget->sum_of_tovar();
     int kop = sum*100 - (int)sum*100;
-    qDebug() << "kop" << kop << "sum=" << sum;
+    //qDebug() << "kop" << kop << "sum=" << sum;
     int rub = (int)sum;
     float delta = sum*100 - (kop + rub*100);
-    qDebug() << "Delta " << delta;
+    //qDebug() << "Delta " << delta;
     kop += delta;
 
     QString sm = "";
@@ -3467,9 +3492,7 @@ void cengen::on_action_get_sum_of_tovar() {
     if (kop<10) kp = "0" + kp;
 
     sm += "." + kp;
-    //sm = QString::number(sum);
-        ui_statusLabel->setText(tr("Sum of tovar: " ) +
-                                sm);
+    ui_statusLabel->setText(tr("Sum of tovar: " ) + sm);
 }
 
 void cengen::on_action_program_update() {
