@@ -48,7 +48,6 @@ private:
 
     bool first_tnomer_search;
     int maximum_tnomer;
-    float *prices;
     int *offsets;
 
 

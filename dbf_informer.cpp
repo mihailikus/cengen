@@ -268,7 +268,6 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
         //qDebug() << "First tnomer search";
         first_tnomer_search = false;
         int i = 1;
-        prices=(float*)malloc((i+1)*sizeof(float));
         int curLen =file_read_start * length_of_each_record + 1;
         int nomer;
 
@@ -278,24 +277,17 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
             if (nomer>i) i = nomer;
             curLen += length_of_each_record;
         }
-        prices=(float*)malloc((i+1)*sizeof(float));
         offsets=(int*) malloc((i+1)*sizeof(int));
         maximum_tnomer = i;
 
         for (int j = 0; j<=i; j++) {
-            prices[j] = 0.0;
             offsets[j] = -1;
         }
-        //qDebug() << "File start-stop " << file_read_start << file_read_end;
-        //qDebug() << "total and 1 size: "<< number_of_records << length_of_each_record;
-
         curLen =file_read_start * length_of_each_record + 1;
-        //qDebug() << "Start curLen" << curLen;
+
         for (int j = file_read_start; j<=file_read_end; j++) {
             nomer = get_one_cell(dbf_fields["tnomer"].offset + curLen,
                                      dbf_fields["tnomer"].length).toInt();
-            prices[nomer] = get_one_cell(dbf_fields["tprice"].offset + curLen,
-                                                        dbf_fields["tprice"].length).toFloat();
             offsets[nomer] = curLen;
 
             curLen += length_of_each_record;
@@ -303,13 +295,12 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
     }
 
     QList<Tovar> spisok;
-    //qDebug() << "Search " << tnomer << " Max=" << maximum_tnomer;
     if (tnomer && tnomer <= maximum_tnomer) {
-        //qDebug() << "True";
         int offset = offsets[tnomer];
         if (offset >=0) {
-            //qDebug() << "True offset";
-            tovar.price1 = prices[tnomer];
+            tovar.price1 = get_one_cell(dbf_fields["tprice"].offset + offset,
+                                        dbf_fields["tprice"].length).toFloat();
+
             tovar.name_of_tovar = get_one_cell(dbf_fields["tname"].offset + offset,
                                                        dbf_fields["tname"].length);
 
