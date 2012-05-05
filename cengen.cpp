@@ -782,6 +782,17 @@ void cengen::make_sellSettings_tab() {
     layTab7->addWidget(lb6, 4, 0);
     layTab7->addWidget(sellKolBox, 4, 1);
 
+    lb10 = new QLabel(tr("Method of get sell value: " ));
+    methodSellBox = new QComboBox;
+    methodSellBox->insertItems(0, QStringList()
+                               << tr("Replace")
+                               << tr("Minus"));
+    //methodSellValue = new QLineEdit("0");
+
+    layTab7->addWidget(lb10, 5, 0);
+    layTab7->addWidget(methodSellBox, 5, 1);
+    //layTab7->addWidget(methodSellValue, 5, 2);
+
     dateStart = new QCalendarWidget;
     dateStop = new QCalendarWidget;
 
@@ -795,10 +806,10 @@ void cengen::make_sellSettings_tab() {
     lb7 = new QLabel(tr("From date: "));
     lb8 = new QLabel(tr("To date: "));
 
-    layTab7->addWidget(lb7, 5, 1);
-    layTab7->addWidget(dateStart, 6, 1);
-    layTab7->addWidget(lb8, 5, 3);
-    layTab7->addWidget(dateStop, 6, 3);
+    layTab7->addWidget(lb7, 6, 1);
+    layTab7->addWidget(dateStart, 7, 1);
+    layTab7->addWidget(lb8, 6, 3);
+    layTab7->addWidget(dateStop, 7, 3);
 
 
     tab7->setLayout(layTab7);
@@ -2964,7 +2975,14 @@ void cengen::on_action_sell_filter_triggered() {
 
     if (!sell_file_is_checked) check_sell_file();
 
-    qDebug() << "Sell action";
+
+    //methodSellBox->setCurrentIndex(1);
+    int methodSell = methodSellBox->currentIndex();
+    //0 - заменить количество товара количеством проданных единиц
+    //1 - вычесть из старого количества количество проданных единиц
+
+    //float methodVal = methodSellValue->text().toFloat();
+    qDebug() << "Sell action method" << methodSell;
 
 
     dbTranslator sellConfig;
@@ -2982,7 +3000,7 @@ void cengen::on_action_sell_filter_triggered() {
     QDate dt1;
     int init_pos;
     dt1 = dateStart->selectedDate();
-    qDebug() << "Dates is " << dt1 << last_known_date;
+    //qDebug() << "Dates is " << dt1 << last_known_date;
     if (dt1 >= last_known_date) {
         qDebug() << "Using last known position";
         init_pos = last_known_pos;
@@ -2993,7 +3011,7 @@ void cengen::on_action_sell_filter_triggered() {
     int startPos;
     //dt1 = dt1.addDays(-1);
     curDate =  dt1.toString("yyyyMMdd");
-    qDebug() << "cur date " << curDate;
+    //qDebug() << "cur date " << curDate;
     tb1 = sell_informer->info(curDate, "tbarcode", init_pos, -1, 1, true);
 
     //dt1 = dt1.addDays(1);
@@ -3012,7 +3030,7 @@ void cengen::on_action_sell_filter_triggered() {
             qDebug() << "We know now: " << startPos << last_known_date;
         }
     }
-    qDebug() << "Start pos will be: " << startPos;
+    //qDebug() << "Start pos will be: " << startPos;
     //qDebug() << "Date delta is " << last_known_date.daysTo(dt1);
 
 
@@ -3036,7 +3054,7 @@ void cengen::on_action_sell_filter_triggered() {
     }
 
 
-    qDebug() << "Last position " << lastPos;
+    //qDebug() << "Last position " << lastPos;
 
     curTb = tableWidget->get_tovar_list("x");
 
@@ -3064,8 +3082,40 @@ void cengen::on_action_sell_filter_triggered() {
         for (int j = 0; j<tb3.count(); j++) {
             count += tb3.at(j).price1;
         }
-        tovar.quantity = count;
+
+        //в зависимости от метода обновления - разные действия
+        switch (methodSell) {
+        case 0:
+            tovar.quantity = count;
+            break;
+        case 1:
+            tovar.quantity = tovar.quantity - count;
+            break;
+        default:
+            tovar.quantity = count;
+            break;
+        }
+
+        //tovar.quantity = count;
         newTb << tovar;
+    }
+    if (curTb.count() == 1 && tb3.count()) {
+        //был поиск продаж только одного товара и он продавался -
+        //  покажем информацию о дате и времени продажи
+        int prod = tb3.count();
+        QString dt = tb3.at(prod-1).barcode;
+        QDate ldt  = QDate::fromString(dt, "yyyyMMdd");
+        dt = ldt.toString("d MMMM yyyy, dddd");
+        QString tm = tb3.at(prod-1).name_of_tovar;
+        QString message = tr("Total sold %1 goods of %2 tnomer%3Last date is %4 at %5")
+                .arg(QString::number(prod))
+                .arg(QString::number(curTb.at(0).nomer_of_tovar))
+                .arg("\n")
+                .arg(dt)
+                .arg(tm);
+        ListFoundedItemsDialog *dlg = new ListFoundedItemsDialog(this);
+        dlg->setMessage(message);
+        dlg->exec();
     }
     statusBar->removeWidget(progressBar);
 
