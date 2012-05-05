@@ -2048,12 +2048,14 @@ QList<Tovar> cengen::convert_xml_into_tovar_list(QDomDocument doc) {
             tovarItem.quantity = 0;
             if (item.tagName() == "tovarItem") {
                 QDomNode nodeItem = node.firstChild();
+                QString itemName;
+                QString itemValue;
                 while (!nodeItem.isNull()) {
                     if (nodeItem.isElement()) {
                         QDomElement elementItem = nodeItem.toElement();
                         if (!elementItem.isNull()) {
-                            QString itemName = elementItem.tagName();
-                            QString itemValue = elementItem.text();
+                            itemName = elementItem.tagName();
+                            itemValue = elementItem.text();
                             if (itemName == "name") {
                                 tovarItem.name_of_tovar = itemValue;
                             }
@@ -2094,9 +2096,9 @@ QDomDocument cengen::convert_tovar_list_into_xml(QList<Tovar> spisok) {
     QDomNode xmlNode = doc.createProcessingInstruction("xml",
                                     "version=\"1.0\" encoding=\"UTF-8\"");
     doc.insertBefore(xmlNode, doc.firstChild());
-    //doc.createElement("tovarList");
 
     QDomElement domList = doc.createElement("tovarList");
+
 
     for (int i = 0; i<spisok.count(); i++) {
         QDomElement tovarElement = doc.createElement("tovarItem");
