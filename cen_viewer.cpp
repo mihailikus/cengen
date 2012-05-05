@@ -188,6 +188,9 @@ QGraphicsItemGroup* Cennic::render(QGraphicsScene *scene, float X, float Y) {
                     if (method == "barcodeAsText") {
                         text = ctovar->barcode;
                     }
+                    if (method == "quantity") {
+                        text = QString::number(ctovar->quantity);
+                    }
 
                     //qDebug() << "method = " << method;
                     QGraphicsTextItem* textItem = scene->addText(text, font);
