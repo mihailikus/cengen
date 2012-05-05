@@ -786,7 +786,8 @@ void cengen::make_sellSettings_tab() {
     methodSellBox = new QComboBox;
     methodSellBox->insertItems(0, QStringList()
                                << tr("Replace")
-                               << tr("Minus"));
+                               << tr("Minus")
+                               << tr("Per day"));
     //methodSellValue = new QLineEdit("0");
 
     layTab7->addWidget(lb10, 5, 0);
@@ -2997,7 +2998,7 @@ void cengen::on_action_sell_filter_triggered() {
     QList<Tovar> tb1, tb2, tb3, curTb, newTb;
 
     QString curDate;
-    QDate dt1;
+    QDate dt1, dt2;
     int init_pos;
     dt1 = dateStart->selectedDate();
     //qDebug() << "Dates is " << dt1 << last_known_date;
@@ -3034,8 +3035,8 @@ void cengen::on_action_sell_filter_triggered() {
     //qDebug() << "Date delta is " << last_known_date.daysTo(dt1);
 
 
-
-    curDate = dateStop->selectedDate().toString("yyyyMMdd");
+    dt2 = dateStop->selectedDate();
+    curDate = dt2.toString("yyyyMMdd");
 //    curDate = "20120311";
     qDebug() << curDate;
 
@@ -3058,8 +3059,13 @@ void cengen::on_action_sell_filter_triggered() {
 
     curTb = tableWidget->get_tovar_list("x");
 
-    int count;
+    int count, prod;
     Tovar tovar;
+    QList<QDateTime> lastSellDates;
+    QDateTime lastSellDate;
+    QString lh, lm ;
+    QDateTime zeroDate = QDateTime(QDate::fromString("19000101", "yyyyMMdd"));
+
 
     progressBar->setMaximum(curTb.count());
     statusBar->addWidget(progressBar);
@@ -3079,11 +3085,24 @@ void cengen::on_action_sell_filter_triggered() {
         //qDebug() << i << " Last found number" << sell_informer->last_found_record_number();
         QApplication::processEvents();
         count = 0;
-        for (int j = 0; j<tb3.count(); j++) {
+        prod = tb3.count();
+        for (int j = 0; j<prod; j++) {
             count += tb3.at(j).price1;
         }
+        if (prod) {
+            lh = tb3.at(prod-1).name_of_tovar.split(":").at(0);
+            lm = tb3.at(prod-1).name_of_tovar.split(":").at(1);
+            //qDebug() << "Time is " <<lh << lm;
 
+            lastSellDate = QDateTime(QDate::fromString(tb3.at(prod-1).barcode, "yyyyMMdd"),
+                                     QTime::fromString(tb3.at(prod-1).name_of_tovar, "hh:mm"));
+            //qDebug() << "Last date " << lastSellDate;
+        } else {
+            lastSellDate = zeroDate;
+        }
+        lastSellDates << lastSellDate;
         //в зависимости от метода обновления - разные действия
+        int days;
         switch (methodSell) {
         case 0:
             tovar.quantity = count;
@@ -3091,13 +3110,18 @@ void cengen::on_action_sell_filter_triggered() {
         case 1:
             tovar.quantity = tovar.quantity - count;
             break;
+        case 2:
+            days = dt1.daysTo(dt2) + 1;
+            tovar.price2 = (float)count / days;
+            tovar.quantity = count;
+            break;
         default:
             tovar.quantity = count;
             break;
         }
 
         //tovar.quantity = count;
-        newTb << tovar;
+        newTb << tovar;        
     }
     if (curTb.count() == 1 && tb3.count()) {
         //был поиск продаж только одного товара и он продавался -
