@@ -462,6 +462,7 @@ void MainTableWidget::remove_zero_quantity() {
             removeRow(i);
             qDebug() << "Deleted";
             j--;
+            i--;
         }
         i++;
     }

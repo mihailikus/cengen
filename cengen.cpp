@@ -2325,8 +2325,8 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
         }
         //qDebug() << "searching " << searchText << searchMethod;
         QList<Tovar> foundList = filterInformer->info(searchText, searchMethod, 0, -1, 1, true, FastSearch);
+        itemfound = false;
         if (foundList.count()) {
-            itemfound = false;
             tovarFound = foundList.at(0);
             //проверяем, используя выбранный метод сравнения
             switch (method) {
@@ -2353,9 +2353,12 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
                 //qDebug() << "count << " << tovarItem.quantity;
 
             }
+            if (!delete_filtered && !itemfound) {
+                filteredList << tovarItem;
+            }
             if (itemfound) filteredList <<tovarItem;
         } else {
-            if (!delete_filtered && !itemfound) {
+            if (!delete_filtered) {
                 filteredList << tovarItem;
             }
         }
