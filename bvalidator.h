@@ -11,7 +11,7 @@ public:
 
     }
 
-    virtual State validate(QString& str, int& ) const
+    virtual State validate(QString& str, int& pos) const
     {
         QString tmp;
         QRegExp rxp = QRegExp ("[0-9]");
@@ -21,7 +21,9 @@ public:
                 return Invalid;
             }
         }
-
+        if (pos == 1 && str[0] == '0') {
+            return Invalid;
+        }
         if (str.length()>13) {
             return Invalid;
         }
