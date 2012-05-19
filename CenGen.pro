@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     addlinemaster.cpp \
     imagebox.cpp \
     about.cpp \
-    mainTableWidget.cpp
+    mainTableWidget.cpp \
+    autozakaz.cpp
 HEADERS += cengen.h \
     tinformer.h \
     tovar.h \
@@ -46,9 +47,11 @@ HEADERS += cengen.h \
     about.h \
     mainTableWidget.h \
     tnvalidator.h \
-    file_worker.h
+    file_worker.h \
+    autozakaz.h
 FORMS += \
-    addlinemaster.ui
+    addlinemaster.ui \
+    autozakaz.ui
 
 OTHER_FILES += \
     todo.txt \

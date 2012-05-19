@@ -3681,7 +3681,17 @@ void cengen::httpOneFileFinished(QNetworkReply *rpl) {
 }
 
 void cengen::on_action_zakaz10_triggered() {
-    qDebug() << "Going to make zakaz on 10 days";
+    autozakaz_config acfg;
+    acfg.dateStart = QDate::currentDate().addDays(-7);
+
+    autozakaz *zak = new autozakaz(this);
+    zak->set_config(acfg);
+
+    zak->exec();
+
+    int days = zak->get_days_for_zakaz();
+
+    qDebug() << "Going to make zakaz on " << days << " days";
     QList<Tovar> tbOld, tbNew;
     Tovar tovar;
     int quant;
@@ -3690,7 +3700,7 @@ void cengen::on_action_zakaz10_triggered() {
     for (int i = 0; i<tbOld.count(); i++) {
         tovar = tbOld.at(i);
 
-        quant = ceil(tovar.price2 * 10);
+        quant = ceil(tovar.price2 * days);
         //qDebug() << "Count on skald " << tovar.quantity << " Need: " << quant;
         if (quant < tovar.quantity) {
             quant = 0;

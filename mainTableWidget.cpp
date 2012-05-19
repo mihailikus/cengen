@@ -10,6 +10,7 @@ MainTableWidget::MainTableWidget(QWidget *pwgt)
     price1=0;
     price2=0;
     quantity = 0;
+    shField = 0;
     set_method_view(method);
     connect(this, SIGNAL(cellClicked(int,int)), SLOT(set_editing_price2()));
     connect(this, SIGNAL(cellDoubleClicked(int,int)), SLOT(set_editing_price2()));
@@ -129,7 +130,7 @@ QList<Tovar> MainTableWidget::get_tovar_list(QString priznak) {
                     if (tm == tr("Quantity")) {
                         tovar.quantity = item(i, j)->text().toInt();
                     }
-                    if (tm == tr("Shablon") && rowCount()<=500) {
+                    if (tm == tr("Shablon") && rowCount()<=500 && shField) {
                         box = ((QComboBox*)cellWidget(i, j));
                         tovar.shablon = box->currentIndex();
                         //qDebug() << "Shablon " << tovar.shablon;
@@ -452,6 +453,7 @@ long double MainTableWidget::sum_of_tovar() {
 }
 
 void MainTableWidget::remove_zero_quantity() {
+    if (rowCount() > 500) shField = 0;
     int j = rowCount();
     int i = 0;
     int quant = 0;

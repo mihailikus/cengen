@@ -41,6 +41,7 @@
 #include "editor.h"
 #include "about.h"
 #include "mainTableWidget.h"
+#include "autozakaz.h"
 
 QT_BEGIN_NAMESPACE
 class QPushButton;
