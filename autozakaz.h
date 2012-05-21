@@ -29,6 +29,7 @@ public:
     explicit autozakaz(QWidget *parent = 0);
     ~autozakaz();
     void set_config(autozakaz_config cfg);
+    autozakaz_config get_config();
     int get_days_for_zakaz();
     
 private slots:

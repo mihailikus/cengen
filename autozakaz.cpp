@@ -23,7 +23,25 @@ autozakaz::autozakaz(QWidget *parent) :
 
 void autozakaz::set_config(autozakaz_config cfg) {
     cal1->setSelectedDate(cfg.dateStart);
+    cal2->setSelectedDate(cfg.dateStop);
+    line1->setText(cfg.ostat_magazin);
+    line2->setText(cfg.ostat_sklad);
+    line3->setText(cfg.assort);
+    line4->setText(cfg.kol_v_korob);
+    line5->setText(cfg.korob_quantum);
 
+}
+
+autozakaz_config autozakaz::get_config() {
+    autozakaz_config cfg;
+    cfg.dateStart = cal1->selectedDate();
+    cfg.dateStop = cal2->selectedDate();
+    cfg.ostat_magazin = line1->text();
+    cfg.ostat_sklad = line2->text();
+    cfg.assort = line3->text();
+    cfg.kol_v_korob = line4->text();
+    cfg.korob_quantum = line5->text();
+    return cfg;
 }
 
 autozakaz::~autozakaz()

@@ -1467,6 +1467,17 @@ void cengen::writeSettings()
     m_settings.setValue("extAppName", ext_prog_name_edit->text());
     m_settings.setValue("extShablon", ext_shablon_name_edit->text());
 
+    //сохраняем конфиг автозаказа
+    m_settings.beginGroup("/zakaz");
+    m_settings.setValue("dayStart", acfg.dateStart);
+    m_settings.setValue("dayStop", acfg.dateStop);
+    m_settings.setValue("kolkorob", acfg.kol_v_korob);
+    m_settings.setValue("quantum", acfg.korob_quantum);
+    m_settings.setValue("magazin", acfg.ostat_magazin);
+    m_settings.setValue("sklad", acfg.ostat_sklad);
+    m_settings.setValue("assort", acfg.assort);
+    m_settings.endGroup();
+
     //закрываем вообще settings
     m_settings.endGroup();
 
@@ -1637,6 +1648,15 @@ void cengen::readSettings() {
     ext_prog_name_edit->setText(m_settings.value("/Settings/extAppName", "").toString());
     ext_shablon_name_edit->setText(m_settings.value("/Settings/extShablon", "").toString());
 
+
+    //читаем настройки автозаказа
+    acfg.dateStart = m_settings.value("/Settings/zakaz/dayStart", "0").toDate();
+    acfg.dateStop = m_settings.value("/Settings/zakaz/dayStop", "0").toDate();
+    acfg.kol_v_korob = m_settings.value("/Settings/zakaz/kolkorob", "").toString();
+    acfg.korob_quantum = m_settings.value("/Settings/zakaz/quantum", "").toString();
+    acfg.ostat_magazin = m_settings.value("/Settings/zakaz/magazin", "").toString();
+    acfg.ostat_sklad = m_settings.value("/Settings/zakaz/sklad", "").toString();
+    acfg.assort = m_settings.value("/Settings/zakaz/assort", "").toString();
 
 }
 
@@ -2371,6 +2391,8 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
         } else {
             if (!delete_filtered) {
                 filteredList << tovarItem;
+                tovarItem.quantity = 0;
+
             }
         }
     }
@@ -2947,7 +2969,7 @@ void cengen::load_filter_settings_file(QString fileName) {
     file.setFileName(fileName);
 
     if (file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Load file: " << fileName;
+        //qDebug() << "Load file: " << fileName;
         QTextStream fstream(&file);
         fstream.setCodec("UTF-8");
 
@@ -3007,10 +3029,30 @@ void cengen::on_action_sell_filter_triggered() {
     int methodSell = methodSellBox->currentIndex();
     //0 - заменить количество товара количеством проданных единиц
     //1 - вычесть из старого количества количество проданных единиц
+    //2 - определение среднего за день (заносим в поле Цена2) и количества проданного
 
-    //float methodVal = methodSellValue->text().toFloat();
-    qDebug() << "Sell action method" << methodSell;
+    QList<Tovar> curTb, newTb;
 
+    QDate dt1, dt2;
+    dt1 = dateStart->selectedDate();
+    dt2 = dateStop->selectedDate();
+
+    curTb = tableWidget->get_tovar_list("x");
+
+    newTb = apply_sell_filter(curTb, dt1, dt2, methodSell);
+
+    on_action_new_triggered();
+    tableWidget->load_tovar_list_into_table(newTb);
+    on_action_get_sum_of_tovar();
+}
+
+QList<Tovar> cengen::apply_sell_filter(QList<Tovar> curTb, QDate dt1, QDate dt2, int methodSell) {
+    //int methodSell
+    //0 - заменить количество товара количеством проданных единиц
+    //1 - вычесть из старого количества количество проданных единиц
+    //2 - определение среднего за день (заносим в поле Цена2) и количества проданного
+
+    if (!sell_file_is_checked) check_sell_file();
 
     dbTranslator sellConfig;
     sellConfig.tbarcode = sellDateBox->currentText();
@@ -3021,13 +3063,13 @@ void cengen::on_action_sell_filter_triggered() {
     sell_informer->set_fields(&sellConfig);
 
     sell_informer->set_limit_search(1);
-    QList<Tovar> tb1, tb2, tb3, curTb, newTb;
+
 
     QString curDate;
-    QDate dt1, dt2;
+    QList<Tovar> tb1, tb2, tb3, newTb;
     int init_pos;
-    dt1 = dateStart->selectedDate();
-    //qDebug() << "Dates is " << dt1 << last_known_date;
+
+
     if (dt1 >= last_known_date) {
         qDebug() << "Using last known position";
         init_pos = last_known_pos;
@@ -3036,12 +3078,8 @@ void cengen::on_action_sell_filter_triggered() {
         init_pos = 0;
     }
     int startPos;
-    //dt1 = dt1.addDays(-1);
     curDate =  dt1.toString("yyyyMMdd");
-    //qDebug() << "cur date " << curDate;
     tb1 = sell_informer->info(curDate, "tbarcode", init_pos, -1, 1, true);
-
-    //dt1 = dt1.addDays(1);
 
     if (!tb1.count()) {
         startPos = 0;
@@ -3057,18 +3095,12 @@ void cengen::on_action_sell_filter_triggered() {
             qDebug() << "We know now: " << startPos << last_known_date;
         }
     }
-    //qDebug() << "Start pos will be: " << startPos;
-    //qDebug() << "Date delta is " << last_known_date.daysTo(dt1);
 
 
-    dt2 = dateStop->selectedDate();
     curDate = dt2.toString("yyyyMMdd");
-//    curDate = "20120311";
-    qDebug() << curDate;
 
     tb2 = sell_informer->info(curDate, "tbarcode", init_pos, -1, 0, false);
     int lastPos;
-    //lastPos = 374904;
     int max = sell_informer->get_maximum();
     if (tb2.count()) {
         lastPos = sell_informer->last_found_record_number();
@@ -3080,10 +3112,6 @@ void cengen::on_action_sell_filter_triggered() {
         lastPos = max;
     }
 
-
-    //qDebug() << "Last position " << lastPos;
-
-    curTb = tableWidget->get_tovar_list("x");
 
     int count, prod;
     Tovar tovar;
@@ -3108,7 +3136,7 @@ void cengen::on_action_sell_filter_triggered() {
                  -1,
                  true,
                  false);
-        //qDebug() << i << " Last found number" << sell_informer->last_found_record_number();
+
         QApplication::processEvents();
         count = 0;
         prod = tb3.count();
@@ -3146,8 +3174,7 @@ void cengen::on_action_sell_filter_triggered() {
             break;
         }
 
-        //tovar.quantity = count;
-        newTb << tovar;        
+        newTb << tovar;
     }
     if (curTb.count() == 1 && tb3.count()) {
         //был поиск продаж только одного товара и он продавался -
@@ -3169,11 +3196,7 @@ void cengen::on_action_sell_filter_triggered() {
     }
     statusBar->removeWidget(progressBar);
 
-
-
-    on_action_new_triggered();
-    tableWidget->load_tovar_list_into_table(newTb);
-    on_action_get_sum_of_tovar();
+    return newTb;
 
 }
 
@@ -3681,37 +3704,101 @@ void cengen::httpOneFileFinished(QNetworkReply *rpl) {
 }
 
 void cengen::on_action_zakaz10_triggered() {
-    autozakaz_config acfg;
-    acfg.dateStart = QDate::currentDate().addDays(-7);
+
+    //acfg.dateStart = QDate::currentDate().addDays(-74);
 
     autozakaz *zak = new autozakaz(this);
     zak->set_config(acfg);
 
-    zak->exec();
+    if (!zak->exec()) return;
+
+    acfg = zak->get_config();
 
     int days = zak->get_days_for_zakaz();
 
+
     qDebug() << "Going to make zakaz on " << days << " days";
-    QList<Tovar> tbOld, tbNew;
+//    QList<Tovar> tbOld, tbNew;
+    QList<Tovar> inputList, skList, magList, prList, assList,
+            tbNew, qList, korList, finalList;
     Tovar tovar;
     int quant;
-    tbOld = tableWidget->get_tovar_list("x");
-    tbOld = apply_filter(tbOld);
-    for (int i = 0; i<tbOld.count(); i++) {
-        tovar = tbOld.at(i);
+
+    inputList = tableWidget->get_tovar_list("x");
+
+    load_filter_settings_file(acfg.ostat_magazin);
+    inputList = apply_filter(inputList);
+
+    load_filter_settings_file(acfg.ostat_sklad);
+    skList = apply_filter(inputList);
+
+    prList = apply_sell_filter(inputList, acfg.dateStart, QDate::currentDate().addDays(-70), 2);
+
+    load_filter_settings_file(acfg.assort);
+    for (int i = 0; i<inputList.count(); i++) {
+        tovar = inputList.at(i);
+        tovar.quantity = 0;
+        assList << tovar;
+    }
+    assList = apply_filter(assList);
+
+    load_filter_settings_file(acfg.ostat_magazin);
+    magList = apply_filter(inputList);
+
+    for (int i = 0; i<skList.count(); i++) {
+        tovar = prList.at(i);
 
         quant = ceil(tovar.price2 * days);
-        //qDebug() << "Count on skald " << tovar.quantity << " Need: " << quant;
-        if (quant < tovar.quantity) {
+        qDebug() << tovar.nomer_of_tovar << " In mag  " << magList.at(i).quantity << " Need: " << quant;
+        qDebug() << "    assort: " << assList.at(i).quantity << ceil(assList.at(i).quantity / 2.0);
+
+        if (quant < magList.at(i).quantity + ceil(assList.at(i).quantity / 2.0)) {
             quant = 0;
         } else {
-            quant = quant - tovar.quantity +1;
+            quant = quant - magList.at(i).quantity + ceil(assList.at(i).quantity / 2.0) +1;
+            if (quant > skList.at(i).quantity) {
+                quant = skList.at(i).quantity;
+            }
+            tovar.quantity = quant;
+            tbNew << tovar;
         }
-        tovar.quantity = quant;
-        tbNew << tovar;
+
     }
+
+    load_filter_settings_file(acfg.korob_quantum);
+    for (int i = 0; i<tbNew.count(); i++) {
+        tovar = inputList.at(i);
+        tovar.quantity = 0;
+        qList << tovar;
+    }
+    qList = apply_filter(qList);
+
+    load_filter_settings_file(acfg.kol_v_korob);
+    korList = apply_filter(tbNew);
+
+    load_filter_settings_file(acfg.ostat_sklad);
+    skList = apply_filter(tbNew);
+
+    for (int i = 0; i<tbNew.count(); i++) {
+        tovar = tbNew.at(i);
+        if (qList.at(i).quantity == 10) {
+            int quan = tovar.quantity;
+            int kor = korList.at(i).quantity;
+            int zk = ceil ( (float) quan / kor);
+            quant = zk *kor;
+            if (quant > skList.at(i).quantity) {
+                qDebug() << "On sklad " << skList.at(i).quantity << " need " << quant;
+                quant = skList.at(i).quantity;
+            }
+            tovar.quantity = quant;
+        }
+        finalList << tovar;
+    }
+
+    load_filter_settings_file(acfg.ostat_magazin);
+
     on_action_new_triggered();
-    tableWidget->load_tovar_list_into_table(tbNew);
+    tableWidget->load_tovar_list_into_table(finalList);
 }
 
 void cengen::on_action_remove_zero_items() {

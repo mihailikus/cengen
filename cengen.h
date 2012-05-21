@@ -237,6 +237,9 @@ private:
     int last_known_pos;
     QString last_known_file;
 
+    autozakaz_config acfg;
+
+
     //виджеты вкладки настроек внешней программы
     QWidget *tab8;
     QGridLayout *layTab8;
@@ -424,6 +427,8 @@ private slots:
     void select_ext_app_button_clicked();
     void select_ext_shablon_button_clicked();
     void on_data_changed();
+
+    QList<Tovar> apply_sell_filter(QList<Tovar> inputList, QDate dt1, QDate dt2, int methodSell);
 
     QList<Tovar> show_found_items(QList<Tovar> inputList);
     QList<Tovar> apply_filter(QList<Tovar> inputList);
