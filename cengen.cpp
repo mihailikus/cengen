@@ -2333,6 +2333,7 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     for (int i = 0; i<inputList.count(); i++) {
         progressBar->setValue(i);
         tovarItem = inputList.at(i);
+        //tovarItem.quantity = 0;
 
         QString searchText, searchMethod;
         bool FastSearch = false;
@@ -2395,8 +2396,8 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
             if (itemfound) filteredList <<tovarItem;
         } else {
             if (!delete_filtered) {
-                filteredList << tovarItem;
                 tovarItem.quantity = 0;
+                filteredList << tovarItem;
 
             }
         }
@@ -3736,31 +3737,32 @@ void cengen::on_action_zakaz10_triggered() {
 
     inputList = tableWidget->get_tovar_list("x");
 
-    load_filter_settings_file(acfg.ostat_magazin);
-    inputList = apply_filter(inputList);
-
     load_filter_settings_file(acfg.ostat_sklad);
     skList = apply_filter(inputList);
+    //debug_tovar(skList);
 
-    prList = apply_sell_filter(inputList, acfg.dateStart, QDate::currentDate().addDays(-70), 2);
+    prList = apply_sell_filter(skList, acfg.dateStart, QDate::currentDate().addDays(-70), 2);
+    //debug_tovar(prList);
 
     load_filter_settings_file(acfg.assort);
-    for (int i = 0; i<inputList.count(); i++) {
-        tovar = inputList.at(i);
-        tovar.quantity = 0;
-        assList << tovar;
-    }
-    assList = apply_filter(assList);
+//    for (int i = 0; i<skList.count(); i++) {
+//        tovar = skList.at(i);
+//        tovar.quantity = 0;
+//        assList << tovar;
+//    }
+    assList = apply_filter(skList);
 
     load_filter_settings_file(acfg.ostat_magazin);
-    magList = apply_filter(inputList);
+    magList = apply_filter(skList);
 
     for (int i = 0; i<skList.count(); i++) {
         tovar = prList.at(i);
 
         quant = ceil(tovar.price2 * days);
-        qDebug() << tovar.nomer_of_tovar << " In mag  " << magList.at(i).quantity << " Need: " << quant;
-        qDebug() << "    assort: " << assList.at(i).quantity << ceil(assList.at(i).quantity / 2.0);
+        if (tovar.nomer_of_tovar == 840) {
+            qDebug() << tovar.nomer_of_tovar << " In mag  " << magList.at(i).quantity << " Need: " << quant;
+            qDebug() << "    assort: " << assList.at(i).quantity << ceil(assList.at(i).quantity / 2.0);
+        }
 
         if (quant < magList.at(i).quantity + ceil(assList.at(i).quantity / 2.0)) {
             quant = 0;
@@ -3776,20 +3778,24 @@ void cengen::on_action_zakaz10_triggered() {
     }
 
     load_filter_settings_file(acfg.korob_quantum);
-    for (int i = 0; i<tbNew.count(); i++) {
-        tovar = inputList.at(i);
-        tovar.quantity = 0;
-        qList << tovar;
-    }
-    qList = apply_filter(qList);
+//    for (int i = 0; i<tbNew.count(); i++) {
+//        tovar = tbNew.at(i);
+//        tovar.quantity = 0;
+//        qList << tovar;
+//    }
+    qList = apply_filter(tbNew);
 
     load_filter_settings_file(acfg.kol_v_korob);
     korList = apply_filter(tbNew);
 
     load_filter_settings_file(acfg.ostat_sklad);
     skList = apply_filter(tbNew);
+    qDebug() << "Count " << skList.count() <<tbNew.count();
 
     for (int i = 0; i<tbNew.count(); i++) {
+        if (tovar.nomer_of_tovar == 840) {
+            qDebug() << "840";
+        }
         tovar = tbNew.at(i);
         if (qList.at(i).quantity == 10) {
             int quan = tovar.quantity;
@@ -3797,7 +3803,7 @@ void cengen::on_action_zakaz10_triggered() {
             int zk = ceil ( (float) quan / kor);
             quant = zk *kor;
             if (quant > skList.at(i).quantity) {
-                qDebug() << "On sklad " << skList.at(i).quantity << " need " << quant;
+                qDebug() << skList.at(i).nomer_of_tovar << "On sklad " << skList.at(i).quantity << " need " << quant;
                 quant = skList.at(i).quantity;
             }
             tovar.quantity = quant;
@@ -3809,8 +3815,17 @@ void cengen::on_action_zakaz10_triggered() {
 
     on_action_new_triggered();
     tableWidget->load_tovar_list_into_table(finalList);
+    on_action_get_sum_of_tovar();
+    new_line_ready();
 }
 
 void cengen::on_action_remove_zero_items() {
     tableWidget->remove_zero_quantity();
+}
+
+void cengen::debug_tovar(QList<Tovar> list) {
+    for (int i = 0; i<list.count(); i++) {
+        qDebug() << "Tovar list " <<list.at(i).nomer_of_tovar;
+    }
+
 }

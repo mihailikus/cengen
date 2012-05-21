@@ -477,6 +477,8 @@ private slots:
 
     bool save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok);
 
+    void debug_tovar(QList<Tovar> list);
+
 
 };
 
