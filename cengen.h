@@ -363,6 +363,7 @@ private:
     QAction* action_program_update;
     QAction* action_zakaz10;
     QAction* action_remove_zero_items;
+    QAction* action_group_same_shablons;
 
 
 private slots:
@@ -451,7 +452,7 @@ private slots:
     QDomDocument convert_tovar_list_into_xml(QList<Tovar> tovarList);
     QList<Tovar> minus(QList<Tovar> oldList, QList<Tovar> newList);
     QList<Tovar> expand(QList<Tovar> list);
-
+    QList<Tovar> group(QList<Tovar> list);
 
     void on_action_minus_triggered();
     void on_filterBox_toggled(bool arg1);

@@ -234,6 +234,9 @@ void cengen::make_actions() {
     connect(action_remove_zero_items, SIGNAL(triggered()),
             SLOT(on_action_remove_zero_items()));
 
+    action_group_same_shablons = new QAction(tr("Group items with same shablon"), this);
+    action_group_same_shablons->setCheckable(true);
+    action_group_same_shablons->setChecked(true);
 }
 
 void cengen::make_toolBar() {
@@ -298,6 +301,7 @@ void cengen::make_mainMenu() {
     selectFoundMethodMenu = cenMenu->addMenu(tr("Method for tovar search"));
     cenMenu->addSeparator();
     cenMenu->addAction(action_expand_list);
+    cenMenu->addAction(action_group_same_shablons);
     cenMenu->addSeparator();
     cenMenu->addAction(action_make);
     cenMenu->addAction(action_render_in_external_app);
@@ -1191,6 +1195,7 @@ void cengen::generate_preview() {
     pages.clear();
 
     QList<Tovar> spisok =  tableWidget->get_tovar_list("x");
+    if (action_group_same_shablons->isChecked()) spisok = group(spisok);
     if (expandBox->isChecked()) spisok = expand(spisok);
 
     Tovar currentTovar;
@@ -2470,6 +2475,11 @@ QList<Tovar> cengen::expand(QList<Tovar> list) {
         }
     }
     return newList;
+}
+
+QList<Tovar> cengen::group(QList<Tovar> list) {
+    qSort(list.begin(), list.end());
+    return list;
 }
 
 void cengen::set_org_name(QString org, QString prog) {

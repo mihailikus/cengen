@@ -10,5 +10,12 @@ struct Tovar {
     QString codec_name;
     int shablon;
     int quantity;
+    bool operator < (const Tovar &other) const
+      {
+        if (shablon < other.shablon)
+          return true;
+
+        return false;
+    }
 };
 #endif // TOVAR_H
