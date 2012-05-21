@@ -21,8 +21,8 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
 
     ui_widthSpin = new QSpinBox;
     ui_heithSpin = new QSpinBox;
-    ui_widthSpin->setMaximum(2000);
-    ui_heithSpin->setMaximum(2000);
+    ui_widthSpin->setMaximum(3000);
+    ui_heithSpin->setMaximum(3000);
     ui_widthSpin->setValue(640);
     ui_heithSpin->setValue(450);
 
@@ -93,8 +93,8 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
     br_otstup_box->setMaximum(100);
     br_otstup_box->setValue(5);
 
-    ui_pwidthSpin->setMaximum(2000);
-    ui_pheithSpin->setMaximum(1000);
+    ui_pwidthSpin->setMaximum(3000);
+    ui_pheithSpin->setMaximum(2000);
 
     propertLay->addWidget(label3, 0, 0);
     propertLay->addWidget(ui_pwidthSpin, 0, 1);
@@ -324,7 +324,7 @@ void editor::generate_preview()
 //            qDebug() << "c_items = " << value;
             QString item_value = value.split(QRegExp("[0-9]")).at(0);
             //QString item_value = value;
-            QString text = c_text_items[value].text;
+            //QString text = c_text_items[value].text;
 //            qDebug() << "text is = " << text;
 //            qDebug() << "text is = " << c_text_items[value].font;
 
@@ -579,7 +579,7 @@ void editor::c_items_initialize() {
     //добавляем основные элементы ценника - название товара, штрих-код, цену и т.п.
     add_element_to_scene("barcode", 100, 200, 300, 70, QBrush(Qt::darkBlue), QFont("Arial", 7), "216975");
 
-    add_element_to_scene("good", 0, 0, ui_widthSpin->value(), 230, QBrush(Qt::green), QFont("Arial", 43), "3441 small paper best clean (200 ml.)");
+    add_element_to_scene("good", 0, 0, ui_widthSpin->value(), 230, QBrush(Qt::green), QFont("Arial", 43), tr("Belizna electra 1000 ml"));
 
     add_element_to_scene("nomer", 0, 0, 200, 20, QBrush(Qt::blue), QFont("Arial", 20), "74124");
 
@@ -651,6 +651,8 @@ void editor::on_fontSelectButton_clicked()
 void editor::on_textEdit_textChanged(QString newText)
 {
     QString value = c_items.key(ui_scene->selectedItems().at(0));
+    //qDebug() << "value " << value << newText;
+
     c_text_items[value].text = newText;
     generate_preview();
 }
@@ -793,9 +795,9 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
                 add_element_to_scene("barcode", startX, startY,
                                      width, heith, QBrush(Qt::darkBlue),
                                      font, "216975", 0);
-                br_addition_box->setMaximum(heith/2);
+                //br_addition_box->setMaximum(heith/2);
                 br_addition_box->setValue(br_lineAddition);
-                br_otstup_box->setMaximum(heith/2);
+                //br_otstup_box->setMaximum(heith/2);
                 br_otstup_box->setValue(br_otstup);
             }
 

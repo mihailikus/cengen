@@ -1442,7 +1442,7 @@
     </message>
     <message>
         <location filename="editor.cpp" line="275"/>
-        <location filename="editor.cpp" line="714"/>
+        <location filename="editor.cpp" line="716"/>
         <source>Cennic templates (*.cen)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1458,12 +1458,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="714"/>
+        <location filename="editor.cpp" line="716"/>
         <source>Open cennic template</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="805"/>
+        <location filename="editor.cpp" line="582"/>
+        <location filename="editor.cpp" line="807"/>
         <source>Belizna electra 1000 ml</source>
         <translation type="unfinished"></translation>
     </message>

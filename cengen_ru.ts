@@ -528,7 +528,7 @@
     <message>
         <location filename="cengen.cpp" line="237"/>
         <source>Group items with same shablon</source>
-        <translation>Группировать ценники с одинаковым шаблонов</translation>
+        <translation type="unfinished">Группировать ценники с одинаковым шаблоном</translation>
     </message>
     <message>
         <location filename="cengen.cpp" line="366"/>
@@ -1560,7 +1560,7 @@ If you want to save them into file, click OK button</source>
     </message>
     <message>
         <location filename="editor.cpp" line="275"/>
-        <location filename="editor.cpp" line="714"/>
+        <location filename="editor.cpp" line="716"/>
         <source>Cennic templates (*.cen)</source>
         <translation>Файлы шаблонов (*.cen)</translation>
     </message>
@@ -1576,12 +1576,13 @@ If you want to save them into file, click OK button</source>
         <translation>р::коп</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="714"/>
+        <location filename="editor.cpp" line="716"/>
         <source>Open cennic template</source>
         <translation>Открыть файл шаблона</translation>
     </message>
     <message>
-        <location filename="editor.cpp" line="805"/>
+        <location filename="editor.cpp" line="582"/>
+        <location filename="editor.cpp" line="807"/>
         <source>Belizna electra 1000 ml</source>
         <translation>Белизна электра 1000 мл вкусная с пупырышками и весь этот текст только для проверки поэтому он не важен</translation>
     </message>
