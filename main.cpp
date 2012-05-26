@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
         }
     }
     file->close();
+    //qDebug() << "Org name " << org_name;
 
     //устанавливаем название организации
     QCoreApplication::setOrganizationName(org_name);

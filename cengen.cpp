@@ -3640,7 +3640,7 @@ void cengen::on_action_get_sum_of_tovar() {
 }
 
 void cengen::on_action_program_update() {
-    qDebug() << "Going to update program";
+    //qDebug() << "Going to update program";
     update_dlg = new ListFoundedItemsDialog(this);
     update_dlg->setMessage(tr("Updating. Please wait."));
     update_dlg->show();
@@ -3648,7 +3648,7 @@ void cengen::on_action_program_update() {
     update_counter = 0;
     updatingPath = "http://mihol.ru/cengen/bin/" + QApplication::organizationName() + "/";
     QString file = updatingPath + "list.txt";
-
+    //qDebug() << "upload path " << updatingPath;
 
     manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
@@ -3660,13 +3660,12 @@ void cengen::on_action_program_update() {
 
 void cengen::httpRequestFinished(QNetworkReply* rpl) {
     qDebug() <<"Ready ";
-    //qDebug() << rpl->size();
     QStringList files;
     QString line;
     while (!rpl->atEnd()) {
         line = rpl->readLine();
         line = line.split("\n").at(0).trimmed();
-            qDebug() << "File is: " << line;
+            //qDebug() << "File is: " << line;
 
 
             files << line;
@@ -3680,7 +3679,7 @@ void cengen::httpRequestFinished(QNetworkReply* rpl) {
 
         QString file = updatingPath + files.at(i);
         currentUpdatingFile = files.at(i);
-        qDebug() << "File: " << file;
+        //qDebug() << "File: " << file;
         QNetworkReply *rpl2 = manager2->get(QNetworkRequest(QUrl(file)));
         up_files[rpl2] = currentUpdatingFile;
 
