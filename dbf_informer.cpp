@@ -188,6 +188,24 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
     int j = startPos;
 
     QByteArray arr;
+    int scCount, blCount;
+    QStringList searches, blocks;
+    if (searchText == "") {
+        scCount = 0;
+        blCount = 0;
+    } else {
+        QStringList splits = searchText.split(" ");
+        for (int i = 0; i<splits.count(); i++) {
+            if (splits.at(i)[0] != '!') {
+                searches << splits.at(i);
+            } else {
+                blocks << splits.at(i).split("!").at(1);
+            }
+        }
+        scCount = searches.count();
+        blCount = blocks.count();
+    }
+
     while (j<maximum && count < limit)
     {
         value = this->get_one_cell(offset, dbf_fields[method].length);
@@ -195,27 +213,30 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
              || method == "tnomer") &&
                 (value == searchText) ) found = true;
         if (method == "tname") {
-//            arr.clear();
-//            arr.insert(0, value);
-//            value = codec->toUnicode(arr);
-            //tmp = decoder->fromUnicode(searchText);
-            QStringList searches = searchText.split(" ");
             found = true;
-            for (int j = 0; j<searches.count(); j++) {
+            for (int j = 0; j<scCount; j++) {
                 if (!value.contains(searches.at(j), Qt::CaseInsensitive)) {
+                    //если найденное не содержит ни одну из частей поиска -
+                    //  отметить как ненайденное
+                    found = false;
+                }
+            }
+            for (int j = 0; j<blCount; j++) {
+                if (value.contains(blocks.at(j), Qt::CaseInsensitive)) {
+                    //если найденное содержит одну из блокировок -
+                    //  отметить как ненайденное
                     found = false;
                 }
             }
         }
         if (found)
         {
-            //curLength = (i-startPos)*this->length_of_each_record +1;
             curLength = offset - method_offset;
 
             arr.clear();
             arr.insert(0, get_one_cell(dbf_fields["tname"].offset + curLength,
                                        dbf_fields["tname"].length));
-            //tovar.name_of_tovar = codec->toUnicode(arr);
+
             tovar.name_of_tovar= get_one_cell(dbf_fields["tname"].offset + curLength,
                                               dbf_fields["tname"].length);
 
