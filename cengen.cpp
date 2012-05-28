@@ -3133,7 +3133,7 @@ QList<Tovar> cengen::apply_sell_filter(QList<Tovar> curTb, QDate dt1, QDate dt2,
         lastPos = max;
     }
 
-
+    int period = dt1.daysTo(dt2) +1;
     int count, prod;
     Tovar tovar;
     QList<QDateTime> lastSellDates;
@@ -3186,8 +3186,12 @@ QList<Tovar> cengen::apply_sell_filter(QList<Tovar> curTb, QDate dt1, QDate dt2,
             tovar.quantity = tovar.quantity - count;
             break;
         case 2:
-            days = dt1.daysTo(dt2) + 1;
-            tovar.price2 = (float)count / days;
+            if (tovar.quantity) {
+                tovar.price2 = (float)count / period;
+            } else {
+                days = dt1.daysTo(lastSellDate.date()) + 1;
+                tovar.price2 = (float)count / days;
+            }
             tovar.quantity = count;
             break;
         default:
