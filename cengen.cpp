@@ -3735,12 +3735,12 @@ void cengen::on_action_zakaz10_triggered() {
 
     acfg = zak->get_config();
 
-    int days = zak->get_days_for_zakaz();
+    int days = acfg.datePost.daysTo(acfg.dateStop);
 
 
     QList<Tovar> inputList, skList, magList, prList, assList,
             tbNew, qList, korList, finalList;
-    Tovar tovar;
+    Tovar tovar, magTovar;
     int quant;
 
     inputList = tableWidget->get_tovar_list("x");
@@ -3757,15 +3757,25 @@ void cengen::on_action_zakaz10_triggered() {
     load_filter_settings_file(acfg.ostat_magazin);
     magList = apply_filter(skList);
 
+    int days_to_post = QDate::currentDate().daysTo(acfg.datePost);
+
     for (int i = 0; i<skList.count(); i++) {
         tovar = prList.at(i);
+        magTovar = magList.at(i);
+        int feature_ostat = ceil(magTovar.quantity - tovar.price2*days_to_post);
+        //qDebug() << "Tovar " << tovar.nomer_of_tovar << feature_ostat;
+        if (feature_ostat < 0) {
+            magTovar.quantity = 0;
+        } else {
+            magTovar.quantity = feature_ostat;
+        }
 
         quant = ceil(tovar.price2 * days);
 
-        if (quant < magList.at(i).quantity + ceil(assList.at(i).quantity / 2.0)) {
+        if (quant < magTovar.quantity + ceil(assList.at(i).quantity / 2.0)) {
             quant = 0;
         } else {
-            quant = quant - magList.at(i).quantity + ceil(assList.at(i).quantity / 2.0) +1;
+            quant = quant - magTovar.quantity + ceil(assList.at(i).quantity / 2.0) +1;
             if (quant > skList.at(i).quantity) {
                 quant = skList.at(i).quantity;
             }

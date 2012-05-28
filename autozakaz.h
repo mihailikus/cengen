@@ -14,6 +14,7 @@ class autozakaz;
 struct autozakaz_config {
     QDate dateStart;
     QDate dateStop;
+    QDate datePost; //дата поставки
     QString ostat_magazin;
     QString ostat_sklad;
     QString assort;
@@ -48,7 +49,7 @@ private slots:
 private:
     Ui::autozakaz *ui;
     QLineEdit* line1, *line2, *line3, *line4, *line5;
-    QCalendarWidget *cal1, *cal2;
+    QCalendarWidget *cal1, *cal2, *calPost;
 };
 
 #endif // AUTOZAKAZ_H

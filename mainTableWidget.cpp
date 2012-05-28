@@ -179,6 +179,8 @@ void MainTableWidget::on_tableWidget_cellClicked(int row, int column)
 
 void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
 {
+    QString txt = item(row, column)->text();
+    qDebug() << "new text " << row << column << txt;
     emit data_changed();
     if (method) return; //если не 0, то ничего не редактируем
     if (editing_price2) {
@@ -202,6 +204,7 @@ void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
 
 void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool ToBottom) {
     //загружаем список товаров в таблицу генератора ценников
+    this->blockSignals(true);
     add_flag = true;
     if (tovarList.count()) tovar_searched = true;
     int rowsCount = rowCount();
@@ -290,6 +293,7 @@ void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool To
     add_flag = false;
     editing_price2 = true;
     tovar_searched = true;
+    this->blockSignals(false);
 }
 
 void MainTableWidget::set_editing_price2(bool status) {

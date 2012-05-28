@@ -72,6 +72,37 @@
     </property>
    </widget>
   </widget>
+  <widget class="QWizardPage" name="wizardPage_6">
+   <widget class="QCalendarWidget" name="calendarPost">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>50</y>
+      <width>264</width>
+      <height>156</height>
+     </rect>
+    </property>
+    <property name="firstDayOfWeek">
+     <enum>Qt::Monday</enum>
+    </property>
+    <property name="gridVisible">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>30</y>
+      <width>251</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Поставка будет следующего числа:</string>
+    </property>
+   </widget>
+  </widget>
   <widget class="QWizardPage" name="wizardPage2">
    <widget class="QCalendarWidget" name="calendarStop">
     <property name="geometry">

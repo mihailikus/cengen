@@ -13,6 +13,8 @@ autozakaz::autozakaz(QWidget *parent) :
     line5 = qFindChild<QLineEdit*>(this, "lineEdit_5");
     cal1 = qFindChild<QCalendarWidget*>(this, "calendarStart");
     cal2 = qFindChild<QCalendarWidget*>(this, "calendarStop");
+    calPost = qFindChild<QCalendarWidget*>(this, "calendarPost");
+
 
     cal1->setSelectedDate(QDate::currentDate().addDays(-4));
     cal2->setSelectedDate(QDate::currentDate().addDays(4));
@@ -24,6 +26,7 @@ autozakaz::autozakaz(QWidget *parent) :
 void autozakaz::set_config(autozakaz_config cfg) {
     cal1->setSelectedDate(cfg.dateStart);
     cal2->setSelectedDate(cfg.dateStop);
+    calPost->setSelectedDate(QDate::currentDate().addDays(1));
     line1->setText(cfg.ostat_magazin);
     line2->setText(cfg.ostat_sklad);
     line3->setText(cfg.assort);
@@ -36,6 +39,7 @@ autozakaz_config autozakaz::get_config() {
     autozakaz_config cfg;
     cfg.dateStart = cal1->selectedDate();
     cfg.dateStop = cal2->selectedDate();
+    cfg.datePost = calPost->selectedDate();
     cfg.ostat_magazin = line1->text();
     cfg.ostat_sklad = line2->text();
     cfg.assort = line3->text();
