@@ -3694,21 +3694,32 @@ void cengen::httpRequestFinished(QNetworkReply* rpl) {
 void cengen::httpOneFileFinished(QNetworkReply *rpl) {
     int size1, size2;
     size1 = rpl->size();
-    qDebug() << size1;
     QString fele = up_files[rpl];
     QFileInfo fi(fele);
     size2 = fi.size();
     if (size1 != size2) {
         QFile fl(fele);
         if (fi.exists()) {
-        #ifdef Q_WS_WIN
-            qDebug() << "WIN section";
-            fl.rename(fele+".bak.exe");
-        #else
-            qDebug() << "Lin section";
-            fl.rename(fele+".bak");
-        #endif
+            //если существует файл, который будем загружать - подготовим бэкап
+            QString new_fele = fele;
+            #ifdef Q_WS_WIN
+                //под виндоус - расширение exe, чтоб старая копия запускалась
+                new_fele += ".bak.exe";
+                //fl.rename(fele+".bak.exe");
+            #else
+                new_fele += ".bak";
+                //fl.rename(fele+".bak");
+            #endif
+            QFileInfo oldFl(new_fele);
+            if (oldFl.exists()) {
+                //а если сущестует старый бэкап - удалить его
+                qDebug() << "Removing old backup" << new_fele;
+                QFile oldFlFile(new_fele);
+                oldFlFile.remove();
+            }
+            fl.rename(new_fele);
         }
+
 
         fl.setFileName(fele);
         QByteArray arr = rpl->readAll();
@@ -3722,9 +3733,7 @@ void cengen::httpOneFileFinished(QNetworkReply *rpl) {
     if (update_counter >= update_count) {
         //обновились все файлы - выведем сообщение
         update_dlg->setMessage(tr("Updated successful"));
-        //update_dlg->show();
     }
-    //unfinishedHttp = false;
 }
 
 void cengen::on_action_zakaz10_triggered() {
