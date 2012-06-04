@@ -3737,13 +3737,18 @@ void cengen::httpOneFileFinished(QNetworkReply *rpl) {
 }
 
 void cengen::on_action_zakaz10_triggered() {
+    //функция предвиденья, сколько товара из набранного списка надо заказать
+
     autozakaz *zak = new autozakaz(this);
     zak->set_config(acfg);
 
+    //если в мастере нажмут отмену - выход из функции
     if (!zak->exec()) return;
 
     acfg = zak->get_config();
 
+    //число дней от планируемой даты поставки до даты,
+    //      на которую товара должно хватить
     int days = acfg.datePost.daysTo(acfg.dateStop);
 
 
@@ -3752,52 +3757,87 @@ void cengen::on_action_zakaz10_triggered() {
     Tovar tovar, magTovar;
     int quant;
 
+    //получаем список товаров
     inputList = tableWidget->get_tovar_list("x");
 
+    //фильтруем список по остаткам склада и дальше работаем только с ним
     load_filter_settings_file(acfg.ostat_sklad);
     skList = apply_filter(inputList);
+//    qDebug() << "Ostat sklad: ";
+//    debug_tovar(skList);
 
+    //смотрим, как этот товар продается
+    //      фильтр продаж от даты начала расчета до текущей даты
     prList = apply_sell_filter(skList, acfg.dateStart, QDate::currentDate().addDays(-70), 2);
+//    qDebug() << "Prod tovars: ";
+//    debug_tovar(prList);
 
+    //загружаем настройки фильтра обязательного ассортимента
     load_filter_settings_file(acfg.assort);
-
     assList = apply_filter(skList);
+//    qDebug() << "Assortiment";
+//    debug_tovar(assList);
 
+    //загружаем настройки фильтра по остаткам магазина
     load_filter_settings_file(acfg.ostat_magazin);
     magList = apply_filter(skList);
+//    qDebug() << "Ostat mag: ";
+//    debug_tovar(magList);
 
+    int half_ass;
+
+    //число дней от сегодняшней даты до поставки
     int days_to_post = QDate::currentDate().daysTo(acfg.datePost);
 
     for (int i = 0; i<skList.count(); i++) {
         tovar = prList.at(i);
         magTovar = magList.at(i);
+
+        //вычисляем будущие остатки
+        //      (с учетом динамики продаж и даты будущей поставки)
         int feature_ostat = ceil(magTovar.quantity - tovar.price2*days_to_post);
-        //qDebug() << "Tovar " << tovar.nomer_of_tovar << feature_ostat;
+        qDebug() << "Tovar " << tovar.nomer_of_tovar << feature_ostat;
         if (feature_ostat < 0) {
+            //если планируется уйти в минус - значит, товара будет 0
             magTovar.quantity = 0;
         } else {
             magTovar.quantity = feature_ostat;
         }
 
-        quant = ceil(tovar.price2 * days);
+        //работаем с обязательным ассортиментом
+        half_ass = ceil(assList.at(i).quantity / 2.0);
+        quant = ceil(tovar.price2 * days) + half_ass;
+        if (quant < assList.at(i).quantity) {
+            //если на заказ меньше обязаловки,
+            //  то добавить до обязательного
+            quant = assList.at(i).quantity;
+        }
 
-        if (quant < magTovar.quantity + ceil(assList.at(i).quantity / 2.0)) {
-            quant = 0;
-        } else {
-            quant = quant - magTovar.quantity + ceil(assList.at(i).quantity / 2.0) +1;
+        if (quant > magTovar.quantity) {
+            //если количество для заказа больше прогнозируемого остатка
+            //      на дату поставки, то заказываем, сколько не хватает
+            quant -= magTovar.quantity;
             if (quant > skList.at(i).quantity) {
+                //если на складе тупо меньше, чем надо
+                //    так и быть, закажем сколько есть
                 quant = skList.at(i).quantity;
             }
             tovar.quantity = quant;
             tbNew << tovar;
         }
 
+
     }
+//    qDebug() << "tbNew: ";
+//    debug_tovar(tbNew);
 
+
+    //загружаем настройки фильтра по квантованию в коробках
+    //      т.е. заказывать ли товар только коробками
     load_filter_settings_file(acfg.korob_quantum);
-
     qList = apply_filter(tbNew);
 
+    //загружаем настройки фильтра: какого товара сколько в коробках
     load_filter_settings_file(acfg.kol_v_korob);
     korList = apply_filter(tbNew);
 
@@ -3835,7 +3875,10 @@ void cengen::on_action_remove_zero_items() {
 
 void cengen::debug_tovar(QList<Tovar> list) {
     for (int i = 0; i<list.count(); i++) {
-        qDebug() << "Tovar list " <<list.at(i).nomer_of_tovar;
+        qDebug() << "Tovar list " <<list.at(i).nomer_of_tovar
+                 << list.at(i).quantity
+                 << list.at(i).name_of_tovar;
+
     }
 
 }
