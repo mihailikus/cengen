@@ -284,7 +284,6 @@ void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool To
         }
     }
 
-    emit row_count_changed();
     if (ToBottom) {
         scrollToBottom();
     } else {
@@ -294,6 +293,8 @@ void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool To
     editing_price2 = true;
     tovar_searched = true;
     this->blockSignals(false);
+    emit row_count_changed();
+
 }
 
 void MainTableWidget::set_editing_price2(bool status) {
