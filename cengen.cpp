@@ -34,6 +34,11 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     this->make_sellSettings_tab();
     this->make_ext_app_tab();
 
+    //добавляем кнопку выхода в тулбар после всех контролов
+    //  (ну не сделал я пока все в одной функции, так сложилось)
+    ui_mainToolBar->addAction(action_exit);
+    ui_mainToolBar->addSeparator();
+
     tableWidget->set_editing_price2(false);
     tableWidget->set_tovar_searched(false);
 
@@ -259,9 +264,6 @@ void cengen::make_toolBar() {
     ui_mainToolBar->addAction(action_scale_up);
     ui_mainToolBar->addAction(action_scale_down);
     ui_mainToolBar->addSeparator();
-    ui_mainToolBar->addAction(action_exit);
-    ui_mainToolBar->addSeparator();
-
     addToolBar(ui_mainToolBar);
 }
 
