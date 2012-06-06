@@ -355,6 +355,7 @@ private:
     QAction* action_set_special_shablon_to_zero_price2;
     QAction* action_sell_filter;
     QAction* action_render_in_external_app;
+    QAction* action_open_in_external_app;
     QAction* action_expand_list;
     QAction* action_select_method_barcode;
     QAction* action_select_method_tnomer;
@@ -397,6 +398,7 @@ private slots:
     void on_action_set_special_shablon_to_zero_price2();
     void on_action_sell_filter_triggered();
     void on_action_render_in_external_app();
+    void on_action_open_in_external_app();
     void on_action_expand_triggered(bool);
     void on_action_select_method_barcode();
     void on_action_select_method_tnomer();

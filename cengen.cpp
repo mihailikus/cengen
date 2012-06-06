@@ -237,6 +237,12 @@ void cengen::make_actions() {
     action_group_same_shablons = new QAction(tr("Group items with same shablon"), this);
     action_group_same_shablons->setCheckable(true);
     action_group_same_shablons->setChecked(true);
+
+    action_open_in_external_app = new QAction(tr("Open in QDBFRedactor"), this);
+    action_open_in_external_app->setShortcut(QKeySequence("F7"));
+    connect(action_open_in_external_app, SIGNAL(triggered()),
+            SLOT(on_action_open_in_external_app()));
+
 }
 
 void cengen::make_toolBar() {
@@ -306,6 +312,7 @@ void cengen::make_mainMenu() {
     cenMenu->addSeparator();
     cenMenu->addAction(action_make);
     cenMenu->addAction(action_render_in_external_app);
+    cenMenu->addAction(action_open_in_external_app);
 
     selectFoundMethodMenu->addAction(action_select_method_barcode);
     selectFoundMethodMenu->addAction(action_select_method_tnomer);
@@ -3330,8 +3337,32 @@ void cengen::on_action_render_in_external_app() {
         proc.execute(extName, args);
 
     }
+}
 
+void cengen::on_action_open_in_external_app() {
+    //сохраняем набранный список товаров в DBF
+    // и открываем в QDBFRedactor (если он есть в текущем каталоге)
+    QString extApp = "QDBFRedactor";
+    #ifdef Q_WS_WIN
+        //под виндоус - расширение exe
+        extApp += ".exe";
+    #else
+        extApp = "./" + extApp;
+    #endif
+    QFileInfo fi(extApp);
+    if (!fi.exists()) {
+        qDebug() << "ext app dont exists";
+        return;
+    }
+    QList<Tovar> spisok =  tableWidget->get_tovar_list("x");
+    QString dbf_tmp_name = "current.dbf";
+    QStringList args;
+    args << dbf_tmp_name;
 
+    if (save_tovar_list_into_dbf(dbf_tmp_name, spisok)) {
+        QProcess proc;
+        proc.execute(extApp, args);
+    }
 }
 
 void cengen::set_ext_shablon_name(QString fileName) {
