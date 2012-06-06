@@ -254,6 +254,7 @@ void cengen::make_toolBar() {
     ui_mainToolBar->addAction(action_scale_down);
     ui_mainToolBar->addSeparator();
     ui_mainToolBar->addAction(action_exit);
+    ui_mainToolBar->addSeparator();
 
     addToolBar(ui_mainToolBar);
 }
@@ -567,13 +568,16 @@ void cengen::make_shablon_tab() {
     ui_show_editor_button = new QPushButton(tr("Open shablon in built-in editor"));
     connect(ui_show_editor_button, SIGNAL(clicked()), SLOT(on_show_editor_button_clicked()));
     layBoxT2B2->addWidget(ui_show_editor_button);
-    label24 = new QLabel(tr("List of other shablons in current directory:"));
+    label24 = new QLabel(tr("Shablons: "));
     shablonBox = new QComboBox;
     shablonBox->blockSignals(true);
     shablonBox->addItems(shablonList);
     connect(shablonBox, SIGNAL(currentIndexChanged(int)), SLOT(on_shablonList_combo_changed(int)));
-    layBoxT2B2->addWidget(label24);
-    layBoxT2B2->addWidget(shablonBox);
+    //layBoxT2B2->addWidget(label24);
+    //layBoxT2B2->addWidget(shablonBox);
+    ui_mainToolBar->addWidget(label24);
+    ui_mainToolBar->addWidget(shablonBox);
+    ui_mainToolBar->addSeparator();
 
 
 
@@ -798,7 +802,7 @@ void cengen::make_sellSettings_tab() {
     layTab7->addWidget(lb6, 4, 0);
     layTab7->addWidget(sellKolBox, 4, 1);
 
-    lb10 = new QLabel(tr("Method of get sell value: " ));
+    lb10 = new QLabel(tr("Sells: " ));
     methodSellBox = new QComboBox;
     methodSellBox->insertItems(0, QStringList()
                                << tr("Replace")
@@ -806,8 +810,12 @@ void cengen::make_sellSettings_tab() {
                                << tr("Per day"));
     //methodSellValue = new QLineEdit("0");
 
-    layTab7->addWidget(lb10, 5, 0);
-    layTab7->addWidget(methodSellBox, 5, 1);
+    //layTab7->addWidget(lb10, 5, 0);
+    //layTab7->addWidget(methodSellBox, 5, 1);
+    ui_mainToolBar->addWidget(lb10);
+    ui_mainToolBar->addWidget(methodSellBox);
+    ui_mainToolBar->addSeparator();
+
     //layTab7->addWidget(methodSellValue, 5, 2);
 
     dateStart = new QCalendarWidget;
