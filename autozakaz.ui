@@ -207,7 +207,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QWizardPage" name="wizardPage_5"/>
  </widget>
  <tabstops>
   <tabstop>calendarStart</tabstop>
