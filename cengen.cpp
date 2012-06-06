@@ -3809,7 +3809,7 @@ void cengen::on_action_zakaz10_triggered() {
 
     //смотрим, как этот товар продается
     //      фильтр продаж от даты начала расчета до текущей даты
-    prList = apply_sell_filter(skList, acfg.dateStart, QDate::currentDate().addDays(-70), 2);
+    prList = apply_sell_filter(skList, acfg.dateStart, QDate::currentDate().addDays(-1), 2);
 //    qDebug() << "Prod tovars: ";
 //    debug_tovar(prList);
 
@@ -3822,6 +3822,9 @@ void cengen::on_action_zakaz10_triggered() {
     //загружаем настройки фильтра по остаткам магазина
     load_filter_settings_file(acfg.ostat_magazin);
     magList = apply_filter(skList);
+    //из остатков на начало дня вычтем товары, которые были проданы сегодня
+    //  (т.к. изменения в базу поступают вечером)
+    magList = apply_sell_filter(magList, QDate::currentDate(), QDate::currentDate(), 1);
 //    qDebug() << "Ostat mag: ";
 //    debug_tovar(magList);
 

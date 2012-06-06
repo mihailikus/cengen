@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>503</width>
+    <height>297</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -144,144 +144,76 @@
    </widget>
   </widget>
   <widget class="QWizardPage" name="wizardPage">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>361</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Файл остатков магазина</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>150</y>
-      <width>361</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QWizardPage" name="wizardPage_2">
-   <widget class="QLineEdit" name="lineEdit_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>160</y>
-      <width>361</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>120</y>
-      <width>361</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Остатки склада</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QWizardPage" name="wizardPage_3">
-   <widget class="QPushButton" name="pushButton_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>361</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Ассортимент обязательный</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>160</y>
-      <width>361</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QWizardPage" name="wizardPage_4">
-   <widget class="QPushButton" name="pushButton_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>100</y>
-      <width>361</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Количество в коробках</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>150</y>
-      <width>361</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QWizardPage" name="wizardPage_5">
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>110</y>
-      <width>371</width>
-      <height>25</height>
+      <y>20</y>
+      <width>481</width>
+      <height>201</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Квантование коробок</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_5">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>150</y>
-      <width>371</width>
-      <height>24</height>
-     </rect>
-    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Файл остатков магазина</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEdit"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Остатки склада</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEdit_2"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="text">
+        <string>Ассортимент обязательный</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="lineEdit_3"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>Количество в коробках</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEdit_4"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="text">
+        <string>Квантование коробок</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="lineEdit_5"/>
+     </item>
+    </layout>
    </widget>
   </widget>
+  <widget class="QWizardPage" name="wizardPage_5"/>
  </widget>
  <tabstops>
   <tabstop>calendarStart</tabstop>
   <tabstop>calendarStop</tabstop>
   <tabstop>pushButton</tabstop>
   <tabstop>lineEdit</tabstop>
-  <tabstop>pushButton_2</tabstop>
-  <tabstop>lineEdit_2</tabstop>
-  <tabstop>pushButton_3</tabstop>
-  <tabstop>lineEdit_3</tabstop>
-  <tabstop>pushButton_4</tabstop>
-  <tabstop>lineEdit_4</tabstop>
-  <tabstop>pushButton_5</tabstop>
-  <tabstop>lineEdit_5</tabstop>
  </tabstops>
  <resources/>
  <connections/>
