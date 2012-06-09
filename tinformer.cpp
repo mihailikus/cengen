@@ -274,3 +274,78 @@ int Tinformer::last_found_record_number() {
     return last_record;
 }
 
+QList<Tovar> Tinformer::check_line_prices(QList<Tovar> inputList) {
+    QList<Tovar> outList;
+    if (inputList.count()<3) {
+        return outList;
+    }
+    //для сравнения цен:
+    float pr1, pr2, tmp;
+
+    //подсчет разных цен:
+    int c1, c2;
+
+    //список для сохранения товарных номеров списка цен
+    QList<int> t1, t2;
+    c1 = 0;
+    c2 = 0;
+    pr1 = inputList.at(0).price1;
+    pr2 = inputList.at(1).price1;
+    t1 << inputList.at(0).nomer_of_tovar;
+    int bardak = 0;
+
+    for (int i = 1; i<inputList.count(); i++) {
+        tmp = inputList.at(i).price1;
+        if (pr1 == tmp) {
+            t1 << inputList.at(i).nomer_of_tovar;
+           c1++;
+        } else {
+            if (pr2 == tmp) {
+                c2 ++;
+                t2 << inputList.at(i).nomer_of_tovar;
+            } else {
+                bardak++;
+                pr2 = tmp;
+                c2++;
+                t2 << inputList.at(i).nomer_of_tovar;
+            }
+
+        }
+    }
+    if (!bardak) return outList;
+
+    if (bardak<2) {
+        //если разных цен не больше двух
+        Tovar tovar;
+        tovar.nomer_of_tovar = 0;
+        tovar.barcode = "";
+        tovar.price1 = pr1;
+        tovar.price2 = pr2;
+        tovar.quantity = c1;
+        tovar.name_of_tovar = inputList.at(0).name_of_tovar;
+        QString desc;
+        if (c1 > c2) {
+            desc = "All by " + QString::number(pr1) + ", but ";
+            for (int i = 0; i<t2.count(); i++) {
+                desc += QString::number(t2.at(i)) + ", ";
+            }
+            desc += " by " + QString::number(pr2);
+        } else {
+            desc = "All by " + QString::number(pr2) + ", but ";
+            for (int i = 0; i<t1.count(); i++) {
+                desc += QString::number(t1.at(i)) + ", ";
+            }
+            desc += " by " + QString::number(pr1);
+        }
+        tovar.name_of_tovar += ": " + desc;
+        outList << tovar;
+    } else {
+        //разных цен три и более
+        Tovar tovar;
+        tovar.name_of_tovar = "Many different prices: " + inputList.at(0).name_of_tovar;
+        outList << tovar;
+    }
+
+
+    return outList;
+}

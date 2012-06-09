@@ -248,6 +248,11 @@ void cengen::make_actions() {
     connect(action_open_in_external_app, SIGNAL(triggered()),
             SLOT(on_action_open_in_external_app()));
 
+    action_check_line_prices = new QAction(tr("Check line prices"), this);
+    action_check_line_prices->setShortcut(QKeySequence("F5"));
+    connect(action_check_line_prices, SIGNAL(triggered()),
+            SLOT(on_action_check_line_prices()));
+
 }
 
 void cengen::make_toolBar() {
@@ -322,6 +327,8 @@ void cengen::make_mainMenu() {
 
 
     menuHelp = mainMenu->addMenu(tr("About"));
+    menuHelp->addAction(action_check_line_prices);
+    menuHelp->addSeparator();
     menuHelp->addAction(action_program_update);
     menuHelp->addSeparator();
     menuHelp->addAction(action_about);
@@ -2303,7 +2310,7 @@ void cengen::on_filterFileName_changed() {
     label18a->setText(filterDbf.fileName);
 }
 
-QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
+QList<Tovar> cengen::apply_filter(QList<Tovar> inputList, bool startProgressBar) {
     QList<Tovar> filteredList;
 
     bool delete_filtered = delete_filtered_box->isChecked();
@@ -2345,12 +2352,16 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
     bool ckeckOut = filBoxCheck->isChecked();
 
     //поиск еще не оптимален - иногда он бывает долгим
-    progressBar->setMaximum(inputList.count());
-    statusBar->addWidget(progressBar);
-    progressBar->show();
+    if (startProgressBar) {
+        progressBar->setMaximum(inputList.count());
+        statusBar->addWidget(progressBar);
+        progressBar->show();
+    }
 
     for (int i = 0; i<inputList.count(); i++) {
-        progressBar->setValue(i);
+        if (startProgressBar) {
+            progressBar->setValue(i);
+        }
         tovarItem = inputList.at(i);
         //tovarItem.quantity = 0;
 
@@ -2422,7 +2433,9 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList) {
         }
     }
 
-    statusBar->removeWidget(progressBar);
+    if (startProgressBar) {
+        statusBar->removeWidget(progressBar);
+    }
 
     return filteredList;
 }
@@ -3921,7 +3934,59 @@ void cengen::debug_tovar(QList<Tovar> list) {
     for (int i = 0; i<list.count(); i++) {
         qDebug() << "Tovar list " <<list.at(i).nomer_of_tovar
                  << list.at(i).quantity
+                 << list.at(i).price1
                  << list.at(i).name_of_tovar;
+
+    }
+
+}
+
+void cengen::on_action_check_line_prices() {
+    //проверка линейки ценников (запрос пользователей)
+    qDebug() << "Going to check line prices";
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Select line price describer"), QApplication::applicationDirPath(), tr("Text files (*.txt)"));
+    if (fileName == "") {
+        qDebug() << "Please select file name";
+        return;
+    }
+    QFileInfo fi(fileName);
+    if (!fi.exists()) {
+        qDebug() << "Please select existing file";
+        return;
+    }
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Cannot open file";
+        return;
+    }
+
+    QList<Tovar> tovarList, checkedList;
+    QString line;
+    //QByteArray buf;
+
+    // Под Windows устанавливаем кодировку cp1251
+    #ifdef Q_WS_WIN
+    QTextCodec *codec = QTextCodec::codecForName("Windows-1251");
+    // Под остальными ОС - utf8
+    #else
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    #endif
+
+    QApplication::processEvents();
+
+    int i = 0;
+    while (!file.atEnd()) {
+        line = codec->toUnicode(file.readLine()).split("\n").at(0);
+        qDebug() << "line is " << line;
+        tovarList = apply_filter(my_informer->info(line, "tname"), false);
+
+
+        i++;
+        //debug_tovar(tovarList);
+        checkedList = my_informer->check_line_prices(tovarList);
+
+        tableWidget->load_tovar_list_into_table(checkedList);
+
 
     }
 

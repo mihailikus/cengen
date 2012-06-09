@@ -32,6 +32,8 @@ public:
     QList<Tovar> info (QString text, QString method = "tbarcode",
                        int startPos = 0, int endPos = -1, int limit = 0,
                        bool FromStartToEnd = true, bool AllowFastSearch = true);
+    QList<Tovar> check_line_prices (QList<Tovar> inputList);
+
     int last_found_record_number();
     QStringList db_describe();
     QStringList tb_describe(QString tbName);

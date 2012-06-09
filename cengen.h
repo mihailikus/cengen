@@ -365,6 +365,7 @@ private:
     QAction* action_zakaz10;
     QAction* action_remove_zero_items;
     QAction* action_group_same_shablons;
+    QAction* action_check_line_prices;
 
 
 private slots:
@@ -407,6 +408,7 @@ private slots:
     void on_action_program_update();
     void on_action_zakaz10_triggered();
     void on_action_remove_zero_items();
+    void on_action_check_line_prices();
 
     void on_lineEdit_returnPressed();
     void tovar_search();
@@ -434,7 +436,7 @@ private slots:
     QList<Tovar> apply_sell_filter(QList<Tovar> inputList, QDate dt1, QDate dt2, int methodSell);
 
     QList<Tovar> show_found_items(QList<Tovar> inputList);
-    QList<Tovar> apply_filter(QList<Tovar> inputList);
+    QList<Tovar> apply_filter(QList<Tovar> inputList, bool startProgressBar = true);
     QRectF get_shablon_rect(const QDomNode& node);
     QString get_shablon_name(const QDomNode& node);
     bool read_opisateli_from_settings();
