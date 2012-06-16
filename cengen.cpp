@@ -3029,6 +3029,8 @@ void cengen::load_filter_settings_file(QString fileName) {
 
         on_filterFileName_changed();
 
+        bool ok = true;
+
         line = fstream.readLine();
         ui_filterWhatBox->setCurrentIndex(line.toInt());
         line = fstream.readLine();
@@ -3049,12 +3051,20 @@ void cengen::load_filter_settings_file(QString fileName) {
         //удалять ли ненайденные позиции
         //settings += QString::number(delete_filtered_box->isChecked()) + "\n";
         line = fstream.readLine();
-        delete_filtered_box->setChecked(line.toInt());
+        delete_filtered_box->setChecked(line.toInt(&ok));
+        if (!ok) {
+            //по умолчанию - удалять ненайденные
+            delete_filtered_box->setChecked(true);
+        }
 
         //использовать ли найденное в фильтре поле для обновления значений
         //settings += QString::number(filBoxCheck->isChecked()) + "\n";
         line = fstream.readLine();
-        filBoxCheck->setChecked(line.toInt());
+        filBoxCheck->setChecked(line.toInt(&ok));
+        if (!ok) {
+            //по умолчанию - использовать фильтр для обновления количества
+            filBoxCheck->setChecked(true);
+        }
 
     } else {
         qDebug() << "Cannot open file: " << fileName;
