@@ -3988,16 +3988,14 @@ void cengen::on_action_check_line_prices() {
     while (!file.atEnd()) {
         line = codec->toUnicode(file.readLine()).split("\n").at(0);
         qDebug() << "line is " << line;
-        tovarList = apply_filter(my_informer->info(line, "tname"), false);
+        if (line != "" ) {
+            tovarList = apply_filter(my_informer->info(line, "tname"), false);
+            i++;
+            //debug_tovar(tovarList);
+            checkedList = my_informer->check_line_prices(tovarList);
 
-
-        i++;
-        //debug_tovar(tovarList);
-        checkedList = my_informer->check_line_prices(tovarList);
-
-        tableWidget->load_tovar_list_into_table(checkedList);
-
-
+            tableWidget->load_tovar_list_into_table(checkedList);
+        }
     }
 
 }
