@@ -2511,8 +2511,26 @@ QList<Tovar> cengen::expand(QList<Tovar> list) {
 }
 
 QList<Tovar> cengen::group(QList<Tovar> list) {
-    qSort(list.begin(), list.end());
-    return list;
+    //qSort(list.begin(), list.end());
+    //стандартная сортировка работает по своему признаку, но
+    //  перемешивает по другим полям, поэтому напишем свою
+    QList<Tovar> outer;
+    int misc = shablonBox->count();
+    QList<Tovar> lists[misc];
+    int cur = 0;
+    for (int i = 0; i<list.count(); i++) {
+        //какой номер шаблона - в такой массив и записываем
+        cur = list.at(i).shablon;
+        if (cur>misc) cur = 0;
+        lists[cur] << list.at(i);
+    }
+
+    for (int j = 0; j<misc; j++) {
+        //соединяем все списки в один
+        outer << lists[j];
+    }
+
+    return outer;
 }
 
 void cengen::set_org_name(QString org, QString prog) {
