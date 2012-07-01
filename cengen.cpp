@@ -3157,7 +3157,7 @@ QList<Tovar> cengen::apply_sell_filter(QList<Tovar> curTb, QDate dt1, QDate dt2,
         startPos = 0;
     } else {
         startPos = sell_informer->last_found_record_number();
-        //startPos--;
+        startPos--;
         qDebug() << "Start pos is " << startPos;
         QString dt = tb1.at(0).barcode;
         QDate ddt = QDate::fromString(dt, "yyyyMMdd");

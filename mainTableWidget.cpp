@@ -179,8 +179,8 @@ void MainTableWidget::on_tableWidget_cellClicked(int row, int column)
 
 void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
 {
-    QString txt = item(row, column)->text();
-    qDebug() << "new text " << row << column << txt;
+    //QString txt = item(row, column)->text();
+    //qDebug() << "new text " << row << column << txt;
     emit data_changed();
     if (method) return; //если не 0, то ничего не редактируем
     if (editing_price2) {
