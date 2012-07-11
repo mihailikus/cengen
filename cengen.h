@@ -364,6 +364,7 @@ private:
     QAction* action_program_update;
     QAction* action_zakaz10;
     QAction* action_remove_zero_items;
+    QAction* action_left_items_with_zero_price2;
     QAction* action_group_same_shablons;
     QAction* action_check_line_prices;
 
@@ -408,6 +409,7 @@ private slots:
     void on_action_program_update();
     void on_action_zakaz10_triggered();
     void on_action_remove_zero_items();
+    void on_action_left_itms_zero_price2();
     void on_action_check_line_prices();
 
     void on_lineEdit_returnPressed();

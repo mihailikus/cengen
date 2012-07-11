@@ -464,10 +464,29 @@ void MainTableWidget::remove_zero_quantity() {
     int quant = 0;
     while (i<j) {
         quant = item(i, quantity)->text().toInt();
-        qDebug() << "Quantity = " << quant;
+        //qDebug() << "Quantity = " << quant;
         if (!quant) {
             removeRow(i);
-            qDebug() << "Deleted";
+            //qDebug() << "Deleted";
+            j--;
+            i--;
+        }
+        i++;
+    }
+    emit row_count_changed();
+}
+
+void MainTableWidget::left_items_with_zero_price2() {
+    if (rowCount() > 500) shField = 0;
+    int j = rowCount();
+    int i = 0;
+    float pr2 = 0;
+    while (i<j) {
+        pr2 = item(i, price2)->text().toFloat();
+        //qDebug() << "Quantity = " << pr2;
+        if (pr2) {
+            removeRow(i);
+            //qDebug() << "Deleted";
             j--;
             i--;
         }

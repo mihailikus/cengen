@@ -45,6 +45,7 @@ public slots:
     void set_editing_price2(bool status = false);
     long double sum_of_tovar();
     void remove_zero_quantity();
+    void left_items_with_zero_price2();
 
 private:
     QHeaderView* tableHeader;

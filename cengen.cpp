@@ -253,6 +253,10 @@ void cengen::make_actions() {
     connect(action_check_line_prices, SIGNAL(triggered()),
             SLOT(on_action_check_line_prices()));
 
+    action_left_items_with_zero_price2 = new QAction(tr("Left items with zero price2"), this);
+    connect(action_left_items_with_zero_price2, SIGNAL(triggered()),
+            SLOT(on_action_left_itms_zero_price2()));
+
 }
 
 void cengen::make_toolBar() {
@@ -303,6 +307,8 @@ void cengen::make_mainMenu() {
     menuEdit->addAction(action_verify_barcode);
     menuEdit->addSeparator();
     menuEdit->addAction(action_remove_zero_items);
+    menuEdit->addAction(action_left_items_with_zero_price2);
+
 
     menuSell = mainMenu->addMenu((tr("Sell control")));
     menuSell->addAction(action_sell_filter);
@@ -2250,7 +2256,7 @@ QList<Tovar> cengen::minus(QList<Tovar> oldList, QList<Tovar> newList) {
         for (int j = 0; j<oldList.count(); j++) {
             if (newList.at(i).nomer_of_tovar == oldList.at(j).nomer_of_tovar) {
                 final.removeAt(j-k);
-                qDebug() << "j and k = " << j << k;
+                //qDebug() << "j and k = " << j << k;
                 k++;
             }
         }
@@ -4016,4 +4022,8 @@ void cengen::on_action_check_line_prices() {
         }
     }
 
+}
+
+void cengen::on_action_left_itms_zero_price2() {
+    tableWidget->left_items_with_zero_price2();
 }
