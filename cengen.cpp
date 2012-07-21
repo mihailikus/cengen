@@ -802,8 +802,12 @@ void cengen::make_sellSettings_tab() {
     lb1 = new QLabel(tr("Selected file: "));
     lb2 = new QLabel("");
 
-    layTab7->addWidget(lb1, 0, 1, 1, 4);
+    layTab7->addWidget(lb1, 0, 1, 1, 3);
     //layTab7->addWidget(lb2, 0, 2, 1, 3);
+
+    clear_last_button = new QPushButton(tr("Clear last pos"));
+    connect (clear_last_button, SIGNAL(clicked()), SLOT(on_clear_last_button_clicked()));
+    layTab7->addWidget(clear_last_button, 1, 3);
 
     sellNomerBox = new QComboBox;
     sellDateBox = new QComboBox;
@@ -1427,6 +1431,7 @@ void cengen::writeSettings()
     }
 
     m_settings.setValue("/shablon", currShablonFileName);
+    qDebug() << "settings group is: " << m_settings.group();
 
     m_settings.setValue("/SearchLimit", ui_spinLimit->value());
 
@@ -3344,6 +3349,22 @@ void cengen::check_sell_file() {
 
 void cengen::on_saveSellSettingsButtonClicked() {
     qDebug() << "Saving sell settings";
+}
+
+void cengen::on_clear_last_button_clicked() {
+    //m_settings.beginGroup("/");
+//    m_settings.beginGroup("/Settings");
+//    m_settings.beginGroup("Sell");
+    qDebug() << "Clearing last pos" << m_settings.group();
+
+
+    m_settings.remove("/Settings/Sell/lastDate");
+    m_settings.remove("/Settings/Sell/lastFile");
+    m_settings.remove("/Settings/Sell/lastPos");
+
+//    m_settings.endGroup();
+//    m_settings.endGroup();
+
 }
 
 void cengen::updateSellTab() {

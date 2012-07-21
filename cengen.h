@@ -236,6 +236,7 @@ private:
     QDate last_known_date;
     int last_known_pos;
     QString last_known_file;
+    QPushButton *clear_last_button;
 
     autozakaz_config acfg;
 
@@ -411,6 +412,7 @@ private slots:
     void on_action_remove_zero_items();
     void on_action_left_itms_zero_price2();
     void on_action_check_line_prices();
+    void on_clear_last_button_clicked();
 
     void on_lineEdit_returnPressed();
     void tovar_search();
