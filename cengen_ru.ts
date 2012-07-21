@@ -723,12 +723,17 @@
         <translation>Время продажи</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3981"/>
+        <location filename="cengen.cpp" line="3733"/>
+        <source> pices. </source>
+        <translation> единиц. </translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="3984"/>
         <source>Select line price describer</source>
         <translation>Выбор файла описателя линейки ценников</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3981"/>
+        <location filename="cengen.cpp" line="3984"/>
         <source>Text files (*.txt)</source>
         <translation>Текстоые файлы (*.txt)</translation>
     </message>
@@ -920,12 +925,12 @@
         <translation>Шаблоны Fast Report (*.frf)</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3731"/>
+        <location filename="cengen.cpp" line="3734"/>
         <source>Sum of tovar: </source>
         <translation>Сумма накладной: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3737"/>
+        <location filename="cengen.cpp" line="3740"/>
         <source>Updating. Please wait.</source>
         <translation>Обновляется. Пожалуйста, подождите.</translation>
     </message>
@@ -934,7 +939,7 @@
         <translation type="obsolete">Обновляется. Подождите, пожалуйста!</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3823"/>
+        <location filename="cengen.cpp" line="3826"/>
         <source>Updated successful</source>
         <translation>Успешно обновлено!</translation>
     </message>

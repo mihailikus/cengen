@@ -457,6 +457,14 @@ long double MainTableWidget::sum_of_tovar() {
 
 }
 
+int MainTableWidget::kol_of_tovar() {
+    int kol = 0;
+    for (int i=0; i<rowCount(); i++) {
+        kol += item(i, quantity)->text().toInt();
+    }
+    return kol;
+}
+
 void MainTableWidget::remove_zero_quantity() {
     if (rowCount() > 500) shField = 0;
     int j = rowCount();

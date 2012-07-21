@@ -802,8 +802,8 @@ void cengen::make_sellSettings_tab() {
     lb1 = new QLabel(tr("Selected file: "));
     lb2 = new QLabel("");
 
-    layTab7->addWidget(lb1, 0, 1);
-    layTab7->addWidget(lb2, 0, 2, 1, 3);
+    layTab7->addWidget(lb1, 0, 1, 1, 4);
+    //layTab7->addWidget(lb2, 0, 2, 1, 3);
 
     sellNomerBox = new QComboBox;
     sellDateBox = new QComboBox;
@@ -1644,7 +1644,6 @@ void cengen::readSettings() {
 
     //читаем информацию о файле продаж
     sellFileName = m_settings.value("/Settings/Sell/sellFileName", "").toString();
-    updateSellTab();
     sellOpisateli = m_settings.value("/Settings/Sell/sellFileFields", "").toStringList();
 
     sellNomerBox->addItems(sellOpisateli);
@@ -1667,6 +1666,7 @@ void cengen::readSettings() {
         last_known_date = QDate::currentDate().addYears(-50);
         last_known_pos = 0;
     }
+    updateSellTab();
 
     //читаем номер текущей вкладки (по умолчанию - вкладка с источником данных)
     int ind = m_settings.value("/Settings/tabIndex", "3").toInt();
@@ -3099,7 +3099,7 @@ void cengen::load_filter_settings_file(QString fileName) {
 
 void cengen::on_action_sell_filter_triggered() {
 
-    if (!sell_file_is_checked) check_sell_file();
+    //if (!sell_file_is_checked) check_sell_file();
 
 
     //methodSellBox->setCurrentIndex(1);
@@ -3337,7 +3337,7 @@ void cengen::check_sell_file() {
     sellTimeBox->setCurrentIndex(j3);
     sellKolBox->setCurrentIndex(j4);
 
-    //delete sell_informer;
+    lb1->setText(lb1->text() + "; max=" + QString::number(sell_informer->get_maximum()));
 
     sell_file_is_checked = true;
 }
@@ -3347,7 +3347,13 @@ void cengen::on_saveSellSettingsButtonClicked() {
 }
 
 void cengen::updateSellTab() {
-    lb2->setText(sellFileName);
+    lb1->setText(lb1->text() + sellFileName +
+                 last_known_date.toString(" dd MM yyyy, ") +
+                 QString::number(last_known_pos));
+    qDebug() << "last date " << last_known_date;
+//    last_known_date = m_settings.value("/Settings/Sell/lastDate", "").toDate();
+//    last_known_pos = m_settings.value("/Settings/Sell/lastPos", "").toInt();
+
 }
 
 void cengen::on_action_render_in_external_app() {
@@ -3707,6 +3713,7 @@ void cengen::on_action_select_method_tname() {
 
 void cengen::on_action_get_sum_of_tovar() {
     double sum = tableWidget->sum_of_tovar();
+    int kol = tableWidget->kol_of_tovar();
     int kop = sum*100 - (int)sum*100;
     //qDebug() << "kop" << kop << "sum=" << sum;
     int rub = (int)sum;
@@ -3728,7 +3735,9 @@ void cengen::on_action_get_sum_of_tovar() {
     if (kop<10) kp = "0" + kp;
 
     sm += "." + kp;
-    ui_statusLabel->setText(tr("Sum of tovar: " ) + sm);
+    ui_statusLabel->setText(QString::number(kol) + \
+                            tr(" pices. ") + \
+                            tr("Sum of tovar: " ) + sm);
 }
 
 void cengen::on_action_program_update() {
