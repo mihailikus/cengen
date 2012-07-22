@@ -1482,9 +1482,11 @@ void cengen::writeSettings()
     m_settings.setValue("date", sellDateBox->currentIndex());
     m_settings.setValue("time", sellTimeBox->currentIndex());
     m_settings.setValue("kol", sellKolBox->currentIndex());
-    m_settings.setValue("lastDate", last_known_date);
-    m_settings.setValue("lastPos", last_known_pos);
     m_settings.setValue("lastFile", last_known_file);
+    if (last_known_pos) {
+        m_settings.setValue("lastDate", last_known_date);
+        m_settings.setValue("lastPos", last_known_pos);
+    }
     m_settings.endGroup();
 
     //указываем текущую вкладку
@@ -1664,9 +1666,16 @@ void cengen::readSettings() {
 //    m_settings.setValue("lastPos", last_known_pos);
 //    m_settings.setValue("lastFile", last_known_file);
     last_known_file = m_settings.value("/Settings/Sell/lastFile", "").toString();
-    if (last_known_file == sellFileName) {
+//    if (last_known_file == sellFileName) {
+//        last_known_date = m_settings.value("/Settings/Sell/lastDate", "").toDate();
+//        last_known_pos = m_settings.value("/Settings/Sell/lastPos", "").toInt();
+//    } else {
+//        last_known_date = QDate::currentDate().addYears(-50);
+//        last_known_pos = 0;
+//    }
+    last_known_pos = m_settings.value("/Settings/Sell/lastPos", "-1").toInt();
+    if (last_known_pos != -1) {
         last_known_date = m_settings.value("/Settings/Sell/lastDate", "").toDate();
-        last_known_pos = m_settings.value("/Settings/Sell/lastPos", "").toInt();
     } else {
         last_known_date = QDate::currentDate().addYears(-50);
         last_known_pos = 0;
@@ -3104,7 +3113,8 @@ void cengen::load_filter_settings_file(QString fileName) {
 
 void cengen::on_action_sell_filter_triggered() {
 
-    //if (!sell_file_is_checked) check_sell_file();
+    //if (!sell_file_is_checked)
+    check_sell_file();
 
 
     //methodSellBox->setCurrentIndex(1);
@@ -3278,8 +3288,9 @@ QList<Tovar> cengen::apply_sell_filter(QList<Tovar> curTb, QDate dt1, QDate dt2,
         QDate ldt  = QDate::fromString(dt, "yyyyMMdd");
         dt = ldt.toString("d MMMM yyyy, dddd");
         QString tm = tb3.at(prod-1).name_of_tovar;
-        QString message = tr("Total sold %1 goods of %2 tnomer%3Last date is %4 at %5")
+        QString message = tr("Total sold %1 goods (%2 pices) of %3 tnomer%4Last date is %5 at %6")
                 .arg(QString::number(prod))
+                .arg(QString::number(newTb.at(0).quantity))
                 .arg(QString::number(curTb.at(0).nomer_of_tovar))
                 .arg("\n")
                 .arg(dt)
@@ -3303,7 +3314,7 @@ void cengen::on_selectSellFileButtonClicked() {
 }
 
 void cengen::check_sell_file() {
-    qDebug() << "Checking sell file";
+    qDebug() << "Checking sell file" << sellFileName;
     sell_informer = new Tinformer;
     DbfConfig sellDb;
     sellDb.fileName = sellFileName;
@@ -3353,17 +3364,22 @@ void cengen::on_saveSellSettingsButtonClicked() {
 
 void cengen::on_clear_last_button_clicked() {
     //m_settings.beginGroup("/");
-//    m_settings.beginGroup("/Settings");
-//    m_settings.beginGroup("Sell");
+    m_settings.beginGroup("Settings");
+    m_settings.beginGroup("Sell");
     qDebug() << "Clearing last pos" << m_settings.group();
 
 
-    m_settings.remove("/Settings/Sell/lastDate");
-    m_settings.remove("/Settings/Sell/lastFile");
-    m_settings.remove("/Settings/Sell/lastPos");
+    m_settings.remove("lastDate");
+    m_settings.remove("lastFile");
+    m_settings.remove("lastPos");
 
-//    m_settings.endGroup();
-//    m_settings.endGroup();
+    last_known_pos = 0;
+    last_known_date = QDate::currentDate().addYears(-50);
+    last_known_file = "";
+
+
+    m_settings.endGroup();
+    m_settings.endGroup();
 
 }
 
