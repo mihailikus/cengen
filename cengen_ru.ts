@@ -315,15 +315,15 @@
 <context>
     <name>cengen</name>
     <message>
-        <location filename="cengen.cpp" line="903"/>
-        <location filename="cengen.cpp" line="993"/>
+        <location filename="cengen.cpp" line="907"/>
+        <location filename="cengen.cpp" line="997"/>
         <source>COUNT: </source>
         <comment>ITOGO</comment>
         <translation>ИТОГО: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="905"/>
-        <location filename="cengen.cpp" line="2826"/>
+        <location filename="cengen.cpp" line="909"/>
+        <location filename="cengen.cpp" line="2840"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
@@ -435,7 +435,7 @@
         <location filename="cengen.cpp" line="366"/>
         <location filename="cengen.cpp" line="443"/>
         <location filename="cengen.cpp" line="543"/>
-        <location filename="cengen.cpp" line="2802"/>
+        <location filename="cengen.cpp" line="2816"/>
         <source>Barcode</source>
         <translation>Штрих-код</translation>
     </message>
@@ -444,24 +444,24 @@
         <location filename="cengen.cpp" line="441"/>
         <location filename="cengen.cpp" line="541"/>
         <location filename="cengen.cpp" line="717"/>
-        <location filename="cengen.cpp" line="813"/>
-        <location filename="cengen.cpp" line="2801"/>
+        <location filename="cengen.cpp" line="817"/>
+        <location filename="cengen.cpp" line="2815"/>
         <source>Tnomer</source>
         <translation>Тов. номер</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2801"/>
+        <location filename="cengen.cpp" line="2815"/>
         <source># </source>
         <translation>№ </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2803"/>
+        <location filename="cengen.cpp" line="2817"/>
         <source>Price1</source>
         <translation>Цена1</translation>
     </message>
     <message>
         <location filename="cengen.cpp" line="445"/>
-        <location filename="cengen.cpp" line="2804"/>
+        <location filename="cengen.cpp" line="2818"/>
         <source>Price2</source>
         <translation>Цена2</translation>
     </message>
@@ -479,7 +479,7 @@
     <message>
         <location filename="cengen.cpp" line="368"/>
         <location filename="cengen.cpp" line="442"/>
-        <location filename="cengen.cpp" line="2802"/>
+        <location filename="cengen.cpp" line="2816"/>
         <source>Name</source>
         <translation>Название</translation>
     </message>
@@ -587,8 +587,8 @@
     </message>
     <message>
         <location filename="cengen.cpp" line="446"/>
-        <location filename="cengen.cpp" line="816"/>
-        <location filename="cengen.cpp" line="2803"/>
+        <location filename="cengen.cpp" line="820"/>
+        <location filename="cengen.cpp" line="2817"/>
         <source>Quantity</source>
         <translation>Количество</translation>
     </message>
@@ -713,27 +713,37 @@
         <translation>Выбран файл: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="814"/>
+        <location filename="cengen.cpp" line="808"/>
+        <source>Clear last pos</source>
+        <translation>Сбросить счетчик</translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="818"/>
         <source>Date of sell</source>
         <translation>Дата продажи</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="815"/>
+        <location filename="cengen.cpp" line="819"/>
         <source>Time of sell</source>
         <translation>Время продажи</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3733"/>
+        <location filename="cengen.cpp" line="3291"/>
+        <source>Total sold %1 goods (%2 pices) of %3 tnomer%4Last date is %5 at %6</source>
+        <translation>Всего продано %1 раз (в количестве %2 штук) товара № %3%4Дата последней продажи: %5 в %6</translation>
+    </message>
+    <message>
+        <location filename="cengen.cpp" line="3776"/>
         <source> pices. </source>
         <translation> единиц. </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3984"/>
+        <location filename="cengen.cpp" line="4027"/>
         <source>Select line price describer</source>
         <translation>Выбор файла описателя линейки ценников</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3984"/>
+        <location filename="cengen.cpp" line="4027"/>
         <source>Text files (*.txt)</source>
         <translation>Текстоые файлы (*.txt)</translation>
     </message>
@@ -742,195 +752,194 @@
         <translation type="obsolete">Метод выборки значения</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="830"/>
+        <location filename="cengen.cpp" line="834"/>
         <source>Replace</source>
         <translation>Заменить</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="831"/>
+        <location filename="cengen.cpp" line="835"/>
         <source>Minus</source>
         <translation>Вычесть</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="832"/>
+        <location filename="cengen.cpp" line="836"/>
         <source>Per day</source>
         <translation>Среднее в день</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="855"/>
+        <location filename="cengen.cpp" line="859"/>
         <source>From date: </source>
         <translation>Начальная дата:</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="856"/>
+        <location filename="cengen.cpp" line="860"/>
         <source>To date: </source>
         <translation>Финальная дата:</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="865"/>
+        <location filename="cengen.cpp" line="869"/>
         <source>Sell settings</source>
         <translation>Продажи</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="874"/>
+        <location filename="cengen.cpp" line="878"/>
         <source>Select ext app</source>
         <translation>Выбор внешнего приложения</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="880"/>
+        <location filename="cengen.cpp" line="884"/>
         <source>Select conf settings file</source>
         <translation>Выбор конфигурационного файла</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="886"/>
+        <location filename="cengen.cpp" line="890"/>
         <source>Select external shablon</source>
         <translation>Выбор внешнего шаблона</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="893"/>
+        <location filename="cengen.cpp" line="897"/>
         <source>External application</source>
         <translation>Вншенее приложение</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1224"/>
+        <location filename="cengen.cpp" line="1228"/>
         <source>Rendering cennic&apos;s</source>
         <translation>Прорисовка ценников</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1329"/>
+        <location filename="cengen.cpp" line="1333"/>
         <source>Result: </source>
         <translation>Получилось: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1329"/>
+        <location filename="cengen.cpp" line="1333"/>
         <source> pages</source>
         <translation> страниц</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2039"/>
-        <location filename="cengen.cpp" line="2872"/>
-        <location filename="cengen.cpp" line="2985"/>
+        <location filename="cengen.cpp" line="2053"/>
+        <location filename="cengen.cpp" line="2886"/>
+        <location filename="cengen.cpp" line="2999"/>
         <source>File exist. Rewrite?</source>
         <translation>Файл существует. Перезаписать?</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2567"/>
-        <location filename="cengen.cpp" line="2703"/>
+        <location filename="cengen.cpp" line="2581"/>
+        <location filename="cengen.cpp" line="2717"/>
         <source>FOUND </source>
         <translation>Найдено: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2567"/>
+        <location filename="cengen.cpp" line="2581"/>
         <source>Do you want to search them in database?</source>
         <translation>Хотите выполнить поиск по базе данных?</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2604"/>
-        <location filename="cengen.cpp" line="2646"/>
-        <location filename="cengen.cpp" line="2688"/>
-        <location filename="cengen.cpp" line="2780"/>
+        <location filename="cengen.cpp" line="2618"/>
+        <location filename="cengen.cpp" line="2660"/>
+        <location filename="cengen.cpp" line="2702"/>
+        <location filename="cengen.cpp" line="2794"/>
         <source>NOT FOUND </source>
         <translation>Не найден: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2613"/>
+        <location filename="cengen.cpp" line="2627"/>
         <source>Price changed </source>
         <translation>Цена изменена:</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2704"/>
+        <location filename="cengen.cpp" line="2718"/>
         <source> wrong tovars.</source>
         <translation> неправильных записей.</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2705"/>
+        <location filename="cengen.cpp" line="2719"/>
         <source>If you want to save them into file, click OK button</source>
         <translation>Если вы хотите сохранить их в файл, нажмите кнопку ОК</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2827"/>
+        <location filename="cengen.cpp" line="2841"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2829"/>
+        <location filename="cengen.cpp" line="2843"/>
         <source>Select shablon: </source>
         <translation>Выберите шаблон: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2854"/>
+        <location filename="cengen.cpp" line="2868"/>
         <source>Save source data</source>
         <translation>Сохранить источник данных</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2854"/>
-        <location filename="cengen.cpp" line="2900"/>
+        <location filename="cengen.cpp" line="2868"/>
+        <location filename="cengen.cpp" line="2914"/>
         <source>Source settings (*.das)</source>
         <translation>Настройки источника (*.das)</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2900"/>
+        <location filename="cengen.cpp" line="2914"/>
         <source>Open source data</source>
         <translation>Открыть данные источника</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2972"/>
+        <location filename="cengen.cpp" line="2986"/>
         <source>Save filter data</source>
         <translation>Сохранить данные фильтра</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2972"/>
-        <location filename="cengen.cpp" line="3026"/>
+        <location filename="cengen.cpp" line="2986"/>
+        <location filename="cengen.cpp" line="3040"/>
         <source>Filter settings (*.fli)</source>
         <translation>Настройки фильтра (*.fli)</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3026"/>
+        <location filename="cengen.cpp" line="3040"/>
         <source>Open filter settings</source>
         <translation>Открыть настройки фильтра</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3276"/>
         <source>Total sold %1 goods of %2 tnomer%3Last date is %4 at %5</source>
-        <translation>Всего продано %1 раз (не штук!) товаров № %2 %3Дата последней продажи: %4 в %5</translation>
+        <translation type="obsolete">Всего продано %1 раз (не штук!) товаров № %2 %3Дата последней продажи: %4 в %5</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3423"/>
+        <location filename="cengen.cpp" line="3466"/>
         <source>Choose config location</source>
         <translation>Выберите расположение конфигурационного файла</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3423"/>
+        <location filename="cengen.cpp" line="3466"/>
         <source>CenGen config (tmp.das)</source>
         <translation>Конфигурация CenGen (tmp.das)</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3430"/>
+        <location filename="cengen.cpp" line="3473"/>
         <source>Choose external application location</source>
         <translation>Укажите внешнее приложение</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3430"/>
+        <location filename="cengen.cpp" line="3473"/>
         <source>Executable files (*.exe)</source>
         <translation>Выполняемые файлы (*.exe)</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3436"/>
+        <location filename="cengen.cpp" line="3479"/>
         <source>Choose external shablon location</source>
         <translation>Выберите внешний шаблон</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3436"/>
+        <location filename="cengen.cpp" line="3479"/>
         <source>Fast report shablons (*.frf)</source>
         <translation>Шаблоны Fast Report (*.frf)</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3734"/>
+        <location filename="cengen.cpp" line="3777"/>
         <source>Sum of tovar: </source>
         <translation>Сумма накладной: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3740"/>
+        <location filename="cengen.cpp" line="3783"/>
         <source>Updating. Please wait.</source>
         <translation>Обновляется. Пожалуйста, подождите.</translation>
     </message>
@@ -939,7 +948,7 @@
         <translation type="obsolete">Обновляется. Подождите, пожалуйста!</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="3826"/>
+        <location filename="cengen.cpp" line="3869"/>
         <source>Updated successful</source>
         <translation>Успешно обновлено!</translation>
     </message>
@@ -1098,7 +1107,7 @@ If you want to save them into file, click OK button</source>
     </message>
     <message>
         <location filename="cengen.cpp" line="190"/>
-        <location filename="cengen.cpp" line="2828"/>
+        <location filename="cengen.cpp" line="2842"/>
         <source>Set special shablon for zero price2</source>
         <translation>Установить особый шаблон для нулевых цен2</translation>
     </message>
@@ -1249,7 +1258,7 @@ If you want to save them into file, click OK button</source>
         <translation type="obsolete">Удалить строку из таблицы</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="961"/>
+        <location filename="cengen.cpp" line="965"/>
         <source>NOT FOUND</source>
         <translation>Ничего не найдено</translation>
     </message>
@@ -1263,107 +1272,107 @@ If you want to save them into file, click OK button</source>
     </message>
     <message>
         <location filename="cengen.cpp" line="585"/>
-        <location filename="cengen.cpp" line="1016"/>
+        <location filename="cengen.cpp" line="1020"/>
         <source>Select shablon file</source>
         <translation>Выберите файл шаблона</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1016"/>
+        <location filename="cengen.cpp" line="1020"/>
         <source>CEN-files (*.cen)</source>
         <translation>CEN-файлы (*.cen)</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1043"/>
+        <location filename="cengen.cpp" line="1047"/>
         <source>Please select file</source>
         <comment>If no file selected</comment>
         <translation>Пожалуйста, укажите файл шаблона</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1048"/>
+        <location filename="cengen.cpp" line="1052"/>
         <source>Shablon OK</source>
         <translation>Шаблон ОК</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1705"/>
-        <location filename="cengen.cpp" line="3050"/>
+        <location filename="cengen.cpp" line="1719"/>
+        <location filename="cengen.cpp" line="3064"/>
         <source>Wrong shablon</source>
         <translation>Неверный шаблон</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1127"/>
+        <location filename="cengen.cpp" line="1131"/>
         <source>Select proper file</source>
         <translation>Выбран неверный файл. Выберите файл шаблона</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="827"/>
+        <location filename="cengen.cpp" line="831"/>
         <source>Sells: </source>
         <translation>Продажи: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1055"/>
+        <location filename="cengen.cpp" line="1059"/>
         <source>*.cen</source>
         <translation>*.cen</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1212"/>
+        <location filename="cengen.cpp" line="1216"/>
         <source>Total: </source>
         <translation>Всего: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1214"/>
+        <location filename="cengen.cpp" line="1218"/>
         <source> cennic&apos;s on one page</source>
         <translation> ценников на одну страницу</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="1220"/>
+        <location filename="cengen.cpp" line="1224"/>
         <source>File is not ready</source>
         <comment>If file shablon is not ready</comment>
         <translation>Файл шаблона не готов</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2012"/>
+        <location filename="cengen.cpp" line="2026"/>
         <source>Cannot open shablon</source>
         <translation>Невозможно открыть шаблон</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2026"/>
+        <location filename="cengen.cpp" line="2040"/>
         <source>Save tovar list</source>
         <translation>Сохранить список товаров</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2026"/>
-        <location filename="cengen.cpp" line="2066"/>
-        <location filename="cengen.cpp" line="2218"/>
+        <location filename="cengen.cpp" line="2040"/>
+        <location filename="cengen.cpp" line="2080"/>
+        <location filename="cengen.cpp" line="2232"/>
         <source>Tovar lists (*.tov)</source>
         <translation>Список товаров (*.tov)</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2066"/>
+        <location filename="cengen.cpp" line="2080"/>
         <source>Open tovar list</source>
         <translation>Загрузить список товаров</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2202"/>
+        <location filename="cengen.cpp" line="2216"/>
         <source>COUNT: </source>
         <translation>ИТОГО: </translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2218"/>
+        <location filename="cengen.cpp" line="2232"/>
         <source>Select tovar list for minus</source>
         <translation>Выберите список товаров для минусовки</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2465"/>
+        <location filename="cengen.cpp" line="2479"/>
         <source>Michael Volkov</source>
         <translation>Михаил Волков</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2481"/>
+        <location filename="cengen.cpp" line="2495"/>
         <source>UG_Dvor_34</source>
         <translation>Южный Двор 34</translation>
     </message>
     <message>
-        <location filename="cengen.cpp" line="2481"/>
+        <location filename="cengen.cpp" line="2495"/>
         <source>Encouragement</source>
         <translation>Моральная поддержка</translation>
     </message>
