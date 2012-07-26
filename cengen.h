@@ -330,6 +330,7 @@ private:
     QMenuBar* mainMenu;
     QMenu *menuFile, *menuEdit, *menuSell, *menuHelp;
     QMenu *cenMenu;
+    QMenu *macroMenu;
     QMenu *selectFoundMethodMenu;
 
     QAction* action_new; //новый файл
@@ -368,6 +369,7 @@ private:
     QAction* action_left_items_with_zero_price2;
     QAction* action_group_same_shablons;
     QAction* action_check_line_prices;
+    QAction* action_start_macro;
 
 
 private slots:
@@ -412,6 +414,7 @@ private slots:
     void on_action_remove_zero_items();
     void on_action_left_itms_zero_price2();
     void on_action_check_line_prices();
+    void on_action_start_macro();
     void on_clear_last_button_clicked();
 
     void on_lineEdit_returnPressed();
@@ -486,6 +489,8 @@ private slots:
     bool save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok);
 
     void debug_tovar(QList<Tovar> list);
+
+    void execute_macro_file(QString fileName);
 
 
 };

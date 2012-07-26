@@ -257,6 +257,10 @@ void cengen::make_actions() {
     connect(action_left_items_with_zero_price2, SIGNAL(triggered()),
             SLOT(on_action_left_itms_zero_price2()));
 
+    action_start_macro = new QAction(tr("Execute macro"), this);
+    connect(action_start_macro, SIGNAL(triggered()),
+            SLOT(on_action_start_macro()));
+
 }
 
 void cengen::make_toolBar() {
@@ -331,6 +335,8 @@ void cengen::make_mainMenu() {
     selectFoundMethodMenu->addAction(action_select_method_tnomer);
     selectFoundMethodMenu->addAction(action_select_method_tname);
 
+    macroMenu = mainMenu->addMenu(tr("Macro"));
+    macroMenu->addAction(action_start_macro);
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_check_line_prices);
@@ -4072,4 +4078,71 @@ void cengen::on_action_check_line_prices() {
 
 void cengen::on_action_left_itms_zero_price2() {
     tableWidget->left_items_with_zero_price2();
+}
+
+void cengen::on_action_start_macro() {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Select scenarium file"), QApplication::applicationDirPath(), tr("CenGen scenarium (*.csf)"));
+    if (fileName == "") {
+        qDebug() << "Please select file name";
+        return;
+    }
+    execute_macro_file(fileName);
+}
+
+void cengen::execute_macro_file(QString fileName) {
+    QDomDocument doc;
+
+    QFile file;
+    file.setFileName(fileName);
+
+    if (file.open(QIODevice::ReadOnly)) {
+        if (doc.setContent(&file)) {
+            QDomElement domElement = doc.documentElement();
+            QDomNode node = domElement.firstChild();
+            while (!node.isNull()){
+                if (node.isElement()) {
+                    QDomElement item = node.toElement();
+                    if (item.tagName() == "exec") {
+                        QDomNode nodeItem = node.firstChild();
+                        QString itemName;
+                        QString itemValue;
+                        while (!nodeItem.isNull()) {
+                            if (nodeItem.isElement()) {
+                                QDomElement elementItem = nodeItem.toElement();
+                                if (!elementItem.isNull()) {
+                                    itemName = elementItem.tagName();
+                                    itemValue = elementItem.text();
+                                    if (itemName == "LoadTovarList") {
+                                        this->open_tovar_list(itemValue);
+                                    }
+                                    if (itemName == "SetFilterDontDelete") {
+                                        bool var = itemValue.toInt();
+                                        delete_filtered_box->setChecked(var);
+                                    }
+                                    if (itemName == "GetAllTovar") {
+                                        this->load_all_records();
+                                    }
+                                    if (itemName == "SetFilterEnabled") {
+                                        bool var = itemValue.toInt();
+                                        this->on_filterBox_toggled(var);
+                                    }
+                                    if (itemName == "ApplySellFilter") {
+                                        this->on_action_sell_filter_triggered();
+                                    }
+
+
+
+
+
+                                }
+                            }
+                            nodeItem = nodeItem.nextSibling();
+                        }
+                    }
+
+                }
+                node = node.nextSibling();
+            }
+        }
+    }
 }
