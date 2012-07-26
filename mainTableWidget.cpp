@@ -1,6 +1,8 @@
 #include "mainTableWidget.h"
 #include <QDebug>
 
+#define MAX_SHABLON_OPERATABLE 1000
+
 MainTableWidget::MainTableWidget(QWidget *pwgt)
 : QTableWidget (pwgt)
 {
@@ -130,7 +132,7 @@ QList<Tovar> MainTableWidget::get_tovar_list(QString priznak) {
                     if (tm == tr("Quantity")) {
                         tovar.quantity = item(i, j)->text().toInt();
                     }
-                    if (tm == tr("Shablon") && rowCount()<=500 && shField) {
+                    if (tm == tr("Shablon") && rowCount()<=MAX_SHABLON_OPERATABLE && shField) {
                         box = ((QComboBox*)cellWidget(i, j));
                         tovar.shablon = box->currentIndex();
                         //qDebug() << "Shablon " << tovar.shablon;
@@ -270,7 +272,7 @@ void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool To
                     }
                 }
             }
-            if (tm == tr("Shablon") && tovarList.count() <= 500) {
+            if (tm == tr("Shablon") && tovarList.count() <= MAX_SHABLON_OPERATABLE) {
                 for (int position = rowsCount; position<rowsCount+tovarList.count(); position++) {
                 QComboBox *box = new QComboBox;
                 box->addItems(shablonList);
@@ -371,7 +373,7 @@ QStringList MainTableWidget::get_shablon_list() {
 
 void MainTableWidget::set_shablon_current(int shablon) {
     this->shablonCurrent = shablon;
-    if (rowCount() > 500) return;
+    if (rowCount() > MAX_SHABLON_OPERATABLE) return;
     QComboBox* box;
     for (int i = 0; i<rowCount(); i++) {
         box = ((QComboBox*)cellWidget(i, shField));
@@ -429,7 +431,7 @@ void MainTableWidget::set_focus_on_price2() {
 
 void MainTableWidget::set_special_shablon_for_zero_price2(int shablon) {
     if (!shField) return;
-    if (rowCount() > 500) return;
+    if (rowCount() > MAX_SHABLON_OPERATABLE) return;
     float pr;
     QComboBox* box;
     for (int i = 0; i<rowCount(); i++) {
@@ -466,7 +468,7 @@ int MainTableWidget::kol_of_tovar() {
 }
 
 void MainTableWidget::remove_zero_quantity() {
-    if (rowCount() > 500) shField = 0;
+    if (rowCount() > MAX_SHABLON_OPERATABLE) shField = 0;
     int j = rowCount();
     int i = 0;
     int quant = 0;
@@ -485,7 +487,7 @@ void MainTableWidget::remove_zero_quantity() {
 }
 
 void MainTableWidget::left_items_with_zero_price2() {
-    if (rowCount() > 500) shField = 0;
+    if (rowCount() > MAX_SHABLON_OPERATABLE) shField = 0;
     int j = rowCount();
     int i = 0;
     float pr2 = 0;
