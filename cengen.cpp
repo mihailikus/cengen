@@ -2040,10 +2040,13 @@ void cengen::on_action_save_triggered() {
     this->save_tovar_list_into_file("", spisok);
 }
 
-void cengen::save_tovar_list_into_file(QString preferName, QList<Tovar> spisok)
+void cengen::save_tovar_list_into_file(QString preferName, QList<Tovar> spisok, bool ask)
 {
     //Сохранение списка товаров
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save tovar list"), preferName , tr("Tovar lists (*.tov)"));
+    QString fileName = preferName;
+    if (ask) {
+        fileName = QFileDialog::getSaveFileName(this, tr("Save tovar list"), preferName , tr("Tovar lists (*.tov)"));
+    }
 
     if (fileName != "") {
         bool ckeck = false;
@@ -4109,11 +4112,19 @@ void cengen::execute_macro_file(QString fileName) {
                         while (!nodeItem.isNull()) {
                             if (nodeItem.isElement()) {
                                 QDomElement elementItem = nodeItem.toElement();
+                                float ask =  elementItem.attribute("ask", "0").toInt();
+                                qDebug() << "ASk = " << ask;
                                 if (!elementItem.isNull()) {
                                     itemName = elementItem.tagName();
                                     itemValue = elementItem.text();
                                     if (itemName == "LoadTovarList") {
                                         this->open_tovar_list(itemValue);
+                                    }
+                                    if (itemName == "SaveTovarList") {
+                                        this->save_tovar_list_into_file(itemValue, tableWidget->get_tovar_list("x"), ask);
+                                    }
+                                    if (itemName == "NewTovarList") {
+                                        this->on_action_new_triggered();
                                     }
                                     if (itemName == "SetFilterDontDelete") {
                                         bool var = itemValue.toInt();
@@ -4129,7 +4140,17 @@ void cengen::execute_macro_file(QString fileName) {
                                     if (itemName == "ApplySellFilter") {
                                         this->on_action_sell_filter_triggered();
                                     }
-
+                                    if (itemName == "SetSellFilterMethod") {
+                                        if (itemValue == "REPLACE") {
+                                            this->methodSellBox->setCurrentIndex(0);
+                                        }
+                                        if (itemValue == "MINUS") {
+                                            this->methodSellBox->setCurrentIndex(1);
+                                        }
+                                    }
+                                    if (itemName == "RemoveZeroQuant") {
+                                        this->on_action_remove_zero_items();
+                                    }
 
 
 

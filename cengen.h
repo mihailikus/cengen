@@ -482,7 +482,7 @@ private slots:
 
     void on_fieldListBox_checked(bool status);
 
-    void save_tovar_list_into_file(QString name, QList<Tovar> spisok);
+    void save_tovar_list_into_file(QString name, QList<Tovar> spisok, bool ask_for_fileName = true);
 
     void ask_user_to_save_wrong_tovar_list(QList<Tovar> spisok);
 
