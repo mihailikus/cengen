@@ -55,7 +55,6 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
     filter_is_on = false;
     filterInformer = new Tinformer();
 
-    sell_file_is_checked = false;
     previewed = false;
 
     //После создания всех форм - читаем настройки из конфига
@@ -265,6 +264,10 @@ void cengen::make_actions() {
     connect(action_collaps_same_items, SIGNAL(triggered()),
             SLOT(on_collaps_same_items()));
 
+    action_get_sold_items = new QAction(tr("Get sold items"), this);
+    connect(action_get_sold_items, SIGNAL(triggered()),
+            SLOT(on_action_get_sold_items()));
+
 }
 
 void cengen::make_toolBar() {
@@ -321,6 +324,7 @@ void cengen::make_mainMenu() {
 
     menuSell = mainMenu->addMenu((tr("Sell control")));
     menuSell->addAction(action_sell_filter);
+    menuSell->addAction(action_get_sold_items);
     menuSell->addSeparator();
     menuSell->addAction(action_get_sum_of_tovar);
     menuSell->addSeparator();
@@ -803,82 +807,8 @@ void cengen::make_filter_tab() {
 }
 
 void cengen::make_sellSettings_tab() {
-    tab7 = new QWidget;
-    layTab7 = new QGridLayout;
-
-    selectSellFileButton = new QPushButton (tr("Select file with sell records"));
-    layTab7->addWidget(selectSellFileButton, 0, 0);
-    connect(selectSellFileButton, SIGNAL(clicked()), SLOT(on_selectSellFileButtonClicked()));
-
-    lb1 = new QLabel(tr("Selected file: "));
-    lb2 = new QLabel("");
-
-    layTab7->addWidget(lb1, 0, 1, 1, 3);
-    //layTab7->addWidget(lb2, 0, 2, 1, 3);
-
-    clear_last_button = new QPushButton(tr("Clear last pos"));
-    connect (clear_last_button, SIGNAL(clicked()), SLOT(on_clear_last_button_clicked()));
-    layTab7->addWidget(clear_last_button, 1, 3);
-
-    sellNomerBox = new QComboBox;
-    sellDateBox = new QComboBox;
-    sellTimeBox = new QComboBox;
-    sellKolBox = new QComboBox;
-
-    lb3 = new QLabel(tr("Tnomer"));
-    lb4 = new QLabel(tr("Date of sell"));
-    lb5 = new QLabel(tr("Time of sell"));
-    lb6 = new QLabel(tr("Quantity"));
-
-    layTab7->addWidget(lb3, 1, 0);
-    layTab7->addWidget(sellNomerBox, 1, 1);
-    layTab7->addWidget(lb4, 2, 0);
-    layTab7->addWidget(sellDateBox, 2, 1);
-    layTab7->addWidget(lb5, 3, 0);
-    layTab7->addWidget(sellTimeBox, 3, 1);
-    layTab7->addWidget(lb6, 4, 0);
-    layTab7->addWidget(sellKolBox, 4, 1);
-
-    lb10 = new QLabel(tr("Sells: " ));
-    methodSellBox = new QComboBox;
-    methodSellBox->insertItems(0, QStringList()
-                               << tr("Replace")
-                               << tr("Minus")
-                               << tr("Per day"));
-    //methodSellValue = new QLineEdit("0");
-
-    //layTab7->addWidget(lb10, 5, 0);
-    //layTab7->addWidget(methodSellBox, 5, 1);
-    ui_mainToolBar->addWidget(lb10);
-    ui_mainToolBar->addWidget(methodSellBox);
-    ui_mainToolBar->addSeparator();
-
-    //layTab7->addWidget(methodSellValue, 5, 2);
-
-    dateStart = new QCalendarWidget;
-    dateStop = new QCalendarWidget;
-
-    dateStart->setFirstDayOfWeek ( Qt::Monday );
-    dateStop->setFirstDayOfWeek ( Qt::Monday );
-
-    dateStart->setGridVisible(true);
-    dateStop->setGridVisible(false);
-
-    dateStart->setSelectedDate(QDate::currentDate());
-    dateStop->setSelectedDate(QDate::currentDate());
-
-    lb7 = new QLabel(tr("From date: "));
-    lb8 = new QLabel(tr("To date: "));
-
-    layTab7->addWidget(lb7, 6, 1);
-    layTab7->addWidget(dateStart, 7, 1);
-    layTab7->addWidget(lb8, 6, 3);
-    layTab7->addWidget(dateStop, 7, 3);
-
-
-    tab7->setLayout(layTab7);
-    ui_tabWidget->insertTab(TabsOrder::Sell, tab7, tr("Sell settings"));
-
+    sellFilter = new SellFilterWidget(ui_mainToolBar, statusBar, this);
+    ui_tabWidget->insertTab(TabsOrder::Sell, sellFilter, tr("Sell settings"));
 }
 
 void cengen::make_ext_app_tab() {
@@ -1487,15 +1417,16 @@ void cengen::writeSettings()
 
     //сохраняем настройки о файле продаж
     m_settings.beginGroup("/Sell");
-    m_settings.setValue("sellFileName", sellFileName);
-    m_settings.setValue("sellFileFields", sellOpisateli);
-    m_settings.setValue("nomer", sellNomerBox->currentIndex());
-    m_settings.setValue("date", sellDateBox->currentIndex());
-    m_settings.setValue("time", sellTimeBox->currentIndex());
-    m_settings.setValue("kol", sellKolBox->currentIndex());
-    m_settings.setValue("lastFile", last_known_file);
+    m_settings.setValue("sellFileName", sellFilter->getSellFileName());
+    m_settings.setValue("sellFileFields", sellFilter->getOpisateli());
+    m_settings.setValue("nomer", sellFilter->getNomberBoxIndex());
+    m_settings.setValue("date", sellFilter->getDateBoxIndex());
+    m_settings.setValue("time", sellFilter->getTimeBoxIndex());
+    m_settings.setValue("kol", sellFilter->getKolBoxIndex());
+    m_settings.setValue("lastFile", sellFilter->getLastKnownFile());
+    int last_known_pos = sellFilter->getLastKnownPos();
     if (last_known_pos) {
-        m_settings.setValue("lastDate", last_known_date);
+        m_settings.setValue("lastDate", sellFilter->getLastKnownDate());
         m_settings.setValue("lastPos", last_known_pos);
     }
     m_settings.endGroup();
@@ -1661,37 +1592,29 @@ void cengen::readSettings() {
     }
 
     //читаем информацию о файле продаж
-    sellFileName = m_settings.value("/Settings/Sell/sellFileName", "").toString();
-    sellOpisateli = m_settings.value("/Settings/Sell/sellFileFields", "").toStringList();
+    sellFilter->setSellFileName(m_settings.value("/Settings/Sell/sellFileName", "").toString());
+    sellFilter->setOpisateli(m_settings.value("/Settings/Sell/sellFileFields", "").toStringList());
 
-    sellNomerBox->addItems(sellOpisateli);
-    sellDateBox->addItems(sellOpisateli);
-    sellTimeBox->addItems(sellOpisateli);
-    sellKolBox->addItems(sellOpisateli);
+    sellFilter->setNomberBoxIndex(m_settings.value("/Settings/Sell/nomer", "0").toInt());
+    sellFilter->setDateBoxIndex(m_settings.value("/Settings/Sell/date", "0").toInt());
+    sellFilter->setTimeBoxIndex(m_settings.value("/Settings/Sell/time", "0").toInt());
+    sellFilter->setKolBoxIndex(m_settings.value("/Settings/Sell/kol", "0").toInt());
 
-    sellNomerBox->setCurrentIndex(m_settings.value("/Settings/Sell/nomer", "0").toInt());
-    sellDateBox->setCurrentIndex(m_settings.value("/Settings/Sell/date", "0").toInt());
-    sellTimeBox->setCurrentIndex(m_settings.value("/Settings/Sell/time", "0").toInt());
-    sellKolBox->setCurrentIndex(m_settings.value("/Settings/Sell/kol", "0").toInt());
-//    m_settings.setValue("lastDate", last_known_date);
-//    m_settings.setValue("lastPos", last_known_pos);
-//    m_settings.setValue("lastFile", last_known_file);
-    last_known_file = m_settings.value("/Settings/Sell/lastFile", "").toString();
-//    if (last_known_file == sellFileName) {
-//        last_known_date = m_settings.value("/Settings/Sell/lastDate", "").toDate();
-//        last_known_pos = m_settings.value("/Settings/Sell/lastPos", "").toInt();
-//    } else {
-//        last_known_date = QDate::currentDate().addYears(-50);
-//        last_known_pos = 0;
-//    }
-    last_known_pos = m_settings.value("/Settings/Sell/lastPos", "-1").toInt();
+
+    sellFilter->setLastKnownFile(m_settings.value("/Settings/Sell/lastFile", "").toString());
+
+    int last_known_pos = m_settings.value("/Settings/Sell/lastPos", "-1").toInt();
+    QDate lastDate;
     if (last_known_pos != -1) {
-        last_known_date = m_settings.value("/Settings/Sell/lastDate", "").toDate();
+        lastDate = m_settings.value("/Settings/Sell/lastDate", "").toDate();
     } else {
-        last_known_date = QDate::currentDate().addYears(-50);
+        lastDate = QDate::currentDate().addYears(-50);
         last_known_pos = 0;
     }
-    updateSellTab();
+    sellFilter->setLastKnownPos(last_known_pos);
+    sellFilter->setLastKnownDate(lastDate);
+
+    sellFilter->updateSellTab();
 
     //читаем номер текущей вкладки (по умолчанию - вкладка с источником данных)
     int ind = m_settings.value("/Settings/tabIndex", "3").toInt();
@@ -2291,9 +2214,15 @@ void cengen::on_collaps_same_items() {
     //функция объединяет товары с одинаковым товарным номером, складывая количество
     qDebug() << "Tovar collaps";
     QList<Tovar> oldList;
-    QVector<Tovar> newList;
+
     oldList = tableWidget->get_tovar_list("x");
 
+    tableWidget->setRowCount(0);
+    tableWidget->load_tovar_list_into_table(collaps_same_items(oldList.toVector()));
+}
+
+QVector<Tovar> cengen::collaps_same_items(QVector<Tovar> oldList) {
+    QVector<Tovar> newList;
     for (int i = 0; i<oldList.count(); i++) {
         bool z = false;
         for (int j = 0; j<newList.count(); j++) {
@@ -2306,25 +2235,7 @@ void cengen::on_collaps_same_items() {
             newList.push_back(oldList.at(i));
         }
     }
-
-//    char st[] = "aaalkjasdhkwebsdfl;j";
-//    vector<tabl> t;
-
-//    for (int i=0; i<sizeof(st); i++){
-//            bool z = false;
-//            for (unsigned int j=0; j<t.size(); j++)
-//                    if (t[j].simbol == st){
-//                            t[j].cout++;
-//                            z = true;
-//                    }
-//            if (!z){
-//                    tabl s = {st,1};
-//                    t.push_back(s);
-//            }
-//    }
-
-    tableWidget->setRowCount(0);
-    tableWidget->load_tovar_list_into_table(newList);
+    return newList;
 }
 
 void cengen::on_filterBox_toggled(bool arg1)
@@ -2646,6 +2557,10 @@ void cengen::on_action_verify_barcode() {
 }
 
 void cengen::on_action_update_prices() {
+    this->update_prices(true);
+}
+
+void cengen::update_prices(bool AskUserToSave) {
     QList<Tovar> spisokCur, spisokNew, spisokWrong, spTmp;
     Tovar tovar;
     spisokCur = tableWidget->get_tovar_list("x");
@@ -2684,7 +2599,7 @@ void cengen::on_action_update_prices() {
     this->on_action_new_triggered();
     tableWidget->load_tovar_list_into_table(spisokNew);
 
-    ask_user_to_save_wrong_tovar_list(spisokWrong);
+    if (AskUserToSave) ask_user_to_save_wrong_tovar_list(spisokWrong);
 }
 
 void cengen::on_action_update_prices_in_minus() {
@@ -3160,284 +3075,24 @@ void cengen::load_filter_settings_file(QString fileName) {
 
 void cengen::on_action_sell_filter_triggered() {
 
-    //if (!sell_file_is_checked)
-    check_sell_file();
-
-
-    //methodSellBox->setCurrentIndex(1);
-    int methodSell = methodSellBox->currentIndex();
-    //0 - заменить количество товара количеством проданных единиц
-    //1 - вычесть из старого количества количество проданных единиц
-    //2 - определение среднего за день (заносим в поле Цена2) и количества проданного
+    sellFilter->check_sell_file();
 
     QList<Tovar> curTb, newTb;
+    //QVector<Tovar> newTb;
 
-    QDate dt1, dt2;
-    dt1 = dateStart->selectedDate();
-    dt2 = dateStop->selectedDate();
+//    QDate dt1, dt2;
+//    dt1 = sellFilter->get_date_start();
+//    dt2 = sellFilter->get_date_end();
 
     curTb = tableWidget->get_tovar_list("x");
 
-    newTb = apply_sell_filter(curTb, dt1, dt2, methodSell);
-
     on_action_new_triggered();
+
+    newTb = sellFilter->apply_sell_filter(curTb);
+
     tableWidget->load_tovar_list_into_table(newTb);
+
     on_action_get_sum_of_tovar();
-}
-
-QList<Tovar> cengen::apply_sell_filter(QList<Tovar> curTb, QDate dt1, QDate dt2, int methodSell) {
-    //int methodSell
-    //0 - заменить количество товара количеством проданных единиц
-    //1 - вычесть из старого количества количество проданных единиц
-    //2 - определение среднего за день (заносим в поле Цена2) и количества проданного
-
-    if (!sell_file_is_checked) check_sell_file();
-
-    dbTranslator sellConfig;
-    sellConfig.tbarcode = sellDateBox->currentText();
-    sellConfig.tnomer =   sellNomerBox->currentText();
-    sellConfig.tname =    sellTimeBox->currentText();
-    sellConfig.tprice =   sellKolBox->currentText();
-
-    sell_informer->set_fields(&sellConfig);
-
-    sell_informer->set_limit_search(1);
-
-
-    QString curDate;
-    QList<Tovar> tb1, tb2, tb3, newTb;
-    int init_pos;
-    qDebug() << "Last known date is " << last_known_date;
-
-
-    if (dt1 >= last_known_date) {
-        qDebug() << "Using last known position";
-        init_pos = last_known_pos;
-    } else {
-        qDebug() << "Found last date";
-        init_pos = 0;
-    }
-    int startPos;
-    curDate =  dt1.toString("yyyyMMdd");
-    tb1 = sell_informer->info(curDate, "tbarcode", init_pos, -1, 1, true);
-
-    if (!tb1.count()) {
-        startPos = 0;
-    } else {
-        startPos = sell_informer->last_found_record_number();
-        startPos--;
-        qDebug() << "Start pos is " << startPos;
-        QString dt = tb1.at(0).barcode;
-        QDate ddt = QDate::fromString(dt, "yyyyMMdd");
-        QDate dd2 = last_known_date.addDays(14);
-        qDebug() << "Before start is " << ddt << "\n" << dd2;
-        if (ddt > dd2) {
-            ddt = ddt.addDays(-14);
-            tb1 = sell_informer->info(ddt.toString("yyyyMMdd"), "tbarcode", init_pos, -1, 1, true);
-
-            last_known_pos = sell_informer->last_found_record_number();
-            last_known_date = ddt;
-            last_known_file = sellFileName;
-            qDebug() << "We know now: " << last_known_pos << last_known_date;
-        }
-    }
-
-
-    curDate = dt2.toString("yyyyMMdd");
-
-    tb2 = sell_informer->info(curDate, "tbarcode", init_pos, -1, 0, false);
-    int lastPos;
-    int max = sell_informer->get_maximum();
-    if (tb2.count()) {
-        lastPos = sell_informer->last_found_record_number();
-        lastPos++;
-        lastPos++;
-        qDebug() << "Last pos " << lastPos;
-        if (lastPos > max) lastPos = max;
-
-    } else {
-        lastPos = max;
-    }
-
-    int period = dt1.daysTo(dt2) +1;
-    int count, prod;
-    Tovar tovar;
-    QList<QDateTime> lastSellDates;
-    QDateTime lastSellDate;
-    QString lh, lm ;
-    QDateTime zeroDate = QDateTime(QDate::fromString("19000101", "yyyyMMdd"));
-
-
-    progressBar->setMaximum(curTb.count());
-    statusBar->addWidget(progressBar);
-    progressBar->show();
-
-    for (int i = 0; i<curTb.count(); i++) {
-        progressBar->setValue(i);
-        tovar = curTb.at(i);
-        tb3 = sell_informer->info
-                (QString::number(tovar.nomer_of_tovar),
-                 "tnomer",
-                 startPos,
-                 lastPos,
-                 -1,
-                 true,
-                 false);
-
-        QApplication::processEvents();
-        count = 0;
-        prod = tb3.count();
-        for (int j = 0; j<prod; j++) {
-            count += tb3.at(j).price1;
-        }
-        if (prod) {
-            lh = tb3.at(prod-1).name_of_tovar.split(":").at(0);
-            lm = tb3.at(prod-1).name_of_tovar.split(":").at(1);
-            //qDebug() << "Time is " <<lh << lm;
-
-            lastSellDate = QDateTime(QDate::fromString(tb3.at(prod-1).barcode, "yyyyMMdd"),
-                                     QTime::fromString(tb3.at(prod-1).name_of_tovar, "hh:mm"));
-            //qDebug() << "Last date " << lastSellDate;
-        } else {
-            lastSellDate = zeroDate;
-        }
-        lastSellDates << lastSellDate;
-        //в зависимости от метода обновления - разные действия
-        int days;
-        switch (methodSell) {
-        case 0:
-            tovar.quantity = count;
-            break;
-        case 1:
-            tovar.quantity = tovar.quantity - count;
-            break;
-        case 2:
-            if (tovar.quantity) {
-                tovar.price2 = (float)count / period;
-            } else {
-                days = dt1.daysTo(lastSellDate.date()) + 1;
-                tovar.price2 = (float)count / days;
-            }
-            tovar.quantity = count;
-            break;
-        default:
-            tovar.quantity = count;
-            break;
-        }
-
-        newTb << tovar;
-    }
-    if (curTb.count() == 1 && tb3.count()) {
-        //был поиск продаж только одного товара и он продавался -
-        //  покажем информацию о дате и времени продажи
-        int prod = tb3.count();
-        QString dt = tb3.at(prod-1).barcode;
-        QDate ldt  = QDate::fromString(dt, "yyyyMMdd");
-        dt = ldt.toString("d MMMM yyyy, dddd");
-        QString tm = tb3.at(prod-1).name_of_tovar;
-        QString message = tr("Total sold %1 goods (%2 pices) of %3 tnomer%4Last date is %5 at %6")
-                .arg(QString::number(prod))
-                .arg(QString::number(newTb.at(0).quantity))
-                .arg(QString::number(curTb.at(0).nomer_of_tovar))
-                .arg("\n")
-                .arg(dt)
-                .arg(tm);
-        ListFoundedItemsDialog *dlg = new ListFoundedItemsDialog(this);
-        dlg->setMessage(message);
-        dlg->exec();
-    }
-    statusBar->removeWidget(progressBar);
-
-    return newTb;
-
-}
-
-void cengen::on_selectSellFileButtonClicked() {
-    //выбор DBF-файла
-    QString str = QFileDialog::getOpenFileName(0, "Select SELL file", sellFileName, "DBF-files (*.dbf)");
-    sellFileName = str;
-    updateSellTab();
-    check_sell_file();
-}
-
-void cengen::check_sell_file() {
-    qDebug() << "Checking sell file" << sellFileName;
-    sell_informer = new Tinformer;
-    DbfConfig sellDb;
-    sellDb.fileName = sellFileName;
-
-    QFileInfo fi;
-    fi.setFile(sellFileName);
-    if (!fi.exists()) {
-        qDebug() << "File not exists";
-        return;
-    }
-
-
-    sell_informer->prepare(&sellDb);
-
-    sell_informer->set_tb_name(sellDb.fileName);
-
-    int j1 = sellNomerBox->currentIndex();
-    int j2 = sellDateBox->currentIndex();
-    int j3 = sellTimeBox->currentIndex();
-    int j4 = sellKolBox->currentIndex();
-
-    sellNomerBox->clear();
-    sellDateBox->clear();
-    sellTimeBox->clear();
-    sellKolBox->clear();
-
-    sellOpisateli = sell_informer->tb_describe("DBF");
-
-    sellNomerBox->addItems(sellOpisateli);
-    sellDateBox->addItems(sellOpisateli);
-    sellTimeBox->addItems(sellOpisateli);
-    sellKolBox->addItems(sellOpisateli);
-
-    sellNomerBox->setCurrentIndex(j1);
-    sellDateBox->setCurrentIndex(j2);
-    sellTimeBox->setCurrentIndex(j3);
-    sellKolBox->setCurrentIndex(j4);
-
-    lb1->setText(lb1->text() + "; max=" + QString::number(sell_informer->get_maximum()));
-
-    sell_file_is_checked = true;
-}
-
-void cengen::on_saveSellSettingsButtonClicked() {
-    qDebug() << "Saving sell settings";
-}
-
-void cengen::on_clear_last_button_clicked() {
-    //m_settings.beginGroup("/");
-    m_settings.beginGroup("Settings");
-    m_settings.beginGroup("Sell");
-    qDebug() << "Clearing last pos" << m_settings.group();
-
-
-    m_settings.remove("lastDate");
-    m_settings.remove("lastFile");
-    m_settings.remove("lastPos");
-
-    last_known_pos = 0;
-    last_known_date = QDate::currentDate().addYears(-50);
-    last_known_file = "";
-
-
-    m_settings.endGroup();
-    m_settings.endGroup();
-
-}
-
-void cengen::updateSellTab() {
-    lb1->setText(lb1->text() + sellFileName +
-                 last_known_date.toString(" dd MM yyyy, ") +
-                 QString::number(last_known_pos));
-    qDebug() << "last date " << last_known_date;
-//    last_known_date = m_settings.value("/Settings/Sell/lastDate", "").toDate();
-//    last_known_pos = m_settings.value("/Settings/Sell/lastPos", "").toInt();
-
 }
 
 void cengen::on_action_render_in_external_app() {
@@ -3935,6 +3590,7 @@ void cengen::on_action_zakaz10_triggered() {
 
     QList<Tovar> inputList, skList, magList, prList, assList,
             tbNew, qList, korList, finalList;
+    //QVector<Tovar> prLst, mgLst;
     Tovar tovar, magTovar;
     int quant;
 
@@ -3949,9 +3605,8 @@ void cengen::on_action_zakaz10_triggered() {
 
     //смотрим, как этот товар продается
     //      фильтр продаж от даты начала расчета до текущей даты
-    prList = apply_sell_filter(skList, acfg.dateStart, QDate::currentDate().addDays(-1), 2);
-//    qDebug() << "Prod tovars: ";
-//    debug_tovar(prList);
+    prList = sellFilter->apply_sell_filter(skList, acfg.dateStart, QDate::currentDate().addDays(-1), 2);
+    //for (int i = 0; i<prLst.count(); i++) prList << prLst[i];
 
     //загружаем настройки фильтра обязательного ассортимента
     load_filter_settings_file(acfg.assort);
@@ -3967,7 +3622,9 @@ void cengen::on_action_zakaz10_triggered() {
     //из остатков на начало дня вычтем товары, которые были проданы сегодня
     //  (т.к. изменения в базу поступают вечером)
     if (acfg.check_today_sell) {
-            magList = apply_sell_filter(magList, QDate::currentDate(), QDate::currentDate(), 1);
+            magList = sellFilter->apply_sell_filter(magList, QDate::currentDate(), QDate::currentDate(), 1);
+//            magList.clear();
+//            for (int i = 0; i<mgLst.count(); i++) magList << mgLst[i];
     }
 
     int half_ass;
@@ -4182,10 +3839,10 @@ void cengen::execute_macro_file(QString fileName) {
                                     }
                                     if (itemName == "SetSellFilterMethod") {
                                         if (itemValue == "REPLACE") {
-                                            this->methodSellBox->setCurrentIndex(0);
+                                            sellFilter->setSellMethod(0);
                                         }
                                         if (itemValue == "MINUS") {
-                                            this->methodSellBox->setCurrentIndex(1);
+                                            sellFilter->setSellMethod(1);
                                         }
                                     }
                                     if (itemName == "RemoveZeroQuant") {
@@ -4206,4 +3863,15 @@ void cengen::execute_macro_file(QString fileName) {
             }
         }
     }
+}
+
+void cengen::on_action_get_sold_items() {
+    QVector<Tovar> lst = sellFilter->get_sold_tovars();
+    tableWidget->load_tovar_list_into_table(collaps_same_items(lst));
+    ui_tabWidget->setCurrentIndex(0);
+
+    on_action_update_names();
+    update_prices(false);
+    on_action_get_sum_of_tovar();
+
 }

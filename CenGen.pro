@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     imagebox.cpp \
     about.cpp \
     mainTableWidget.cpp \
-    autozakaz.cpp
+    autozakaz.cpp \
+    sellFilterWidget.cpp
 HEADERS += cengen.h \
     tinformer.h \
     tovar.h \
@@ -48,7 +49,8 @@ HEADERS += cengen.h \
     mainTableWidget.h \
     tnvalidator.h \
     file_worker.h \
-    autozakaz.h
+    autozakaz.h \
+    sellFilterWidget.h
 FORMS += \
     addlinemaster.ui \
     autozakaz.ui

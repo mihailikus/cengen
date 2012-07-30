@@ -42,6 +42,7 @@
 #include "about.h"
 #include "mainTableWidget.h"
 #include "autozakaz.h"
+#include "sellFilterWidget.h"
 
 QT_BEGIN_NAMESPACE
 class QPushButton;
@@ -63,10 +64,12 @@ class BarcodeValidator;
 class Tinformer;
 class Barcode;
 class Cennic;
+//class SellFilterWidget;
+QT_END_NAMESPACE
 
-namespace Ui {
-    class cengen;
-}
+//namespace Ui {
+//    class cengen;
+//}
 
 class cengen : public QMainWindow, public ImageBox
 {
@@ -220,23 +223,7 @@ private:
 
 
     //виджеты вкладки для управления файлом продаж
-    QWidget *tab7;
-    QGridLayout *layTab7;
-    QLabel *lb1, *lb2, *lb3, *lb4, *lb5, *lb6, *lb7, *lb8, *lb9, *lb10;
-    QComboBox *sellNomerBox, *sellDateBox, *sellTimeBox, *sellKolBox;
-    QPushButton *selectSellFileButton;
-    QPushButton *saveSellSettingsButton;
-    QString sellFileName;
-    QStringList sellOpisateli;
-    QComboBox *methodSellBox;
-    //QLineEdit *methodSellValue;
-    QCalendarWidget *dateStart, *dateStop;
-    bool sell_file_is_checked;
-    Tinformer *sell_informer;
-    QDate last_known_date;
-    int last_known_pos;
-    QString last_known_file;
-    QPushButton *clear_last_button;
+    SellFilterWidget *sellFilter;
 
     autozakaz_config acfg;
 
@@ -371,6 +358,7 @@ private:
     QAction* action_check_line_prices;
     QAction* action_start_macro;
     QAction* action_collaps_same_items;
+    QAction* action_get_sold_items;
 
 
 private slots:
@@ -399,6 +387,7 @@ private slots:
     void on_action_export_tovar_list_to_clipboard();
     void on_action_verify_barcode();
     void on_action_update_prices();
+    void update_prices(bool AskUserToSave = true);
     void on_action_update_prices_in_minus();
     void on_action_update_names();
     void on_action_set_special_shablon_to_zero_price2();
@@ -416,8 +405,9 @@ private slots:
     void on_action_left_itms_zero_price2();
     void on_action_check_line_prices();
     void on_action_start_macro();
-    void on_clear_last_button_clicked();
     void on_collaps_same_items();
+    QVector<Tovar> collaps_same_items(QVector<Tovar> inputList);
+    void on_action_get_sold_items();
 
     void on_lineEdit_returnPressed();
     void tovar_search();
@@ -433,16 +423,14 @@ private slots:
     void on_loadSourceButton();
     void on_saveFilterSettings();
     void on_loadFilterSettings();
-    void on_selectSellFileButtonClicked();
-    void check_sell_file();
-    void on_saveSellSettingsButtonClicked();
-    void updateSellTab();
+    //void on_selectSellFileButtonClicked();
+    //void check_sell_file();
+    //void updateSellTab();
     void select_ext_conf_button_clicked();
     void select_ext_app_button_clicked();
     void select_ext_shablon_button_clicked();
     void on_data_changed();
 
-    QList<Tovar> apply_sell_filter(QList<Tovar> inputList, QDate dt1, QDate dt2, int methodSell);
 
     QList<Tovar> show_found_items(QList<Tovar> inputList);
     QList<Tovar> apply_filter(QList<Tovar> inputList, bool startProgressBar = true);
@@ -493,7 +481,6 @@ private slots:
     void debug_tovar(QList<Tovar> list);
 
     void execute_macro_file(QString fileName);
-
 
 };
 

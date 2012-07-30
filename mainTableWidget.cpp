@@ -206,7 +206,8 @@ void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
 
 void MainTableWidget::load_tovar_list_into_table(QVector<Tovar> tovarList, bool ToBottom) {
     QList<Tovar> lst;
-    for (int i = 0; i<tovarList.count(); i++) lst << tovarList[i];
+    lst = tovarList.toList();
+    //for (int i = 0; i<tovarList.count(); i++) lst << tovarList[i];
     load_tovar_list_into_table(lst, ToBottom);
 }
 
