@@ -14,13 +14,11 @@ autozakaz::autozakaz(QWidget *parent) :
     cal1 = qFindChild<QCalendarWidget*>(this, "calendarStart");
     cal2 = qFindChild<QCalendarWidget*>(this, "calendarStop");
     calPost = qFindChild<QCalendarWidget*>(this, "calendarPost");
+    ui_check_today_box = qFindChild<QCheckBox*>(this, "check_today_box");
 
 
     cal1->setSelectedDate(QDate::currentDate().addDays(-4));
     cal2->setSelectedDate(QDate::currentDate().addDays(4));
-
-
-
 }
 
 void autozakaz::set_config(autozakaz_config cfg) {
@@ -32,6 +30,13 @@ void autozakaz::set_config(autozakaz_config cfg) {
     line3->setText(cfg.assort);
     line4->setText(cfg.kol_v_korob);
     line5->setText(cfg.korob_quantum);
+
+    //флаг "Проверять сегодняшние продажи"
+    //  устанавливаем, если время больше 9:05 утра (типа магазин открылся)
+    QTime tm2 = QTime::currentTime();
+    QTime tm1 = QTime(9, 5);
+    ui_check_today_box->setChecked(tm2>tm1);
+
 
 }
 
@@ -45,6 +50,7 @@ autozakaz_config autozakaz::get_config() {
     cfg.assort = line3->text();
     cfg.kol_v_korob = line4->text();
     cfg.korob_quantum = line5->text();
+    cfg.check_today_sell = ui_check_today_box->isChecked();
     return cfg;
 }
 

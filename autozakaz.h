@@ -3,6 +3,7 @@
 
 #include <QWizard>
 #include <QLineEdit>
+#include <QCheckBox>
 #include <QFileDialog>
 #include <QCalendarWidget>
 //#include "file_worker.h"
@@ -20,6 +21,7 @@ struct autozakaz_config {
     QString assort;
     QString kol_v_korob;
     QString korob_quantum;
+    bool check_today_sell;
 };
 
 class autozakaz : public QWizard
@@ -50,6 +52,7 @@ private:
     Ui::autozakaz *ui;
     QLineEdit* line1, *line2, *line3, *line4, *line5;
     QCalendarWidget *cal1, *cal2, *calPost;
+    QCheckBox *ui_check_today_box;
 };
 
 #endif // AUTOZAKAZ_H
