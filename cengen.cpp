@@ -3836,6 +3836,11 @@ void cengen::execute_macro_file(QString fileName) {
                                     if (itemName == "ApplySellFilter") {
                                         this->on_action_sell_filter_triggered();
                                     }
+                                    if (itemName == "ApplyFilter") {
+                                        QList<Tovar> lst = this->apply_filter(tableWidget->get_tovar_list("x"), 1);
+                                        this->on_action_new_triggered();
+                                        tableWidget->load_tovar_list_into_table(lst);
+                                    }
                                     if (itemName == "SetSellFilterMethod") {
                                         if (itemValue == "REPLACE") {
                                             sellFilter->setSellMethod(0);
