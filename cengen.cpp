@@ -261,6 +261,10 @@ void cengen::make_actions() {
     connect(action_start_macro, SIGNAL(triggered()),
             SLOT(on_action_start_macro()));
 
+    action_collaps_same_items = new QAction(tr("Collaps same items"), this);
+    connect(action_collaps_same_items, SIGNAL(triggered()),
+            SLOT(on_collaps_same_items()));
+
 }
 
 void cengen::make_toolBar() {
@@ -311,6 +315,7 @@ void cengen::make_mainMenu() {
     menuEdit->addAction(action_verify_barcode);
     menuEdit->addSeparator();
     menuEdit->addAction(action_remove_zero_items);
+    menuEdit->addAction(action_collaps_same_items);
     menuEdit->addAction(action_left_items_with_zero_price2);
 
 
@@ -2236,8 +2241,6 @@ void cengen::on_action_minus_triggered()
     //из существующего списка убираем позиции, которые есть в загружаемом списке
     //сверку ведем по товарному номеру
 
-    qDebug() << "Tovar list minus";
-
     QString fileName = QFileDialog::getOpenFileName(this, tr("Select tovar list for minus"), "", tr("Tovar lists (*.tov)"));
     if (fileName == "") {
         qDebug() << "Please select file name";
@@ -2270,12 +2273,9 @@ void cengen::on_action_minus_triggered()
 
 QList<Tovar> cengen::minus(QList<Tovar> oldList, QList<Tovar> newList) {
     QList<Tovar> final;
-
     final = oldList;
     int k = 0;
-
     for (int i = 0; i<newList.count(); i++) {
-
         for (int j = 0; j<oldList.count(); j++) {
             if (newList.at(i).nomer_of_tovar == oldList.at(j).nomer_of_tovar) {
                 final.removeAt(j-k);
@@ -2283,10 +2283,48 @@ QList<Tovar> cengen::minus(QList<Tovar> oldList, QList<Tovar> newList) {
                 k++;
             }
         }
+    }
+    return final;
+}
 
+void cengen::on_collaps_same_items() {
+    //функция объединяет товары с одинаковым товарным номером, складывая количество
+    qDebug() << "Tovar collaps";
+    QList<Tovar> oldList;
+    QVector<Tovar> newList;
+    oldList = tableWidget->get_tovar_list("x");
+
+    for (int i = 0; i<oldList.count(); i++) {
+        bool z = false;
+        for (int j = 0; j<newList.count(); j++) {
+            if (newList[j].nomer_of_tovar == oldList.at(i).nomer_of_tovar) {
+                newList[j].quantity += oldList.at(i).quantity;
+                z = true;
+            }
+        }
+        if (!z) {
+            newList.push_back(oldList.at(i));
+        }
     }
 
-    return final;
+//    char st[] = "aaalkjasdhkwebsdfl;j";
+//    vector<tabl> t;
+
+//    for (int i=0; i<sizeof(st); i++){
+//            bool z = false;
+//            for (unsigned int j=0; j<t.size(); j++)
+//                    if (t[j].simbol == st){
+//                            t[j].cout++;
+//                            z = true;
+//                    }
+//            if (!z){
+//                    tabl s = {st,1};
+//                    t.push_back(s);
+//            }
+//    }
+
+    tableWidget->setRowCount(0);
+    tableWidget->load_tovar_list_into_table(newList);
 }
 
 void cengen::on_filterBox_toggled(bool arg1)

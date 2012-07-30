@@ -22,6 +22,7 @@ public:
 
     QList<Tovar> get_tovar_list(QString priznak);
     void load_tovar_list_into_table(QList<Tovar> tovarList, bool ToBottom = true);
+    void load_tovar_list_into_table(QVector<Tovar> tovarList, bool ToBottom = true);
     int get_tableTab_width(int col);
     void set_tableTab_width(int col, int size);
 

@@ -204,6 +204,12 @@ void MainTableWidget::on_tableWidget_cellChanged(int row, int column)
     setCurrentCell(row, column);
 }
 
+void MainTableWidget::load_tovar_list_into_table(QVector<Tovar> tovarList, bool ToBottom) {
+    QList<Tovar> lst;
+    for (int i = 0; i<tovarList.count(); i++) lst << tovarList[i];
+    load_tovar_list_into_table(lst, ToBottom);
+}
+
 void MainTableWidget::load_tovar_list_into_table(QList<Tovar> tovarList, bool ToBottom) {
     //загружаем список товаров в таблицу генератора ценников
     this->blockSignals(true);

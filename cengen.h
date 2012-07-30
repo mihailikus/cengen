@@ -370,6 +370,7 @@ private:
     QAction* action_group_same_shablons;
     QAction* action_check_line_prices;
     QAction* action_start_macro;
+    QAction* action_collaps_same_items;
 
 
 private slots:
@@ -416,6 +417,7 @@ private slots:
     void on_action_check_line_prices();
     void on_action_start_macro();
     void on_clear_last_button_clicked();
+    void on_collaps_same_items();
 
     void on_lineEdit_returnPressed();
     void tovar_search();
