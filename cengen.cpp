@@ -2196,17 +2196,16 @@ void cengen::on_action_minus_triggered()
 
 QList<Tovar> cengen::minus(QList<Tovar> oldList, QList<Tovar> newList) {
     QList<Tovar> final;
-    final = oldList;
-    int k = 0;
-    for (int i = 0; i<newList.count(); i++) {
-        for (int j = 0; j<oldList.count(); j++) {
-            if (newList.at(i).nomer_of_tovar == oldList.at(j).nomer_of_tovar) {
-                final.removeAt(j-k);
-                //qDebug() << "j and k = " << j << k;
-                k++;
-            }
+
+    for (int i = 0; i<oldList.count(); i++) {
+        bool z = false;
+        for (int j = 0; j<newList.count(); j++) {
+            if (oldList.at(i).nomer_of_tovar == newList.at(j).nomer_of_tovar)
+                z = true;
         }
+        if (!z) final << oldList.at(i);
     }
+
     return final;
 }
 
