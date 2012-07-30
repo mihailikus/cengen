@@ -3852,6 +3852,9 @@ void cengen::execute_macro_file(QString fileName) {
                                     if (itemName == "RemoveZeroQuant") {
                                         this->on_action_remove_zero_items();
                                     }
+                                    if (itemName == "GetSoldItems") {
+                                        this->on_action_get_sold_items();
+                                    }
 
 
 
