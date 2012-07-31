@@ -1,0 +1,100 @@
+\documentclass[a4paper]{book}
+\usepackage{makeidx}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{ifthen}
+\usepackage[table]{xcolor}
+\usepackage{textcomp}
+\usepackage{alltt}
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\else
+\usepackage[ps2pdf,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\usepackage{pspicture}
+\fi
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+\usepackage{sectsty}
+\usepackage[titles]{tocloft}
+\usepackage{doxygen}
+\lstset{language=C++,inputencoding=utf8,basicstyle=\footnotesize,breaklines=true,breakatwhitespace=true,tabsize=8,numbers=left }
+\makeindex
+\setcounter{tocdepth}{3}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\familydefault}{\sfdefault}
+\hfuzz=15pt
+\setlength{\emergencystretch}{15pt}
+\hbadness=750
+\tolerance=750
+\begin{document}
+\hypersetup{pageanchor=false,citecolor=blue}
+\begin{titlepage}
+\vspace*{7cm}
+\begin{center}
+{\Large \-Cen\-Gen -\/ Генератор ценников \\[1ex]\large 1.\-1 }\\
+\vspace*{1cm}
+{\large Создано системой Doxygen 1.7.6.1}\\
+\vspace*{0.5cm}
+{\small Вт 31 Июл 2012 16:41:18}\\
+\end{center}
+\end{titlepage}
+\clearemptydoublepage
+\pagenumbering{roman}
+\tableofcontents
+\clearemptydoublepage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true,citecolor=blue}
+\chapter{Алфавитный указатель классов}
+\input{hierarchy}
+\chapter{Алфавитный указатель классов}
+\input{annotated}
+\chapter{Классы}
+\input{class_about}
+\input{class_add_line_master}
+\input{classautozakaz}
+\input{structautozakaz__config}
+\input{class_barcode}
+\input{class_barcode_validator}
+\input{classcengen}
+\input{class_cennic}
+\input{structdbf__field__descr}
+\input{classdbf__informer}
+\input{structdbf__informer_1_1dbf__one__field}
+\input{class_dbf_config}
+\input{structdbf_header}
+\input{classdb_translator}
+\input{class_ui_1_1_dialog}
+\input{classeditor}
+\input{class_image_box}
+\input{class_list_founded_items_dialog}
+\input{class_main_table_widget}
+\input{class_sell_filter_widget}
+\input{class_sql_config}
+\input{class_sql_validator}
+\input{structcengen_1_1_tabs_order}
+\input{class_tinformer}
+\input{class_t_n_validator}
+\input{struct_tovar}
+\input{class_ui___dialog}
+\printindex
+\end{document}

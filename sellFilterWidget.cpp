@@ -347,6 +347,7 @@ QVector<Tovar> SellFilterWidget::get_sold_tovars() {
 }
 
 QVector<Tovar> SellFilterWidget::get_sold_tovars(QDate dt1, QDate dt2) {
+    ///Возвращает список проданных товаров между датами dt1 и dt2
     if (!sell_file_is_checked) check_sell_file();
     dbTranslator sellConfig;
     sellConfig.tbarcode = sellDateBox->currentText();

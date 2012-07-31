@@ -1,0 +1,27 @@
+var files =
+[
+    [ "about.h", null, null ],
+    [ "addlinemaster.h", null, null ],
+    [ "autozakaz.h", null, null ],
+    [ "barcode.h", null, null ],
+    [ "bvalidator.h", null, null ],
+    [ "cen_viewer.h", null, null ],
+    [ "cengen.h", null, null ],
+    [ "db_translator.h", null, null ],
+    [ "dbf.h", null, null ],
+    [ "dbf_config.h", null, null ],
+    [ "dbf_informer.h", null, null ],
+    [ "dialog.h", null, null ],
+    [ "editor.h", null, null ],
+    [ "file_worker.h", null, null ],
+    [ "graph.h", null, null ],
+    [ "imagebox.h", null, null ],
+    [ "mainTableWidget.h", null, null ],
+    [ "sellFilterWidget.h", null, null ],
+    [ "sql_config.h", null, null ],
+    [ "sql_validator.h", null, null ],
+    [ "tinformer.h", null, null ],
+    [ "tnvalidator.h", null, null ],
+    [ "tovar.h", null, null ],
+    [ "ui_add_line_master.h", null, null ]
+];
