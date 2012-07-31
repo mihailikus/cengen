@@ -141,8 +141,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
 <a name="l00043"></a>00043     QList&lt;Tovar&gt; apply_sell_filter(QList&lt;Tovar&gt; curTb, QDate dt1, QDate dt2, <span class="keywordtype">int</span> methodSell);
 <a name="l00044"></a>00044     QList&lt;Tovar&gt; apply_sell_filter(QList&lt;Tovar&gt; curTb);
 <a name="l00045"></a>00045 
-<a name="l00046"></a>00046     QVector&lt;Tovar&gt; get_sold_tovars();
-<a name="l00047"></a>00047     QVector&lt;Tovar&gt; get_sold_tovars(QDate dt1, QDate dt2);
+<a name="l00046"></a>00046     QVector&lt;Tovar&gt; <a class="code" href="class_sell_filter_widget.html#ad4cb4e729168f060eb02b483e0500b20">get_sold_tovars</a>();
+<a name="l00047"></a>00047     QVector&lt;Tovar&gt; <a class="code" href="class_sell_filter_widget.html#ad4cb4e729168f060eb02b483e0500b20">get_sold_tovars</a>(QDate dt1, QDate dt2);
 <a name="l00048"></a>00048 
 <a name="l00049"></a>00049     QDate get_date_start() {
 <a name="l00050"></a>00050         <span class="keywordflow">return</span> dateStart-&gt;selectedDate();
@@ -269,7 +269,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Указатель</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Классы</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Функции</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Указатель</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Классы</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Функции</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Переменные</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -282,7 +282,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
     <ul>
       <li class="navelem"><b>sellFilterWidget.h</b>      </li>
 
-    <li class="footer">Документация по CenGen - Генератор ценников. Последние изменения: Вт 31 Июл 2012 16:41:16. Создано системой
+    <li class="footer">Документация по CenGen - Генератор ценников. Последние изменения: Вт 31 Июл 2012 16:59:12. Создано системой
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

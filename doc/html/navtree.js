@@ -7,7 +7,8 @@ var NAVTREE =
       [ "Иерархия классов", "hierarchy.html", "hierarchy" ],
       [ "Члены классов", "functions.html", [
         [ "Указатель", "functions.html", null ],
-        [ "Функции", "functions_func.html", null ]
+        [ "Функции", "functions_func.html", null ],
+        [ "Переменные", "functions_vars.html", null ]
       ] ]
     ] ],
     [ "Файлы", null, [

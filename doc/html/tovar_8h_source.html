@@ -99,24 +99,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef TOVAR_H</span>
 <a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define TOVAR_H</span>
 <a name="l00003"></a>00003 <span class="preprocessor"></span><span class="preprocessor">#include &lt;QString&gt;</span>
-<a name="l00004"></a><a class="code" href="struct_tovar.html">00004</a> <span class="keyword">struct </span><a class="code" href="struct_tovar.html">Tovar</a> {
-<a name="l00005"></a>00005     <span class="comment">//переменные для идентификации товара:</span>
-<a name="l00006"></a>00006     QString name_of_tovar;
-<a name="l00007"></a>00007     <span class="keywordtype">float</span> price1, price2;
-<a name="l00008"></a>00008     QString barcode;
-<a name="l00009"></a>00009     <span class="keywordtype">int</span> nomer_of_tovar; <span class="comment">//товарный номер</span>
-<a name="l00010"></a>00010     QString codec_name;
-<a name="l00011"></a>00011     <span class="keywordtype">int</span> shablon;
-<a name="l00012"></a>00012     <span class="keywordtype">int</span> quantity;
-<a name="l00013"></a>00013     <span class="keywordtype">bool</span> operator &lt; (<span class="keyword">const</span> <a class="code" href="struct_tovar.html">Tovar</a> &amp;other)<span class="keyword"> const</span>
-<a name="l00014"></a>00014 <span class="keyword">      </span>{
-<a name="l00015"></a>00015         <span class="keywordflow">if</span> (shablon &lt; other.shablon)
-<a name="l00016"></a>00016           <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00017"></a>00017 
-<a name="l00018"></a>00018         <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00019"></a>00019     }
-<a name="l00020"></a>00020 };
-<a name="l00021"></a>00021 <span class="preprocessor">#endif // TOVAR_H</span>
+<a name="l00005"></a><a class="code" href="struct_tovar.html">00005</a> <span class="keyword">struct </span><a class="code" href="struct_tovar.html" title="переменные для идентификации товара:">Tovar</a> {
+<a name="l00007"></a><a class="code" href="struct_tovar.html#a0558b5260c83faf4e7aa0e832025d590">00007</a>     QString <a class="code" href="struct_tovar.html#a0558b5260c83faf4e7aa0e832025d590" title="название товара">name_of_tovar</a>;
+<a name="l00009"></a><a class="code" href="struct_tovar.html#a23aee907302c0340de9dc722444d204b">00009</a>     <span class="keywordtype">float</span> <a class="code" href="struct_tovar.html#a23aee907302c0340de9dc722444d204b" title="текущая цена">price1</a>;
+<a name="l00011"></a><a class="code" href="struct_tovar.html#ac611856fa45875e8c1443477254c1613">00011</a>     <span class="keywordtype">float</span> <a class="code" href="struct_tovar.html#ac611856fa45875e8c1443477254c1613" title="старая цена">price2</a>;
+<a name="l00013"></a><a class="code" href="struct_tovar.html#add3cd7c24dc5c28062a5d4c6fe42b04b">00013</a>     QString <a class="code" href="struct_tovar.html#add3cd7c24dc5c28062a5d4c6fe42b04b" title="штрих-код товара">barcode</a>;
+<a name="l00015"></a><a class="code" href="struct_tovar.html#a482dd26f52f0f5cf87c19a040d4ccefb">00015</a>     <span class="keywordtype">int</span> <a class="code" href="struct_tovar.html#a482dd26f52f0f5cf87c19a040d4ccefb" title="товарный номер">nomer_of_tovar</a>;
+<a name="l00017"></a><a class="code" href="struct_tovar.html#a0c6ccedf9c913bee32443e26de7a19c3">00017</a>     QString <a class="code" href="struct_tovar.html#a0c6ccedf9c913bee32443e26de7a19c3" title="языковой кодек">codec_name</a>;
+<a name="l00019"></a><a class="code" href="struct_tovar.html#a2b61d47e68345a4ceb2ff00e6c03bc5a">00019</a>     <span class="keywordtype">int</span> <a class="code" href="struct_tovar.html#a2b61d47e68345a4ceb2ff00e6c03bc5a" title="номер шаблона из списка шаблонов в выбранной дирректории">shablon</a>;
+<a name="l00021"></a><a class="code" href="struct_tovar.html#aed46d41d507daa3662368e50c87e046c">00021</a>     <span class="keywordtype">int</span> <a class="code" href="struct_tovar.html#aed46d41d507daa3662368e50c87e046c" title="количество">quantity</a>;
+<a name="l00023"></a><a class="code" href="struct_tovar.html#ad566921c830e3919dda043641fc85f5e">00023</a>     <span class="keywordtype">bool</span> <a class="code" href="struct_tovar.html#ad566921c830e3919dda043641fc85f5e" title="оператор сравнения двух товаров. Возвращает TRUE, если номер шаблона текущего товара меньше...">operator &lt; </a>(<span class="keyword">const</span> <a class="code" href="struct_tovar.html" title="переменные для идентификации товара:">Tovar</a> &amp;other)<span class="keyword"> const</span>
+<a name="l00024"></a>00024 <span class="keyword">      </span>{
+<a name="l00025"></a>00025         <span class="keywordflow">if</span> (<a class="code" href="struct_tovar.html#a2b61d47e68345a4ceb2ff00e6c03bc5a" title="номер шаблона из списка шаблонов в выбранной дирректории">shablon</a> &lt; other.<a class="code" href="struct_tovar.html#a2b61d47e68345a4ceb2ff00e6c03bc5a" title="номер шаблона из списка шаблонов в выбранной дирректории">shablon</a>)
+<a name="l00026"></a>00026           <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028         <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00029"></a>00029     }
+<a name="l00030"></a>00030 };
+<a name="l00031"></a>00031 <span class="preprocessor">#endif // TOVAR_H</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -124,7 +124,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Указатель</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Классы</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Функции</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Указатель</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Классы</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Функции</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Переменные</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -137,7 +137,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
     <ul>
       <li class="navelem"><b>tovar.h</b>      </li>
 
-    <li class="footer">Документация по CenGen - Генератор ценников. Последние изменения: Вт 31 Июл 2012 16:41:16. Создано системой
+    <li class="footer">Документация по CenGen - Генератор ценников. Последние изменения: Вт 31 Июл 2012 16:59:12. Создано системой
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

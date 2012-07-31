@@ -342,6 +342,7 @@ void SellFilterWidget::on_clear_last_button_clicked() {
 }
 
 QVector<Tovar> SellFilterWidget::get_sold_tovars() {
+    ///Возвращает список проданных товаров в период дат, указанных пользователем в виджетах-календариках
     return this->get_sold_tovars(dateStart->selectedDate(),
                                  dateStop->selectedDate());
 }

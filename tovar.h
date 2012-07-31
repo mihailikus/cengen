@@ -1,15 +1,25 @@
 #ifndef TOVAR_H
 #define TOVAR_H
 #include <QString>
+///переменные для идентификации товара:
 struct Tovar {
-    //переменные для идентификации товара:
+    ///название товара
     QString name_of_tovar;
-    float price1, price2;
+    ///текущая цена
+    float price1;
+    ///старая цена
+    float price2;
+    ///штрих-код товара
     QString barcode;
-    int nomer_of_tovar; //товарный номер
+    ///товарный номер
+    int nomer_of_tovar;
+    ///языковой кодек
     QString codec_name;
+    ///номер шаблона из списка шаблонов в выбранной дирректории
     int shablon;
+    ///количество
     int quantity;
+    ///оператор сравнения двух товаров. Возвращает TRUE, если номер шаблона текущего товара меньше, чем номер шаблона другого
     bool operator < (const Tovar &other) const
       {
         if (shablon < other.shablon)
