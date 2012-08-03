@@ -19,10 +19,10 @@ struct Tovar {
     int shablon;
     ///количество
     int quantity;
-    ///оператор сравнения двух товаров. Возвращает TRUE, если номер шаблона текущего товара меньше, чем номер шаблона другого
+    ///оператор сравнения двух товаров. Возвращает TRUE, если количество текущего товара меньше, чем номер количество другого
     bool operator < (const Tovar &other) const
       {
-        if (shablon < other.shablon)
+        if (quantity < other.quantity)
           return true;
 
         return false;

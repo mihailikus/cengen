@@ -3855,6 +3855,12 @@ void cengen::execute_macro_file(QString fileName) {
                                     if (itemName == "GetSoldItems") {
                                         this->on_action_get_sold_items();
                                     }
+                                    if (itemName == "SortItems") {
+                                        QVector<Tovar> lst = tableWidget->get_tovar_list("x").toVector();
+                                        qSort(lst.begin(), lst.end());
+                                        this->on_action_new_triggered();
+                                        tableWidget->load_tovar_list_into_table(lst.toList());
+                                    }
 
 
 
