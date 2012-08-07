@@ -488,101 +488,102 @@ var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
 <a name="l00390"></a>00390     <span class="keywordtype">void</span> update_prices(<span class="keywordtype">bool</span> AskUserToSave = <span class="keyword">true</span>);
 <a name="l00391"></a>00391     <span class="keywordtype">void</span> on_action_update_prices_in_minus();
 <a name="l00392"></a>00392     <span class="keywordtype">void</span> on_action_update_names();
-<a name="l00393"></a>00393     <span class="keywordtype">void</span> on_action_set_special_shablon_to_zero_price2();
-<a name="l00394"></a>00394     <span class="keywordtype">void</span> on_action_sell_filter_triggered();
-<a name="l00395"></a>00395     <span class="keywordtype">void</span> on_action_render_in_external_app();
-<a name="l00396"></a>00396     <span class="keywordtype">void</span> on_action_open_in_external_app();
-<a name="l00397"></a>00397     <span class="keywordtype">void</span> on_action_expand_triggered(<span class="keywordtype">bool</span>);
-<a name="l00398"></a>00398     <span class="keywordtype">void</span> on_action_select_method_barcode();
-<a name="l00399"></a>00399     <span class="keywordtype">void</span> on_action_select_method_tnomer();
-<a name="l00400"></a>00400     <span class="keywordtype">void</span> on_action_select_method_tname();
-<a name="l00401"></a>00401     <span class="keywordtype">void</span> on_action_get_sum_of_tovar();
-<a name="l00402"></a>00402     <span class="keywordtype">void</span> on_action_program_update();
-<a name="l00403"></a>00403     <span class="keywordtype">void</span> on_action_zakaz10_triggered();
-<a name="l00404"></a>00404     <span class="keywordtype">void</span> on_action_remove_zero_items();
-<a name="l00405"></a>00405     <span class="keywordtype">void</span> on_action_left_itms_zero_price2();
-<a name="l00406"></a>00406     <span class="keywordtype">void</span> on_action_check_line_prices();
-<a name="l00407"></a>00407     <span class="keywordtype">void</span> on_action_start_macro();
-<a name="l00408"></a>00408     <span class="keywordtype">void</span> on_collaps_same_items();
-<a name="l00409"></a>00409     QVector&lt;Tovar&gt; collaps_same_items(QVector&lt;Tovar&gt; inputList);
-<a name="l00410"></a>00410     <span class="keywordtype">void</span> on_action_get_sold_items();
-<a name="l00411"></a>00411 
-<a name="l00412"></a>00412     <span class="keywordtype">void</span> on_lineEdit_returnPressed();
-<a name="l00413"></a>00413     <span class="keywordtype">void</span> tovar_search();
-<a name="l00414"></a>00414     <span class="keywordtype">void</span> new_line_ready();
-<a name="l00415"></a>00415     <span class="keywordtype">void</span> update_values();   <span class="comment">//обновить значеня шаблона в UI-форме</span>
-<a name="l00416"></a>00416     QDomDocument read_file_shablon(QString str);    <span class="comment">//прочитать шаблон</span>
-<a name="l00417"></a>00417     <span class="keywordtype">void</span> describe_shablon(QDomDocument shablon);
-<a name="l00418"></a>00418     <span class="keywordtype">void</span> generate_preview();
-<a name="l00419"></a>00419     <span class="keywordtype">void</span> update_ui_tb_fields(QStringList list);
-<a name="l00420"></a>00420     <span class="keywordtype">void</span> update_ui_db_controls();
-<a name="l00421"></a>00421     <span class="keywordtype">void</span> update_ui_connection_established();
-<a name="l00422"></a>00422     <span class="keywordtype">void</span> on_saveSourceButton();
-<a name="l00423"></a>00423     <span class="keywordtype">void</span> on_loadSourceButton();
-<a name="l00424"></a>00424     <span class="keywordtype">void</span> on_saveFilterSettings();
-<a name="l00425"></a>00425     <span class="keywordtype">void</span> on_loadFilterSettings();
-<a name="l00426"></a>00426     <span class="comment">//void on_selectSellFileButtonClicked();</span>
-<a name="l00427"></a>00427     <span class="comment">//void check_sell_file();</span>
-<a name="l00428"></a>00428     <span class="comment">//void updateSellTab();</span>
-<a name="l00429"></a>00429     <span class="keywordtype">void</span> select_ext_conf_button_clicked();
-<a name="l00430"></a>00430     <span class="keywordtype">void</span> select_ext_app_button_clicked();
-<a name="l00431"></a>00431     <span class="keywordtype">void</span> select_ext_shablon_button_clicked();
-<a name="l00432"></a>00432     <span class="keywordtype">void</span> on_data_changed();
-<a name="l00433"></a>00433 
+<a name="l00393"></a>00393     <span class="keywordtype">void</span> update_names(<span class="keywordtype">bool</span> ask);
+<a name="l00394"></a>00394     <span class="keywordtype">void</span> on_action_set_special_shablon_to_zero_price2();
+<a name="l00395"></a>00395     <span class="keywordtype">void</span> on_action_sell_filter_triggered();
+<a name="l00396"></a>00396     <span class="keywordtype">void</span> on_action_render_in_external_app();
+<a name="l00397"></a>00397     <span class="keywordtype">void</span> on_action_open_in_external_app();
+<a name="l00398"></a>00398     <span class="keywordtype">void</span> on_action_expand_triggered(<span class="keywordtype">bool</span>);
+<a name="l00399"></a>00399     <span class="keywordtype">void</span> on_action_select_method_barcode();
+<a name="l00400"></a>00400     <span class="keywordtype">void</span> on_action_select_method_tnomer();
+<a name="l00401"></a>00401     <span class="keywordtype">void</span> on_action_select_method_tname();
+<a name="l00402"></a>00402     <span class="keywordtype">void</span> on_action_get_sum_of_tovar();
+<a name="l00403"></a>00403     <span class="keywordtype">void</span> on_action_program_update();
+<a name="l00404"></a>00404     <span class="keywordtype">void</span> on_action_zakaz10_triggered();
+<a name="l00405"></a>00405     <span class="keywordtype">void</span> on_action_remove_zero_items();
+<a name="l00406"></a>00406     <span class="keywordtype">void</span> on_action_left_itms_zero_price2();
+<a name="l00407"></a>00407     <span class="keywordtype">void</span> on_action_check_line_prices();
+<a name="l00408"></a>00408     <span class="keywordtype">void</span> on_action_start_macro();
+<a name="l00409"></a>00409     <span class="keywordtype">void</span> on_collaps_same_items();
+<a name="l00410"></a>00410     QVector&lt;Tovar&gt; collaps_same_items(QVector&lt;Tovar&gt; inputList);
+<a name="l00411"></a>00411     <span class="keywordtype">void</span> on_action_get_sold_items();
+<a name="l00412"></a>00412 
+<a name="l00413"></a>00413     <span class="keywordtype">void</span> on_lineEdit_returnPressed();
+<a name="l00414"></a>00414     <span class="keywordtype">void</span> tovar_search();
+<a name="l00415"></a>00415     <span class="keywordtype">void</span> new_line_ready();
+<a name="l00416"></a>00416     <span class="keywordtype">void</span> update_values();   <span class="comment">//обновить значеня шаблона в UI-форме</span>
+<a name="l00417"></a>00417     QDomDocument read_file_shablon(QString str);    <span class="comment">//прочитать шаблон</span>
+<a name="l00418"></a>00418     <span class="keywordtype">void</span> describe_shablon(QDomDocument shablon);
+<a name="l00419"></a>00419     <span class="keywordtype">void</span> generate_preview();
+<a name="l00420"></a>00420     <span class="keywordtype">void</span> update_ui_tb_fields(QStringList list);
+<a name="l00421"></a>00421     <span class="keywordtype">void</span> update_ui_db_controls();
+<a name="l00422"></a>00422     <span class="keywordtype">void</span> update_ui_connection_established();
+<a name="l00423"></a>00423     <span class="keywordtype">void</span> on_saveSourceButton();
+<a name="l00424"></a>00424     <span class="keywordtype">void</span> on_loadSourceButton();
+<a name="l00425"></a>00425     <span class="keywordtype">void</span> on_saveFilterSettings();
+<a name="l00426"></a>00426     <span class="keywordtype">void</span> on_loadFilterSettings();
+<a name="l00427"></a>00427     <span class="comment">//void on_selectSellFileButtonClicked();</span>
+<a name="l00428"></a>00428     <span class="comment">//void check_sell_file();</span>
+<a name="l00429"></a>00429     <span class="comment">//void updateSellTab();</span>
+<a name="l00430"></a>00430     <span class="keywordtype">void</span> select_ext_conf_button_clicked();
+<a name="l00431"></a>00431     <span class="keywordtype">void</span> select_ext_app_button_clicked();
+<a name="l00432"></a>00432     <span class="keywordtype">void</span> select_ext_shablon_button_clicked();
+<a name="l00433"></a>00433     <span class="keywordtype">void</span> on_data_changed();
 <a name="l00434"></a>00434 
-<a name="l00435"></a>00435     QList&lt;Tovar&gt; show_found_items(QList&lt;Tovar&gt; inputList);
-<a name="l00436"></a>00436     QList&lt;Tovar&gt; apply_filter(QList&lt;Tovar&gt; inputList, <span class="keywordtype">bool</span> startProgressBar = <span class="keyword">true</span>);
-<a name="l00437"></a>00437     QRectF get_shablon_rect(<span class="keyword">const</span> QDomNode&amp; node);
-<a name="l00438"></a>00438     QString get_shablon_name(<span class="keyword">const</span> QDomNode&amp; node);
-<a name="l00439"></a>00439     <span class="keywordtype">bool</span> read_opisateli_from_settings();
-<a name="l00440"></a>00440     <span class="keywordtype">void</span> set_opisateli_from_settings();
-<a name="l00441"></a>00441 
-<a name="l00442"></a>00442     <span class="keywordtype">void</span> on_selectSourceDBF_file_button_clicked();
-<a name="l00443"></a>00443     <span class="keywordtype">void</span> on_spinLimit_valueChanged(<span class="keywordtype">int</span> );
-<a name="l00444"></a>00444     <span class="keywordtype">void</span> on_maxButton_clicked();
-<a name="l00445"></a>00445 
+<a name="l00435"></a>00435 
+<a name="l00436"></a>00436     QList&lt;Tovar&gt; show_found_items(QList&lt;Tovar&gt; inputList);
+<a name="l00437"></a>00437     QList&lt;Tovar&gt; apply_filter(QList&lt;Tovar&gt; inputList, <span class="keywordtype">bool</span> startProgressBar = <span class="keyword">true</span>);
+<a name="l00438"></a>00438     QRectF get_shablon_rect(<span class="keyword">const</span> QDomNode&amp; node);
+<a name="l00439"></a>00439     QString get_shablon_name(<span class="keyword">const</span> QDomNode&amp; node);
+<a name="l00440"></a>00440     <span class="keywordtype">bool</span> read_opisateli_from_settings();
+<a name="l00441"></a>00441     <span class="keywordtype">void</span> set_opisateli_from_settings();
+<a name="l00442"></a>00442 
+<a name="l00443"></a>00443     <span class="keywordtype">void</span> on_selectSourceDBF_file_button_clicked();
+<a name="l00444"></a>00444     <span class="keywordtype">void</span> on_spinLimit_valueChanged(<span class="keywordtype">int</span> );
+<a name="l00445"></a>00445     <span class="keywordtype">void</span> on_maxButton_clicked();
 <a name="l00446"></a>00446 
-<a name="l00447"></a>00447     <span class="keywordtype">void</span> on_show_editor_button_clicked();
-<a name="l00448"></a>00448     <span class="keywordtype">void</span> on_action_save_triggered();
-<a name="l00449"></a>00449     <span class="keywordtype">void</span> on_action_open_triggered();
-<a name="l00450"></a>00450     <span class="keywordtype">void</span> on_action_new_triggered();
-<a name="l00451"></a>00451 
-<a name="l00452"></a>00452     QList&lt;Tovar&gt; convert_xml_into_tovar_list(QDomDocument doc);
-<a name="l00453"></a>00453     QDomDocument convert_tovar_list_into_xml(QList&lt;Tovar&gt; tovarList);
-<a name="l00454"></a>00454     QList&lt;Tovar&gt; minus(QList&lt;Tovar&gt; oldList, QList&lt;Tovar&gt; newList);
-<a name="l00455"></a>00455     QList&lt;Tovar&gt; expand(QList&lt;Tovar&gt; list);
-<a name="l00456"></a>00456     QList&lt;Tovar&gt; group(QList&lt;Tovar&gt; list);
-<a name="l00457"></a>00457 
-<a name="l00458"></a>00458     <span class="keywordtype">void</span> on_action_minus_triggered();
-<a name="l00459"></a>00459     <span class="keywordtype">void</span> on_filterBox_toggled(<span class="keywordtype">bool</span> arg1);
-<a name="l00460"></a>00460     <span class="keywordtype">void</span> on_filterFileSelectButton_clicked();
-<a name="l00461"></a>00461     <span class="keywordtype">void</span> on_filterFileName_changed();
-<a name="l00462"></a>00462     <span class="keywordtype">void</span> read_filter_settings();
-<a name="l00463"></a>00463 
-<a name="l00464"></a>00464     <span class="keywordtype">void</span> on_radioButton_6_clicked();
-<a name="l00465"></a>00465     <span class="keywordtype">void</span> on_radioButton_7_clicked();
-<a name="l00466"></a>00466 
-<a name="l00467"></a>00467     <span class="keywordtype">void</span> on_action_about_triggered();
-<a name="l00468"></a>00468 
-<a name="l00469"></a>00469     <span class="keywordtype">void</span> on_shablon_name_changed(QString name);
-<a name="l00470"></a>00470 
-<a name="l00471"></a>00471     <span class="keywordtype">void</span> on_shablonList_combo_changed(<span class="keywordtype">int</span> index);
-<a name="l00472"></a>00472 
-<a name="l00473"></a>00473     <span class="keywordtype">void</span> on_fieldListBox_checked(<span class="keywordtype">bool</span> status);
-<a name="l00474"></a>00474 
-<a name="l00475"></a>00475     <span class="keywordtype">void</span> save_tovar_list_into_file(QString name, QList&lt;Tovar&gt; spisok, <span class="keywordtype">bool</span> ask_for_fileName = <span class="keyword">true</span>);
-<a name="l00476"></a>00476 
-<a name="l00477"></a>00477     <span class="keywordtype">void</span> ask_user_to_save_wrong_tovar_list(QList&lt;Tovar&gt; spisok);
-<a name="l00478"></a>00478 
-<a name="l00479"></a>00479     <span class="keywordtype">bool</span> save_tovar_list_into_dbf(QString fileName, QList&lt;Tovar&gt; spisok);
-<a name="l00480"></a>00480 
-<a name="l00481"></a>00481     <span class="keywordtype">void</span> debug_tovar(QList&lt;Tovar&gt; list);
-<a name="l00482"></a>00482 
-<a name="l00483"></a>00483     <span class="keywordtype">void</span> execute_macro_file(QString fileName);
-<a name="l00484"></a>00484 
-<a name="l00485"></a>00485 };
-<a name="l00486"></a>00486 
-<a name="l00487"></a>00487 <span class="preprocessor">#endif // CENGEN_H</span>
+<a name="l00447"></a>00447 
+<a name="l00448"></a>00448     <span class="keywordtype">void</span> on_show_editor_button_clicked();
+<a name="l00449"></a>00449     <span class="keywordtype">void</span> on_action_save_triggered();
+<a name="l00450"></a>00450     <span class="keywordtype">void</span> on_action_open_triggered();
+<a name="l00451"></a>00451     <span class="keywordtype">void</span> on_action_new_triggered();
+<a name="l00452"></a>00452 
+<a name="l00453"></a>00453     QList&lt;Tovar&gt; convert_xml_into_tovar_list(QDomDocument doc);
+<a name="l00454"></a>00454     QDomDocument convert_tovar_list_into_xml(QList&lt;Tovar&gt; tovarList);
+<a name="l00455"></a>00455     QList&lt;Tovar&gt; minus(QList&lt;Tovar&gt; oldList, QList&lt;Tovar&gt; newList);
+<a name="l00456"></a>00456     QList&lt;Tovar&gt; expand(QList&lt;Tovar&gt; list);
+<a name="l00457"></a>00457     QList&lt;Tovar&gt; group(QList&lt;Tovar&gt; list);
+<a name="l00458"></a>00458 
+<a name="l00459"></a>00459     <span class="keywordtype">void</span> on_action_minus_triggered();
+<a name="l00460"></a>00460     <span class="keywordtype">void</span> on_filterBox_toggled(<span class="keywordtype">bool</span> arg1);
+<a name="l00461"></a>00461     <span class="keywordtype">void</span> on_filterFileSelectButton_clicked();
+<a name="l00462"></a>00462     <span class="keywordtype">void</span> on_filterFileName_changed();
+<a name="l00463"></a>00463     <span class="keywordtype">void</span> read_filter_settings();
+<a name="l00464"></a>00464 
+<a name="l00465"></a>00465     <span class="keywordtype">void</span> on_radioButton_6_clicked();
+<a name="l00466"></a>00466     <span class="keywordtype">void</span> on_radioButton_7_clicked();
+<a name="l00467"></a>00467 
+<a name="l00468"></a>00468     <span class="keywordtype">void</span> on_action_about_triggered();
+<a name="l00469"></a>00469 
+<a name="l00470"></a>00470     <span class="keywordtype">void</span> on_shablon_name_changed(QString name);
+<a name="l00471"></a>00471 
+<a name="l00472"></a>00472     <span class="keywordtype">void</span> on_shablonList_combo_changed(<span class="keywordtype">int</span> index);
+<a name="l00473"></a>00473 
+<a name="l00474"></a>00474     <span class="keywordtype">void</span> on_fieldListBox_checked(<span class="keywordtype">bool</span> status);
+<a name="l00475"></a>00475 
+<a name="l00476"></a>00476     <span class="keywordtype">void</span> save_tovar_list_into_file(QString name, QList&lt;Tovar&gt; spisok, <span class="keywordtype">bool</span> ask_for_fileName = <span class="keyword">true</span>);
+<a name="l00477"></a>00477 
+<a name="l00478"></a>00478     <span class="keywordtype">void</span> ask_user_to_save_wrong_tovar_list(QList&lt;Tovar&gt; spisok);
+<a name="l00479"></a>00479 
+<a name="l00480"></a>00480     <span class="keywordtype">bool</span> save_tovar_list_into_dbf(QString fileName, QList&lt;Tovar&gt; spisok);
+<a name="l00481"></a>00481 
+<a name="l00482"></a>00482     <span class="keywordtype">void</span> debug_tovar(QList&lt;Tovar&gt; list);
+<a name="l00483"></a>00483 
+<a name="l00484"></a>00484     <span class="keywordtype">void</span> execute_macro_file(QString fileName);
+<a name="l00485"></a>00485 
+<a name="l00486"></a>00486 };
+<a name="l00487"></a>00487 
+<a name="l00488"></a>00488 <span class="preprocessor">#endif // CENGEN_H</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -603,7 +604,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
     <ul>
       <li class="navelem"><b>cengen.h</b>      </li>
 
-    <li class="footer">Документация по CenGen - Генератор ценников. Последние изменения: Вт 31 Июл 2012 16:59:12. Создано системой
+    <li class="footer">Документация по CenGen - Генератор ценников. Последние изменения: Вт 7 Авг 2012 09:41:18. Создано системой
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>
