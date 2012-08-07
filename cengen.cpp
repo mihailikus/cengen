@@ -1952,9 +1952,12 @@ QDomDocument cengen::read_file_shablon(QString str) {
         qDebug() << "File shablon is";
     } else {
         qDebug() << "Shablon file not found: " << str;
-        str = QApplication::applicationFilePath() + "/ "+ str;
+        str = QApplication::applicationDirPath() + "/" + str;
         fi.setFile(str);
         qDebug() << "Trying " << str;
+        if (fi.exists()) {
+            qDebug() << "shablon found";
+        }
 
     }
 
@@ -3906,7 +3909,9 @@ void cengen::execute_macro_file(QString fileName) {
                                             tableWidget->set_special_shablon_for_zero_price2(z);
 
                                     }
-
+                                    if (itemName == "CollapsItems") {
+                                        this->on_collaps_same_items();
+                                    }
                                 }
                             }
                             nodeItem = nodeItem.nextSibling();
