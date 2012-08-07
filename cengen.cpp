@@ -1947,6 +1947,18 @@ void cengen::describe_shablon(QDomDocument shablon) {
 
 QDomDocument cengen::read_file_shablon(QString str) {
     //QDomElement domElement;
+    QFileInfo fi(str);
+    if (fi.exists()) {
+        qDebug() << "File shablon is";
+    } else {
+        qDebug() << "Shablon file not found: " << str;
+        str = QApplication::applicationFilePath() + "/ "+ str;
+        fi.setFile(str);
+        qDebug() << "Trying " << str;
+
+    }
+
+
     QDomDocument doc;
     QFile * fileSh = new QFile;
     fileSh->setFileName(str);
@@ -2689,6 +2701,11 @@ void cengen::ask_user_to_save_wrong_tovar_list(QList<Tovar> spisokWrong) {
 }
 
 void cengen::on_action_load_tovar_list_in_clipboard_triggered(){
+    ///Загружает список товаров из буфера обмена
+    ///Список товаров должен быть представлен в виде
+    /// Товарный номер, Название товара, Цена1, Цена2
+    /// и быть разделен табуляторами
+
     QClipboard *pcb = QApplication::clipboard();
     QString str = pcb->text();
     if (str.isNull()) return;
@@ -2737,6 +2754,10 @@ void cengen::on_action_load_tovar_list_in_clipboard_triggered(){
 }
 
 void cengen::on_action_update_names() {
+    this->update_names(true);
+}
+
+void cengen::update_names(bool ask) {
     QList<Tovar> spisokCur, spisokNew, spTmp, spisokWrong;
     Tovar tovar;
     spisokCur = tableWidget->get_tovar_list("x");
@@ -2768,7 +2789,7 @@ void cengen::on_action_update_names() {
     this->on_action_new_triggered();
     tableWidget->load_tovar_list_into_table(spisokNew);
 
-    ask_user_to_save_wrong_tovar_list(spisokWrong);
+    if (ask) ask_user_to_save_wrong_tovar_list(spisokWrong);
 }
 
 void cengen::on_action_export_tovar_list_to_clipboard() {
@@ -3809,7 +3830,6 @@ void cengen::execute_macro_file(QString fileName) {
                             if (nodeItem.isElement()) {
                                 QDomElement elementItem = nodeItem.toElement();
                                 float ask =  elementItem.attribute("ask", "0").toInt();
-                                qDebug() << "ASk = " << ask;
                                 if (!elementItem.isNull()) {
                                     itemName = elementItem.tagName();
                                     itemValue = elementItem.text();
@@ -3861,9 +3881,31 @@ void cengen::execute_macro_file(QString fileName) {
                                         this->on_action_new_triggered();
                                         tableWidget->load_tovar_list_into_table(lst.toList());
                                     }
+                                    if (itemName == "LoadFromBuffer") {
+                                        this->on_action_load_tovar_list_in_clipboard_triggered();
+                                    }
+                                    if (itemName == "IntellectPriceChange") {
+                                        tableWidget->intellect_interchange_prices_in_table();
+                                    }
+                                    if (itemName == "UpdateNames") {
+                                        update_names(false);
+                                    }
+                                    if (itemName == "UpdatePrices") {
+                                        update_prices(false);
+                                    }
+                                    if (itemName == "SetShablon") {
+                                        this->on_shablon_name_changed(itemValue);
+                                    }
+                                    if (itemName == "SetSpecialShablonForZeroPrice2") {
+                                        QStringList lst = tableWidget->get_shablon_list();
+                                        int z = -1;
+                                        for (int i = 0; i<lst.count(); i++) {
+                                            if (lst.at(i) == itemValue) z = i;
+                                        }
+                                        if (z>0)
+                                            tableWidget->set_special_shablon_for_zero_price2(z);
 
-
-
+                                    }
 
                                 }
                             }

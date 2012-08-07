@@ -390,6 +390,7 @@ private slots:
     void update_prices(bool AskUserToSave = true);
     void on_action_update_prices_in_minus();
     void on_action_update_names();
+    void update_names(bool ask);
     void on_action_set_special_shablon_to_zero_price2();
     void on_action_sell_filter_triggered();
     void on_action_render_in_external_app();
