@@ -209,6 +209,14 @@ QGraphicsItemGroup* Cennic::render(QGraphicsScene *scene, float X, float Y) {
 
             }
 
+            if (element == "image" ) {
+                QPixmap pm = QPixmap(domElement.text());
+                QGraphicsPixmapItem *px = scene->addPixmap(pm);
+                px->setPos(X+startX, Y+startY);
+                float sc = width / pm.width();
+                px->scale(sc, sc);
+                items->addToGroup(px);
+            }
 
         }
 
