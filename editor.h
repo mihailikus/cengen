@@ -1,202 +1,149 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
-//EDITOR of templates for price lists in XML format
-
-#include <QMainWindow>
+#include <QDialog>
+//#include <QMainWindow>
+#include <QTextCodec>
+#include <QFileInfo>
+//#include <QMenuBar>
+//#include <QMenu>
+#include <QToolBar>
+//#include <QStatusBar>
+#include <QLabel>
+#include <QAction>
+#include <QtXml>
+#include <QDomDocument>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
-#include <QGraphicsTextItem>
-#include <QGraphicsItem>
-#include <QGroupBox>
-#include <QSpinBox>
-#include <QPushButton>
-#include <QLabel>
-#include <QLineEdit>
+#include <QFont>
 #include <QGridLayout>
-#include <QtXml>
-#include <QFontDialog>
-#include <QFileDialog>
+#include <QWidget>
+#include <QTextStream>
 #include <QTextCodec>
-
-#include "addlinemaster.h"
-
-#include "cen_viewer.h"
-
 
 #include <QDebug>
 
-QT_BEGIN_NAMESPACE
-class QGraphicsView;
-class QGraphicsScene;
-class QSpinBox;
-class QPushButton;
-QT_END_NAMESPACE
+#include "models/barcodeBox.h"
+#include "models/textBox.h"
+#include "models/good.h"
+#include "models/image.h"
+#include "models/line.h"
+#include "cen_viewer.h"
 
 class editor : public QDialog
 {
     Q_OBJECT
-
+    
 public:
     explicit editor(QWidget *parent = 0, Qt::WFlags f = Qt::WindowSystemMenuHint);
-//    About(QWidget *parent = 0, Qt::WFlags f = Qt::WindowSystemMenuHint);
-
     ~editor();
 
+    bool set_file_name(QString name);
     void load_xml_data_into_editor(QDomElement* domElement);
-    void set_file_name(QString name);
     QDomDocument get_new_shablon();
     QString get_new_fileName();
 
-
-private slots:
-    void on_addRectButton_clicked();
-
-    void on_exitButton_clicked();
-
-    void on_clearButton_clicked();
-
-    void on_saveButton_clicked();
-
-    void generate_preview();
-
-    void on_widthSpin_valueChanged(int );
-
-    void on_heithSpin_valueChanged(int );
-
-    void on_nameButton_clicked();
-
-    void on_scene_selected();
-
-    void on_propert_spin_changed();
-
-    void c_items_initialize();
-
-    void on_priceButton_clicked();
-
-    void switch_cennic_element(QGraphicsItem* item);   //add or remove a cennic element
-
-    void on_barcodeButton_clicked();
-
-    void on_oldpriceButton_clicked();
-
-    void on_dateButton_clicked();
-
-    void on_nomerButton_clicked();
-
-    void on_fontSelectButton_clicked();
-
-    void on_textEdit_textChanged(QString );
-
-    void on_delButton_clicked();
-
-    void add_element_to_scene(QString type,
-                              float startX, float startY,
-                              float width,  float heith,
-                              QBrush brush = QBrush(Qt::green),
-                              QFont font = QFont("Arial", 10),
-                              QString text = "some text",
-                              bool to_removal = true);
-    void add_element_to_scene(QString type,
-                              float startX, float startY,
-                              float width, float heith,
-                              float linethick);
-
-
-    void on_loadButton_clicked();
-
-    void set_spin_value(QSpinBox* widget, float value);
-
-
-    void on_setLeftButton_clicked();
-
-    void on_setTopButton_clicked();
-
-    void on_setRightButton_clicked();
-
-    void on_setButtomButton_clicked();
-
-    void on_barTextButton_clicked();
-
-    void on_zoomOutButton_clicked();
-
-    void on_zoomInButton_clicked();
-
-    void on_lineButton_clicked();
-
-    void delete_item(QGraphicsItem* item);
-
-
 private:
-    //элементы формы
-    QWidget *mainWidget;
-    QGridLayout *mainLayout;
-    QLabel *label5;
-    QLineEdit* ui_shalon_nameEdit;
-    QLabel *label, *label2;
-    QSpinBox* ui_widthSpin, *ui_heithSpin;
-    QGraphicsScene* ui_scene;
-    QGraphicsView*  ui_view;
+    //QMainWindow *wnd_;
 
-    QPushButton *loadButton, *saveButton, *exitButton, *clearButton;
+    ///имя файла шаблона
+    QString fileName;
+    ///признак, изменялось ли имя файла шаблона
+    bool fileNameChanged;
 
-    QPushButton *barcodeButton, *barTextButton,  *nomerButton,
-                *priceButton,   *oldpriceButton, *lineButton,
-                *dateButton,    *nameButton,     *addRectButton;
+    //QMenuBar *mMenu;
+    //QMenu    *fileMenu;
+    QToolBar *mainToolBar;
+    //QStatusBar *mainStatusBar;
+    QLabel *statusFileNameLabel;
+    QGraphicsScene *scene, *pre_scene;
+    QGraphicsView *view, *pre_view;
+    QGridLayout *layout;
 
-    QGraphicsScene *ui_preScene;
-    QGraphicsView  *ui_preView;
+    QGraphicsRectItem *baseRect;
+    QSpinBox *lineWidth, *lineHeith;
+    QLineEdit *labelName;
+    QToolBar *secToolBar;
+    QToolBar *brToolBar, *txToolBar, *gToolBar, *iToolBar, *lToolBar;
+    bool brIs, txIs, gIs, iIs, lIs; //указатели, отображен ли тулбар
 
-    //элементы бокса выбора свойств элемента
-    QGroupBox *ui_propertBox;
-    QGridLayout *propertLay;
-    QLabel *label3, *label4;
-    QPushButton *fontSelectbutton;
-    QPushButton *delButton;
-    QSpinBox *ui_fontSizeSpin;
-    QSpinBox* ui_pwidthSpin, *ui_pheithSpin;
-    QLineEdit* ui_textEdit;
-    QLabel *br_label1, *br_label2;
-    QSpinBox *br_addition_box, *br_otstup_box;  //эти для управления баркодом
+    QAction *action_new;
+    QAction *action_save;
+    QAction *action_open;
 
-    //элементы бокса позиционирования элемента
-    QGroupBox *posBox;
-    QGridLayout *posLay;
-    QPushButton *setTopButton,  *setButtomButton,
-                *setLeftButton, *setRightButton,
-                *setCenterButton;
-
-    //элементы группы управления масштабом поля редактора
-    QGroupBox *zoomBox;
-    QGridLayout *zoomLay;
-    QPushButton *zoomInButton, *zoomOutButton;
+    QAction *action_del;
+    QAction *action_zoom_in;
+    QAction *action_zoom_out;
 
 
-
-
+    QAction *action_add_barcode;
+    QAction *action_add_barcodeText;
+    QAction *action_add_nomer;
+    QAction *action_add_good;
+    QAction *action_add_date;
+    QAction *action_add_price;
+    QAction *action_add_priceOld;
+    QAction *action_add_image;
+    QAction *action_add_line;
+    QAction *action_add_textInBox;
 
     QDomDocument doc;
-    QString fileName;
-    QTextCodec *codec_utf8;
-
-    int number;
-
-    QGraphicsRectItem* baseRect;
-
-
-    QMap<QString, QGraphicsItem* > c_items;
-    struct cennicTextItmes {
-        QString text;
-        QFont font;
-    };
-    QMap<QString, cennicTextItmes> c_text_items;
+    Cennic cen;
 
     bool isSaved;
+    bool isLoaded;
+
+    QTextCodec *codec_utf8;
 
 
-//signals:
-//    void shablon_is_ready(QDomDocument );
+private slots:
+    void makeToolBars();
+    //void makeMenu();
+    void makeActions();
+    //void makeStatusBar();
+
+    void generate_preview();
+    void create_font_xml_element(QDomElement elem, AbstractItem *itm);
+
+    void on_action_new();
+    void on_action_save();
+    void on_action_open();
+    void on_action_del();
+
+    void on_action_add_barcode();
+    void on_action_add_barcodeText();
+    void on_action_add_nomer();
+    void on_action_add_good();
+    void on_action_add_date();
+    void on_action_add_price();
+    void on_action_add_priceOld();
+    void on_action_add_image();
+    void on_action_add_line();
+    void on_action_add_textInBox();
+
+    void on_zoom_in();
+    void on_zoom_out();
+
+    void on_baseSize_changed();
+
+    void new_shablon(int w, int h);
+    void add_barcode(float startX, float startY, float w, float h,
+                     int font_size, QString font_family, bool Bold, bool Italic,
+                     int brAddition, int brOtstup,
+                     QString text);
+    void add_text(QString method, float startX, float strartY, float w, float h,
+                  int font_size, QString font_family, bool Bold, bool Italic,
+                  QString text);
+    void add_good(float startX, float startY, float w, float h,
+                  int font_size, QString font_family, bool Bold, bool Italic,
+                  QString text);
+    void add_image(float startX, float startY, float w, float h,
+                   QString fileName);
+    void add_line(float startX, float startY, float w, float h,
+                  float lineThick);
+
+    void on_scene_selected();
 
 };
 

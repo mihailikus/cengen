@@ -22,12 +22,17 @@ SOURCES += main.cpp \
     dialog.cpp \
     editor.cpp \
     graph.cpp \
-    addlinemaster.cpp \
     imagebox.cpp \
     about.cpp \
     mainTableWidget.cpp \
     autozakaz.cpp \
-    sellFilterWidget.cpp
+    sellFilterWidget.cpp \
+    models/textBox.cpp \
+    models/line.cpp \
+    models/image.cpp \
+    models/good.cpp \
+    models/barcodeBox.cpp \
+    models/abstract_item.cpp
 HEADERS += cengen.h \
     tinformer.h \
     tovar.h \
@@ -43,16 +48,20 @@ HEADERS += cengen.h \
     dialog.h \
     editor.h \
     graph.h \
-    addlinemaster.h \
     imagebox.h \
     about.h \
     mainTableWidget.h \
     tnvalidator.h \
     file_worker.h \
     autozakaz.h \
-    sellFilterWidget.h
+    sellFilterWidget.h \
+    models/textBox.h \
+    models/line.h \
+    models/image.h \
+    models/good.h \
+    models/barcodeBox.h \
+    models/abstract_item.h
 FORMS += \
-    addlinemaster.ui \
     autozakaz.ui
 
 OTHER_FILES += \

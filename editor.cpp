@@ -3,747 +3,246 @@
 editor::editor(QWidget *parent, Qt::WFlags f) :
     QDialog(parent, f)
 {
+//    wnd_ = new QMainWindow(this);
+//    wnd_->setWindowFlags(wnd_->windowFlags() & ~Qt::Window);
+
+    scene = new QGraphicsScene;
+    view = new QGraphicsView(scene, this);
+    //view->setMaximumWidth(this->width()/2);
+    connect(scene, SIGNAL(selectionChanged()), SLOT(on_scene_selected()));
+    connect(scene, SIGNAL(changed(QList<QRectF>)), SLOT(generate_preview()));
+
+    pre_scene = new QGraphicsScene;
+    pre_view = new QGraphicsView(pre_scene, this);
+    pre_view->scale(0.5, 0.5);
+
+
+    layout = new QGridLayout;
+
     isSaved = false;
-
-    mainLayout = new QGridLayout;
-
-    label5 = new QLabel(tr("Title"));
-    mainLayout->addWidget(label5, 0, 0);
-
-    ui_shalon_nameEdit = new QLineEdit;
-    mainLayout->addWidget(ui_shalon_nameEdit, 0, 1, 1, 3);
-
-    label = new QLabel(tr("Width"));
-    label2 = new QLabel(tr("Height"));
-
-    mainLayout->addWidget(label, 1, 0);
-    mainLayout->addWidget(label2, 1, 2);
-
-    ui_widthSpin = new QSpinBox;
-    ui_heithSpin = new QSpinBox;
-    ui_widthSpin->setMaximum(3000);
-    ui_heithSpin->setMaximum(3000);
-    ui_widthSpin->setValue(640);
-    ui_heithSpin->setValue(450);
-
-    mainLayout->addWidget(ui_widthSpin, 1, 1);
-    mainLayout->addWidget(ui_heithSpin, 1, 3);
-
-    ui_view = new QGraphicsView;
-    ui_scene = new QGraphicsScene;
-    ui_view->setScene(ui_scene);
-
-    mainLayout->addWidget(ui_view, 2, 0, 10, 4);
-
-    loadButton = new QPushButton(tr("LOAD"));
-    saveButton = new QPushButton(tr("SAVE"));
-    clearButton = new QPushButton(tr("CLEAR"));
-    exitButton = new QPushButton(tr("EXIT"));
-
-    mainLayout->addWidget(loadButton, 0, 4);
-    mainLayout->addWidget(saveButton, 0, 5);
-    mainLayout->addWidget(clearButton, 0, 6);
-    mainLayout->addWidget(exitButton, 0, 7);
-
-    barcodeButton = new QPushButton(tr("Barcode"));
-    barTextButton = new QPushButton(tr("Bar. as Text", "Barcode as text"));
-    nomerButton = new QPushButton(tr("Tnomer"));
-    priceButton = new QPushButton(tr("Price"));
-    oldpriceButton = new QPushButton(tr("Old price"));
-    lineButton = new QPushButton(tr("Line"));
-    dateButton = new QPushButton(tr("Date"));
-    nameButton = new QPushButton(tr("Name"));
-    addRectButton = new QPushButton(tr("Simple text"));
-
-    mainLayout->addWidget(barcodeButton,    3, 4);
-    mainLayout->addWidget(barTextButton,    3, 5);
-    mainLayout->addWidget(nomerButton,      3, 6);
-    mainLayout->addWidget(dateButton,       3, 7);
-
-    mainLayout->addWidget(priceButton,      4, 4);
-    mainLayout->addWidget(oldpriceButton,   4, 5);
-    mainLayout->addWidget(nameButton,       4, 6);
-    mainLayout->addWidget(addRectButton,    4, 7);
-
-    mainLayout->addWidget(lineButton,       5, 4);
-
-
-    //группа свойств выбранного элемента
-    ui_propertBox = new QGroupBox(tr("Propert of element"));
-    ui_propertBox->setEnabled(false);
-
-    propertLay = new QGridLayout;
-
-    label3 = new QLabel(tr("Width"));
-    label4 = new QLabel(tr("Height"));
-    ui_pwidthSpin = new QSpinBox;
-    ui_pheithSpin = new QSpinBox;
-    ui_fontSizeSpin = new QSpinBox;
-    fontSelectbutton = new QPushButton(tr("FONT"));
-    ui_textEdit = new QLineEdit(tr("Belizna electra 1000 ml", "Some example text"));
-    delButton = new QPushButton(tr("Delete"));
-
-    br_label1 = new QLabel(tr("Line addition in barcode"));
-    br_addition_box = new QSpinBox;
-    br_addition_box->setMaximum(100);
-    br_addition_box->setValue(5);
-
-    br_label2 = new QLabel(tr("Barcode text otstup"));
-    br_otstup_box = new QSpinBox;
-    br_otstup_box->setMaximum(100);
-    br_otstup_box->setValue(5);
-
-    ui_pwidthSpin->setMaximum(3000);
-    ui_pheithSpin->setMaximum(2000);
-
-    propertLay->addWidget(label3, 0, 0);
-    propertLay->addWidget(ui_pwidthSpin, 0, 1);
-    propertLay->addWidget(label4, 1, 0);
-    propertLay->addWidget(ui_pheithSpin, 1, 1);
-    propertLay->addWidget(fontSelectbutton, 2, 0);
-    propertLay->addWidget(ui_fontSizeSpin, 2, 1);
-    propertLay->addWidget(ui_textEdit, 4, 0, 1, 4);
-    propertLay->addWidget(delButton, 3, 0);
-
-    ui_propertBox->setLayout(propertLay);
-    mainLayout->addWidget(ui_propertBox, 7, 5, 5, 3);
-
-
-    posBox = new QGroupBox(tr("Location"));
-    posBox->setEnabled(false);
-    posLay = new QGridLayout;
-    setTopButton = new QPushButton(tr("^", "Up button"));
-    setButtomButton = new QPushButton(tr("\\/", "Down button"));
-    setLeftButton = new QPushButton(tr("<", "Up button"));
-    setRightButton = new QPushButton(tr(">", "Up button"));
-    setCenterButton = new QPushButton(tr(".", "Center button"));
-
-    //int maxSize = setTopButton->height();
-    int maxSize = 25;
-    setTopButton->setMaximumWidth(maxSize);
-    setButtomButton->setMaximumWidth(maxSize);
-    setLeftButton->setMaximumWidth(maxSize);
-    setRightButton->setMaximumWidth(maxSize);
-    setCenterButton->setMaximumWidth(maxSize);
-
-    posLay->addWidget(setTopButton, 0, 1);
-    posLay->addWidget(setLeftButton, 1, 0);
-    posLay->addWidget(setCenterButton, 1, 1);
-    posLay->addWidget(setRightButton, 1, 2);
-    posLay->addWidget(setButtomButton, 2, 1);
-
-    posBox->setLayout(posLay);
-    mainLayout->addWidget(posBox, 7, 4, 5, 1);
-
-
-    zoomBox = new QGroupBox(tr("Zoom"));
-    zoomLay = new QGridLayout;
-    zoomOutButton = new QPushButton(tr("-", "Zoom --"));
-    zoomInButton = new QPushButton(tr("+", "Zoom ++"));
-
-    zoomInButton->setMaximumWidth(maxSize);
-    zoomOutButton->setMaximumWidth(maxSize);
-
-    zoomLay->addWidget(zoomOutButton, 0, 0);
-    zoomLay->addWidget(zoomInButton, 0, 1);
-
-    zoomBox->setLayout(zoomLay);
-    mainLayout->addWidget(zoomBox, 12, 0);
-
-
-    ui_preView = new QGraphicsView;
-    ui_preScene = new QGraphicsScene;
-    ui_preView->setScene(ui_preScene);
-    ui_preView->scale(0.5, 0.5);
-
-
-    mainLayout->addWidget(ui_preView, 13, 0, 1, 4);
-
-
-
-    //mainWidget->setLayout(mainLayout);
-    this->setLayout(mainLayout);
-
-    //this->setCentralWidget(mainWidget);
-
-
-
-    //подключаем сигналы к слотам
-    connect (ui_pwidthSpin, SIGNAL(valueChanged(int)), SLOT(on_propert_spin_changed()));
-    connect (ui_pheithSpin, SIGNAL(valueChanged(int)), SLOT(on_propert_spin_changed()));
-    connect (ui_fontSizeSpin, SIGNAL(valueChanged(int)), SLOT(on_propert_spin_changed()));
-
-    connect(ui_scene, SIGNAL(selectionChanged()), SLOT(on_scene_selected()));
-    //connect(ui_scene, SIGNAL(changed(QList<QRectF>)), SLOT(generate_preview()));
-
-    connect(zoomInButton, SIGNAL(clicked()), SLOT(on_zoomInButton_clicked()));
-    connect(zoomOutButton, SIGNAL(clicked()), SLOT(on_zoomOutButton_clicked()));
-
-    connect(loadButton, SIGNAL(clicked()), SLOT(on_loadButton_clicked()));
-    connect(saveButton, SIGNAL(clicked()), SLOT(on_saveButton_clicked()));
-    connect(clearButton, SIGNAL(clicked()), SLOT(on_clearButton_clicked()));
-    connect(exitButton, SIGNAL(clicked()), SLOT(on_exitButton_clicked()));
-
-    connect(barcodeButton, SIGNAL(clicked()), SLOT(on_barcodeButton_clicked()));
-    connect(barTextButton, SIGNAL(clicked()), SLOT(on_barTextButton_clicked()));
-    connect(nomerButton, SIGNAL(clicked()), SLOT(on_nomerButton_clicked()));
-    connect(priceButton, SIGNAL(clicked()), SLOT(on_priceButton_clicked()));
-    connect(oldpriceButton, SIGNAL(clicked()), SLOT(on_oldpriceButton_clicked()));
-    connect(lineButton, SIGNAL(clicked()), SLOT(on_lineButton_clicked()));
-    connect(dateButton, SIGNAL(clicked()), SLOT(on_dateButton_clicked()));
-    connect(nameButton, SIGNAL(clicked()), SLOT(on_nameButton_clicked()));
-    connect(addRectButton, SIGNAL(clicked()), SLOT(on_addRectButton_clicked()));
-
-    connect(setTopButton, SIGNAL(clicked()), SLOT(on_setTopButton_clicked()));
-    connect(setButtomButton, SIGNAL(clicked()), SLOT(on_setButtomButton_clicked()));
-    connect(setLeftButton, SIGNAL(clicked()), SLOT(on_setLeftButton_clicked()));
-    connect(setRightButton, SIGNAL(clicked()), SLOT(on_setRightButton_clicked()));
-    //connect(setCenterButton, SIGNAL(clicked()), SLOT(on_setCenterButton_clicked()));
-
-    connect(ui_textEdit, SIGNAL(textChanged(QString)), SLOT(on_textEdit_textChanged(QString)));
-
-    connect(fontSelectbutton, SIGNAL(clicked()), SLOT(on_fontSelectButton_clicked()));
-    connect(delButton, SIGNAL(clicked()), SLOT(on_delButton_clicked()));
-
-    connect(br_addition_box, SIGNAL(valueChanged(int)), SLOT(generate_preview()));
-    connect(br_otstup_box, SIGNAL(valueChanged(int)), SLOT(generate_preview()));
-
-
-    //установка начальных переменных
-    number = 0;
-
+    isLoaded = false;
     codec_utf8 = QTextCodec::codecForName("UTF-8");
     fileName = "template.cen";
 
-    c_items_initialize();
 
-    ui_view->scale(0.5, 0.5);
+    fileNameChanged = true;
+    fileName = "new_template.cen";
+    statusFileNameLabel = new QLabel(fileName);
+
+    makeActions();
+    makeToolBars();
+
+    brIs = false;
+    txIs = false;
+     gIs = false;
+     iIs = false;
+     lIs = false;
+
+    QLabel *lb = new QLabel(" ");
+    layout->addWidget(secToolBar, 0, 0, 1, 2);
+    layout->addWidget(mainToolBar, 1, 0, 1, 1);
+    layout->addWidget(lb, 2, 1);
+    layout->addWidget(view, 3, 0);
+    layout->addWidget(pre_view, 3, 1);
+    this->setLayout(layout);
 
 
 }
 
 editor::~editor()
 {
-    //delete ui;
+    if (brIs) {
+        brToolBar->hide();
+        brIs = false;
+    }
+    if (txIs) {
+        txToolBar->hide();
+        txIs = false;
+    }
+    if (gIs) {
+        gToolBar->hide();
+        gIs = false;
+    }
+    if (iIs) {
+        iToolBar->hide();
+        iIs = false;
+    }
+    if (lIs) {
+        lToolBar->hide();
+        lIs = false;
+    }
 }
 
-void editor::on_exitButton_clicked()
-{
-    if (this->parent()) {
-        generate_preview();
-        //qDebug() << doc.toString() << "\n----------------------------\n";
-
-        //int length = doc.toString().length();
-        //emit shablon_is_ready(doc);
+bool editor::set_file_name(QString name) {
+    //qDebug() << "Setting filename " << name;
+    if (isLoaded) {
+        fileName= name;
+        return true;
     }
 
-    close();
-}
-
-QDomDocument editor::get_new_shablon() {
-    generate_preview();
-    return doc;
-}
-
-QString editor::get_new_fileName() {
-    if (isSaved) {
-        return fileName;
-    }
-    return "";
-}
-
-void editor::on_clearButton_clicked()
-{
-    isSaved = false;
-    fileName = "template.cen";
-    ui_scene->clear();
-    c_items_initialize();
-}
-
-void editor::delete_item(QGraphicsItem *item) {
-    ui_scene->removeItem(item);
-}
-
-void editor::on_saveButton_clicked()
-{
-    isSaved = true;
-
-    //создаем превью (вместе с XML-документом)
-    this->generate_preview();
-
-    //записываем все это дело в файл
-    fileName = QFileDialog::getSaveFileName(this, tr("Save template"), fileName, tr("Cennic templates (*.cen)"));
-    qDebug() << "file name is " << fileName;
-    if (fileName != "") {
-        QFile file(fileName);
-        if(file.open(QIODevice::WriteOnly)) {
-            QString shablon_array = doc.toString();
-            QTextStream out(&file);
-            out.setCodec(codec_utf8);
-            out << shablon_array;
-
-            file.close();
-        }
-        //qDebug() << "template:: \n " << doc.toString();
-
+    ///устанавливает файл шаблона
+    QFileInfo fi(name);
+    qDebug() << "New file name: " << name;
+    if (name == fileName) {
+        fileNameChanged = false;
+        return true;
     }
 
+    if (fi.exists()) {
+        fileName = name;
+        fileNameChanged = true;
+        statusFileNameLabel->setText(fileName);
 
+        doc.clear();
 
-}
+        QDomElement domElement;
+        //this->on_clearButton_clicked();
+        //ui_scene->removeItem(baseRect);
 
-void editor::generate_preview()
-{
-    qDebug() << "Preview started";
-    ui_preView->setVisible(true);
-    //создаем XML-документ
-    doc.clear();
-    QDomNode xmlNode = doc.createProcessingInstruction("xml",
-                                    "version=\"1.0\" encoding=\"UTF-8\"");
-    doc.insertBefore(xmlNode, doc.firstChild());
+        QFile file;
+        file.setFileName(fileName);
 
-    QDomElement cennic = doc.createElement("cennic");
+        if (file.open(QIODevice::ReadOnly)) {
+            if (doc.setContent(&file)) {
+                domElement = doc.documentElement();
 
-    //устанавливаем название шаблона
-    QDomElement elementName = doc.createElement("name");
-    QDomText domText = doc.createTextNode(ui_shalon_nameEdit->text());
-    elementName.appendChild(domText);
-    cennic.appendChild(elementName);
-
-    //устанавливаем базовый размер - ширину и высоту
-    QDomElement domElement = doc.createElement("base");
-    domElement.setAttribute("width", QString::number(ui_widthSpin->value()));
-    domElement.setAttribute("heith", QString::number(ui_heithSpin->value()));
-    cennic.appendChild(domElement);
-
-//    qDebug() << "STARTED------------";
-
-    foreach(QGraphicsItem* item, c_items) {
-        if (item->scene() == ui_scene) {
-            QString value = c_items.key(item);
-//            qDebug() << "c_items = " << value;
-            QString item_value = value.split(QRegExp("[0-9]")).at(0);
-            //QString item_value = value;
-            //QString text = c_text_items[value].text;
-//            qDebug() << "text is = " << text;
-//            qDebug() << "text is = " << c_text_items[value].font;
-
-            QDomElement elem;
-
-            //устанавливаем атрибуты для поля названия товара
-            if (item_value == "barcode"
-                    || item_value == "good"
-                    || item_value == "line") {
-                elem = doc.createElement(item_value);
-                if (item_value == "barcode") {
-                    elem.setAttribute("addition", br_addition_box->value());
-                    elem.setAttribute("otstup", br_otstup_box->value());
-                }
+                load_xml_data_into_editor(&domElement);
             } else {
-                elem = doc.createElement("text");
-                QString method;
-                if (item_value == "text" || item_value == "date") {
-                    if (item_value == "date") {
-                        method = "date";
-                    } else {
-                        method = "textInBox";
-                    }
-                    QDomText dm = doc.createTextNode(c_text_items[value].text);
-//                    qDebug() << "Item text" << c_text_items[value].text;
-                    elem.appendChild(dm);
-                } else {
-                    method = item_value;
-                }
-                elem.setAttribute("method", method);
-
+                qDebug() << "file wrong";
+                return false;
             }
-
-            if (item_value == "price" || item_value == "priceOld") {
-                //устанавливаем дополнительные параметры для рублей и копеек
-                QStringList rub_kop = c_text_items[value].text.split("::");
-                if (rub_kop.count()<2) {
-                    rub_kop << tr("kop");
-                }
-                elem.setAttribute("rub", rub_kop.at(0));
-                elem.setAttribute("kop", rub_kop.at(1));
-
-            }
-
-            QString startX, startY, width, heith;
-            startX = QString::number(item->x());
-            startY = QString::number(item->y());
-            width = QString::number(item->sceneBoundingRect().width());
-            heith = QString::number(item->sceneBoundingRect().height());
-
-            if (item_value == "line") {
-                //вычисляем параметры линии
-                float rotation = c_text_items[value].text.toFloat();
-                item->rotate(0-rotation);
-                float linethick = item->sceneBoundingRect().height();
-                float len = item->sceneBoundingRect().width();
-                width = QString::number(len * cos(rotation/180*M_PI));
-                heith = QString::number(len * sin(rotation/180*M_PI));
-                item->rotate(rotation);
-                elem.setAttribute("linethick", linethick);
-
-            } else {
-                //если не линия - записываем в XML параметры шрифта
-                QString font_family = c_text_items[value].font.family();
-                elem.setAttribute("font-family", font_family);
-                int font_size = c_text_items[value].font.pointSize();
-                elem.setAttribute("font-size", QString::number(font_size));
-                elem.setAttribute("font-bold", c_text_items[value].font.bold());
-                elem.setAttribute("font-italic", c_text_items[value].font.italic());
-            }
-
-            elem.setAttribute("startX", startX);
-            elem.setAttribute("startY", startY);
-            elem.setAttribute("width", width);
-            elem.setAttribute("heith", heith);
-
-            cennic.appendChild(elem);
-
-    }
-}
-    doc.appendChild(cennic);
-
-
-//    qDebug() << "--------------------" << doc.toString() << "------------";
-
-    ui_preScene->clear();
-    Tovar tovar;
-    tovar.barcode = c_text_items["barcode"].text;
-    tovar.name_of_tovar = c_text_items["good"].text.toUtf8();
-    tovar.nomer_of_tovar = c_text_items["nomer"].text.toInt();
-    tovar.price1 = 299.90;
-    tovar.price2 = 999.90;
-    Cennic* preview_cennic = new Cennic(&tovar, doc.documentElement());
-    QGraphicsItemGroup *pos = preview_cennic->render(ui_preScene, 0, 0);
-
-    ui_preView->fitInView(0, 0, pos->x(), pos->y(), Qt::KeepAspectRatio);
-    qDebug() << "Preview finished";
-
-}
-
-void editor::on_widthSpin_valueChanged(int value)
-{
-    ui_scene->removeItem(baseRect);
-    baseRect = ui_scene->addRect(0, 0, value, ui_heithSpin->value());
-
-}
-
-void editor::on_heithSpin_valueChanged(int value)
-{
-    ui_scene->removeItem(baseRect);
-    baseRect = ui_scene->addRect(0, 0, ui_widthSpin->value(), value);
-
-}
-
-void editor::set_spin_value(QSpinBox *widget, float value) {
-    widget->blockSignals(true);
-    widget->setValue(value);
-    widget->blockSignals(false);
-}
-
-void editor::on_scene_selected() {
-    this->generate_preview();
-    QList<QGraphicsItem* > items = ui_scene->selectedItems();
-    if (!items.count()) {
-        ui_propertBox->setEnabled(false);
-        posBox->setEnabled(false);
-        return;
-    }
-
-    posBox->setEnabled(true);
-
-    if (items.count() != 1) {
-        ui_propertBox->setEnabled(false);
-        return;
-    }
-
-    ui_propertBox->setEnabled(true);
-    QGraphicsItem* item = items.at(0);
-    qreal width, heith;
-    QString text = c_items.key(item);
-    if (text.contains("line")) {
-        float angle = c_text_items[text].text.toFloat();
-        item->rotate(0-angle);
-        width = item->sceneBoundingRect().width();
-        heith = item->sceneBoundingRect().height();
-        if (angle<0) {
-            heith = 0-heith;
-        }
-        item->rotate(angle);
-
-
-    } else {
-        width = item->sceneBoundingRect().width();
-        heith = item->sceneBoundingRect().height();
-    }
-
-    //устанавливаем размеры прямоугольника
-    set_spin_value(ui_pwidthSpin, width);
-    set_spin_value(ui_pheithSpin, heith);
-
-    //устанавливаем размер шрифта в поле для его изменения
-    QFont font = c_text_items[text].font;
-    //qDebug() << "FONT is " << font.pointSize();
-    set_spin_value(ui_fontSizeSpin, font.pointSize());
-
-
-    //устанавливаем текст
-    QString value = c_items.key(item);
-    ui_textEdit->blockSignals(true);
-    ui_textEdit->setText(c_text_items[value].text);
-    ui_textEdit->blockSignals(false);
-
-    if (text.contains("barcode")) {
-        //добавляем кнопку управления отступами
-        propertLay->addWidget(br_label1, 5, 0);
-        propertLay->addWidget(br_addition_box, 5, 1);
-        propertLay->addWidget(br_label2, 6, 0);
-        propertLay->addWidget(br_otstup_box, 6, 1);
-
-    } else {
-        propertLay->removeWidget(br_label1);
-        propertLay->removeWidget(br_addition_box);
-        propertLay->removeWidget(br_label2);
-        propertLay->removeWidget(br_otstup_box);
-    }
-
-
-}
-
-void editor::on_propert_spin_changed() {
-    QGraphicsItem* item = ui_scene->selectedItems().at(0);
-    QString text = c_items.key(item);
-    //qDebug() << "TEXT in spin is " << text;
-    float angle;
-
-    if (text.contains("line")) {
-        angle = c_text_items[text].text.toFloat();
-        item->rotate(0-angle);
-        float len = ui_pwidthSpin->value();
-        float linethick = ui_pheithSpin->value();
-        QString api_changed;
-        if ( (linethick - item->sceneBoundingRect().height()) < 0.01) {
-            api_changed = "width";
         } else {
-            api_changed = "heith";
-        }
-        float startX = item->pos().x();
-        float startY = item->pos().y();
-        float width = len * cos (angle/180*M_PI);
-        float heith = len * sin (angle/180*M_PI);
-        ui_scene->removeItem(item);
-        add_element_to_scene(text, startX, startY, width, heith, linethick);
-        item = c_items.value(text);
-        item->setSelected(true);
-
-        if (api_changed == "width") {
-            ui_pwidthSpin->setFocus();
-        }
-        if (api_changed == "heith") {
-            ui_pheithSpin->setFocus();
+            //error что файл не открывается
+            qDebug() << "cant open file";
+            return false;
         }
 
-
-    } else {
-
-        qreal width = ui_pwidthSpin->value() / item->sceneBoundingRect().width();
-        qreal heith = ui_pheithSpin->value() / item->sceneBoundingRect().height();
-
-        item->scale(width, heith);
-
-        c_text_items[text].font.setPointSize(ui_fontSizeSpin->value());
-
-
-
+        return true;
     }
+    return false;
+}
 
-    generate_preview();
+void editor::makeActions() {
+    action_new = new QAction(tr("New"), this);
+    action_new->setShortcut(QKeySequence("Ctrl+N"));
+    connect(action_new, SIGNAL(triggered()), SLOT(on_action_new()));
+
+    action_open = new QAction(tr("Open"), this);
+    action_open->setShortcut(QKeySequence("Ctrl+O"));
+    connect(action_open, SIGNAL(triggered()), SLOT(on_action_open()));
+
+    action_save = new QAction(tr("Save"), this);
+    action_save->setShortcut(QKeySequence("Ctrl+S"));
+    connect(action_save, SIGNAL(triggered()), SLOT(on_action_save()));
+
+    action_del = new QAction(tr("Del"), this);
+    connect(action_del, SIGNAL(triggered()), SLOT(on_action_del()));
+    action_del->setEnabled(false);
+
+    action_add_barcode = new QAction(tr("Barcode"), this);
+    connect(action_add_barcode, SIGNAL(triggered()),
+            SLOT(on_action_add_barcode()));
+
+    action_add_barcode = new QAction(tr("Barcode"), this);
+    connect(action_add_barcode, SIGNAL(triggered()),
+            SLOT(on_action_add_barcode()));
+
+    action_add_barcodeText = new QAction(tr("brText"), this);
+    connect(action_add_barcodeText, SIGNAL(triggered()),
+            SLOT(on_action_add_barcodeText()));
+
+    action_add_nomer = new QAction(tr("Nomer"), this);
+    connect(action_add_nomer, SIGNAL(triggered()),
+            SLOT(on_action_add_nomer()));
+
+    action_add_good = new QAction(tr("Good"), this);
+    connect(action_add_good, SIGNAL(triggered()),
+            SLOT(on_action_add_good()));
+
+    action_add_date = new QAction(tr("Date"), this);
+    connect(action_add_date, SIGNAL(triggered()),
+            SLOT(on_action_add_date()));
+
+    action_add_price = new QAction(tr("Price"), this);
+    connect(action_add_price, SIGNAL(triggered()),
+            SLOT(on_action_add_price()));
+
+    action_add_priceOld = new QAction(tr("PrOld"), this);
+    connect(action_add_priceOld, SIGNAL(triggered()),
+            SLOT(on_action_add_priceOld()));
+
+    action_add_image = new QAction(tr("Image"), this);
+    connect(action_add_image, SIGNAL(triggered()),
+            SLOT(on_action_add_image()));
+
+    action_add_line = new QAction(tr("Line"), this);
+    connect(action_add_line, SIGNAL(triggered()),
+            SLOT(on_action_add_line()));
+
+    action_add_textInBox = new QAction(tr("Text"), this);
+    connect(action_add_textInBox, SIGNAL(triggered()),
+            SLOT(on_action_add_textInBox()));
+
+    action_zoom_in = new QAction(tr("+", "Zoom in"), this);
+    connect(action_zoom_in, SIGNAL(triggered()), SLOT(on_zoom_in()));
+
+    action_zoom_out = new QAction(tr("-", "Zoom out"), this);
+    connect(action_zoom_out, SIGNAL(triggered()), SLOT(on_zoom_out()));
 
 }
 
-void editor::add_element_to_scene(QString type, float startX, float startY, float width, float heith, float linethick) {
-    this->add_element_to_scene(type, startX, startY, width, heith, QBrush(Qt::red), QFont("arial", 10), QString::number(linethick), false);
-}
+void editor::makeToolBars() {
+    mainToolBar = new QToolBar();
+    mainToolBar->addAction(action_new);
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(action_save);
+    mainToolBar->addAction(action_open);
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(action_del);
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(action_add_barcode);
+    mainToolBar->addAction(action_add_barcode);
+    mainToolBar->addAction(action_add_barcodeText);
+    mainToolBar->addAction(action_add_nomer);
+    mainToolBar->addAction(action_add_good);
+    mainToolBar->addAction(action_add_date);
+    mainToolBar->addAction(action_add_price);
+    mainToolBar->addAction(action_add_priceOld);
+    mainToolBar->addAction(action_add_image);
+    mainToolBar->addAction(action_add_line);
+    mainToolBar->addAction(action_add_textInBox);
+    //wnd_->addToolBar(Qt::LeftToolBarArea, mainToolBar);
 
-void editor::c_items_initialize() {
-    c_items.clear();
-    c_text_items.clear();
+    secToolBar = new QToolBar();
+    lineWidth = new QSpinBox();
+    lineHeith = new QSpinBox();
+    lineWidth->setMaximum(3000);
+    lineHeith->setMaximum(3000);
+    connect(lineHeith, SIGNAL(valueChanged(int)), SLOT(on_baseSize_changed()));
+    connect(lineWidth, SIGNAL(valueChanged(int)), SLOT(on_baseSize_changed()));
 
-    //базовый размер
-    //baseRect = ui_scene->addRect(0, 0, ui_widthSpin->value(), ui_heithSpin->value());
+    secToolBar->addWidget(lineWidth);
+    secToolBar->addWidget(lineHeith);
 
-    //добавляем основные элементы ценника - название товара, штрих-код, цену и т.п.
-    add_element_to_scene("barcode", 100, 200, 300, 70, QBrush(Qt::darkBlue), QFont("Arial", 7), "216975");
-
-    add_element_to_scene("good", 0, 0, ui_widthSpin->value(), 230, QBrush(Qt::green), QFont("Arial", 43), tr("Belizna electra 1000 ml"));
-
-    add_element_to_scene("nomer", 0, 0, 200, 20, QBrush(Qt::blue), QFont("Arial", 20), "74124");
-
-    add_element_to_scene("price", 0, 0, 300, 70, QBrush(Qt::red), QFont("Arial", 50), tr("r::k"));
-
-    add_element_to_scene("priceOld", 0, 0, 300, 70, QBrush(Qt::lightGray), QFont("Arial", 50), tr("r::k"));
-
-    add_element_to_scene("date", 0, 0, 200, 20, QBrush(Qt::magenta), QFont("Arial", 20), "dd.MM.yy");
-
-    add_element_to_scene("barcodeAsText", 100, 200, 200, 20, QBrush(Qt::darkYellow), QFont("Arial", 20), "4600702003840");
-
-}
-
-void editor::switch_cennic_element(QGraphicsItem *item) {
-    QString type = c_items.key(item);
-    add_element_to_scene(type,
-                         0,
-                         0,
-                         item->sceneBoundingRect().width(),
-                         item->sceneBoundingRect().height(), QBrush(Qt::green),
-                         c_text_items[type].font,
-                         c_text_items[type].text, false);
-    //ui_scene->addItem(item);
-}
-
-void editor::on_nameButton_clicked()
-{
-    switch_cennic_element(c_items["good"]);
-
-}
-
-void editor::on_priceButton_clicked()
-{
-    switch_cennic_element(c_items["price"]);
-
-}
-
-void editor::on_barcodeButton_clicked()
-{
-    switch_cennic_element(c_items["barcode"]);
-}
-
-void editor::on_oldpriceButton_clicked()
-{
-    switch_cennic_element(c_items["priceOld"]);
-}
-
-void editor::on_dateButton_clicked()
-{
-    switch_cennic_element(c_items["date"]);
-}
-
-void editor::on_nomerButton_clicked()
-{
-    switch_cennic_element(c_items["nomer"]);
-}
-
-void editor::on_fontSelectButton_clicked()
-{
-    bool ok;
-    QString value = c_items.key(ui_scene->selectedItems().at(0));
-    QFont font = c_text_items[value].font;
-    QFont fnt = QFontDialog::getFont(&ok, font);
-    if (ok) {
-        c_text_items[value].font = fnt;
-    }
-}
-
-void editor::on_textEdit_textChanged(QString newText)
-{
-    QString value = c_items.key(ui_scene->selectedItems().at(0));
-    //qDebug() << "value " << value << newText;
-
-    c_text_items[value].text = newText;
-    generate_preview();
-}
-
-void editor::on_delButton_clicked()
-{
-    ui_scene->removeItem(ui_scene->selectedItems().at(0));
-}
-
-void editor::add_element_to_scene(QString mainType, float startX, float startY, float width, float heith, QBrush brush, QFont font, QString text, bool to_removal   ) {
-    QString type = mainType;
-    if (!to_removal) {
-        type = mainType + QString::number(number++);
-    }
-    if (type.contains("line")) {
-        ui_scene->removeItem(c_items[type]);
-        //переводим прямоугольные координаты в полярные
-        float len = sqrt(width*width + heith*heith);
-        float angl;
-        if (width) {
-            angl = atan(heith / width) * 180 / M_PI;
-        } else {
-            angl = 90;
-        }
-
-        c_items[type] = ui_scene->addRect(0, 0, len, text.toFloat());
-
-        text = QString::number(angl);
-        c_items[type]->rotate(angl);
-
-        //float new_angl = c_items[type]->rotation();
-        //qDebug() << "rotation from item is " << new_angl;
-
-        to_removal = false;
-    } else {
-        c_items[type] = ui_scene->addRect(0, 0, width, heith, QPen(Qt::black), brush);
-
-    }
-    c_items[type]->setPos(startX, startY);
-    c_text_items[type].font = font;
-    c_text_items[type].text = text;
-    c_items[type]->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
-
-    if (to_removal) {
-        ui_scene->removeItem(c_items[type]);
-    }
+    secToolBar->addAction(action_zoom_in);
+    secToolBar->addAction(action_zoom_out);
 
 
-}
+    labelName = new QLineEdit(tr("Sample shablon"));
+    secToolBar->addWidget(labelName);
 
-void editor::on_addRectButton_clicked()
-{
-    //static int i = 0;
-    QString value = "text";// + QString::number(i++);
-    add_element_to_scene(value, 0, 0, 200, 50, QBrush(Qt::yellow), QFont("Arial", 20), "text", false);
+    //wnd_->addToolBar(Qt::TopToolBarArea, secToolBar);
 
-}
-
-void editor::on_loadButton_clicked()
-{
-    fileName = QFileDialog::getOpenFileName(this, tr("Open cennic template"), fileName, tr("Cennic templates (*.cen)"));
-    if (fileName == "") {
-        qDebug() << "Please select file name";
-        return;
-    }
-    doc.clear();
-
-    QDomElement domElement;
-    this->on_clearButton_clicked();
-    ui_scene->removeItem(baseRect);
-
-    QFile file;
-    file.setFileName(fileName);
-
-    if (file.open(QIODevice::ReadOnly)) {
-    if (doc.setContent(&file)) {
-        domElement = doc.documentElement();
-
-        load_xml_data_into_editor(&domElement);
-    }
-    } else {
-        //error что файл не открывается
-        qDebug() << "cant open file";
-        return;
-    }
 }
 
 void editor::load_xml_data_into_editor(QDomElement *domElement) {
-    ui_scene->blockSignals(true);
-    ui_scene->clear();
-    c_items_initialize();
+///загружаем XML-шаблон в редактор
+    qDebug() << "Loading xml shablon";
+
+    isLoaded = true;
+
+    scene->blockSignals(true);
+    //scene->clear();
 
     QDomNode node = domElement->firstChild();
     while (!node.isNull()){
@@ -775,183 +274,500 @@ void editor::load_xml_data_into_editor(QDomElement *domElement) {
             QString kopSymbol = domElement->attribute("kop", "KOP");
             QString text = domElement->text();
 
-            if (element == "name") {
-                ui_shalon_nameEdit->setText(text);
-            }
-
             if (element == "base" ) {
-                baseRect = ui_scene->addRect(0, 0, width, heith);
-                qDebug() << "width = " << width;
-                set_spin_value(ui_widthSpin, width);
-                set_spin_value(ui_heithSpin, heith);
+                new_shablon(width, heith);
+                //baseRect = scene->addRect(0, 0, width, heith);
+                //qDebug() << "width = " << width;
+                //set_spin_value(ui_widthSpin, width);
+                //set_spin_value(ui_heithSpin, heith);
             }
-
-            if (element == "line" ) {
-                add_element_to_scene("line", startX, startY, width, heith, linethick.toFloat());
-
+            if (element == "name") {
+                labelName->setText(text);
             }
-
             if (element == "barcode") {
-                add_element_to_scene("barcode", startX, startY,
-                                     width, heith, QBrush(Qt::darkBlue),
-                                     font, "216975", 0);
-                //br_addition_box->setMaximum(heith/2);
-                br_addition_box->setValue(br_lineAddition);
-                //br_otstup_box->setMaximum(heith/2);
-                br_otstup_box->setValue(br_otstup);
+                qDebug() << "Adding barcode box";
+                add_barcode(startX, startY, width, heith,
+                            font_size, font_family, font_bold, font_italic,
+                            br_lineAddition, br_otstup, tr("216975", "Example barcode text"));
             }
-
             if (element == "good") {
-                add_element_to_scene("good", startX, startY,
-                                     width, heith, QBrush(Qt::green),
-                                     font, tr("Belizna electra 1000 ml"), 0);
+                add_good(startX, startY, width, heith,
+                         font_size, font_family, font_bold, font_italic,
+                         tr("Example good name Belizna Electra 1100 ml, this text is not impotant"));
             }
-
+            if (element == "image") {
+                add_image(startX, startY, width, heith, text);
+            }
+            if (element == "line") {
+                add_line(startX, startY, width, heith, linethick.toFloat());
+            }
             if (element == "text") {
                 if (method == "textInBox") {
-                    static int i = 0;
-                    add_element_to_scene("text"+QString::number(i++), startX, startY,
-                                         width, heith, QBrush(Qt::yellow),
-                                         font, text, 0);
+                    add_text(method, startX, startY, width, heith,
+                             font_size, font_family, font_bold, font_italic,
+                             text);
                 }
-
+                if (method == "barcodeAsText") {
+                    text = tr("216975", "Example barcode text");
+                    add_text(method, startX, startY, width, heith,
+                             font_size, font_family, font_bold, font_italic,
+                             text);
+                }
                 if (method == "date") {
-                    add_element_to_scene("date", startX, startY,
-                                         width, heith, QBrush(Qt::magenta),
-                                         font, domElement->text(), 0);
+                    add_text(method, startX, startY, width, heith,
+                             font_size, font_family, font_bold, font_italic,
+                             text);
                 }
                 if (method == "nomer") {
-                    add_element_to_scene("nomer", startX, startY,
-                                         width, heith, QBrush(Qt::blue),
-                                         font, "77216", 0);
+                    text = tr("21697", "Example tnomer");
+                    add_text(method, startX, startY, width, heith,
+                             font_size, font_family, font_bold, font_italic,
+                             text);
+                }
+                if (method == "quantity") {
+                    text = tr("12", "Example quantity");
+                    add_text(method, startX, startY, width, heith,
+                             font_size, font_family, font_bold, font_italic,
+                             text);
                 }
                 if (method == "price") {
 
                     QString money = rubSymbol + "::" + kopSymbol;
-                    add_element_to_scene("price", startX, startY,
-                                         width, heith, QBrush(Qt::red),
-                                         font, money, 0);
+                    add_text(method, startX, startY, width, heith,
+                             font_size, font_family, font_bold, font_italic,
+                             money);
                 }
                 if (method == "priceOld") {
-                    QString money = rubSymbol + "::" + kopSymbol;
-                    add_element_to_scene("priceOld", startX, startY,
-                                         width, heith, QBrush(Qt::lightGray),
-                                         font, money, 0);                    }
-                if (method == "barcodeAsText") {
-                    add_element_to_scene("barcodeAsText", startX, startY,
-                                         width, heith, QBrush(Qt::darkYellow),
-                                         font, "4600702003840", 0);
-                }
-            }
 
+                    QString money = rubSymbol + "::" + kopSymbol;
+                    add_text(method, startX, startY, width, heith,
+                             font_size, font_family, font_bold, font_italic,
+                             money);
+                }
+
+                }
         }
         node = node.nextSibling();
     }
-    generate_preview();
-    ui_scene->blockSignals(false);
+    scene->blockSignals(false);
+//    generate_preview();
+
 }
 
-void editor::set_file_name(QString name) {
-    isSaved = true;
-    this->fileName = name;
+void editor::on_action_new() {
+    new_shablon(lineWidth->value(), lineHeith->value());
+    labelName->setText(tr("Sample shablon"));
+    fileName = "template.cen";
+    isSaved = false;
 }
 
-void editor::on_setLeftButton_clicked()
-{
-    QList<QGraphicsItem* > items = ui_scene->selectedItems();
-    int count = items.count();
-    if (!count) return;
+void editor::on_action_save() {
+    //создаем превью (вместе с XML-документом)
+    this->generate_preview();
 
-    if (count == 1) {
-        items.at(0)->setX(0);
+    //записываем все это дело в файл
+    fileName = QFileDialog::getSaveFileName(this, tr("Save template"), fileName, tr("Cennic templates (*.cen)"));
+    qDebug() << "file name is " << fileName;
+    if (fileName != "") {
+        QFile file(fileName);
+        if(file.open(QIODevice::WriteOnly)) {
+            QString shablon_array = doc.toString();
+            QTextStream out(&file);
+            out.setCodec(codec_utf8);
+            out << shablon_array;
+
+            file.close();
+
+            isSaved = true;
+        }
+        //qDebug() << "template:: \n " << doc.toString();
+
+    }
+}
+
+void editor::on_action_open() {
+    QString str = QFileDialog::getOpenFileName(this, tr("Open cennic template"), fileName, tr("Cennic templates (*.cen)"));
+    if (str == "") {
+        qDebug() << "Please select file name";
         return;
     }
-    int min_pos=items.at(0)->pos().x();
+    isLoaded = false;
+    this->set_file_name(str);
+}
 
-    for (int i = 1; i<count; i++) {
-        int cur_pos = items.at(i)->pos().x();
-        qDebug() << "pos" << cur_pos;
-        if (min_pos > cur_pos) {
-            min_pos = cur_pos;
-            qDebug() << "min pos " << min_pos;
-        }
+void editor::on_action_del() {
+    QList<QGraphicsItem *> lst = scene->selectedItems();
+    for (int i = 0; i<lst.count(); i++) {
+        scene->removeItem(lst.at(i));
+        delete lst.at(i);
     }
-    qDebug() << "min pos 77 " << min_pos;
-    for (int i = 0; i<count; i++) {
-        items.at(i)->setX(min_pos);
+    view->repaint();
+}
+
+void editor::new_shablon(int w, int h) {
+    scene->clear();
+    view->repaint();
+    baseRect = scene->addRect(0, 0, w, h);
+    lineWidth->setValue(w);
+    lineHeith->setValue(h);
+}
+
+void editor::on_baseSize_changed() {
+    scene->removeItem(baseRect);
+    baseRect = scene->addRect(0, 0, lineWidth->value(), lineHeith->value());
+}
+
+void editor::on_zoom_in() {
+    view->scale(2, 2);
+    pre_view->scale(2, 2);
+}
+
+void editor::on_zoom_out() {
+    view->scale(0.5, 0.5);
+    pre_view->scale(0.5, 0.5);
+}
+
+void editor::on_action_add_barcode() {
+    add_barcode(0, 0, 300, 65, 10, "Arial", false, false, 10, 5, tr("216975"));
+}
+
+void editor:: on_action_add_barcodeText(){
+    add_text("barcodeAsText", 0, 0, 100, 40, 10, "Arial", false, false, tr("216975"));
+}
+
+void editor:: on_action_add_nomer(){
+    add_text("nomer", 0, 0, 100, 40, 10, "Arial", false, false, tr("216975"));
+}
+
+void editor:: on_action_add_good(){
+    add_good(0, 0, 300, 200, 30, "Arial", false, false, tr("Example good name Belizna Electra 1100 ml, this text is not impotant"));
+}
+
+void editor:: on_action_add_date(){
+    add_text("date", 0, 0, 100, 40, 10, "Arial", false, false, tr("dd.MM.yy"));
+}
+
+void editor:: on_action_add_price(){
+    add_text("price", 0, 0, 100, 40, 10, "Arial", false, false, tr("rub::kop"));
+}
+
+void editor:: on_action_add_priceOld(){
+    add_text("priceOld", 0, 0, 100, 40, 10, "Arial", false, false, tr("rub::kop"));
+}
+
+void editor:: on_action_add_image(){
+    QString str = QFileDialog::getOpenFileName(0, tr("Select image file"), ".", tr("images (*.jpg *.gif)"));
+
+    if (str != "") {
+        QPixmap *pxItem = new QPixmap(str);
+        float w = pxItem->width();
+        float h = pxItem->height();
+
+        add_image(0, 0, w, h, str);
+
     }
+}
 
+void editor:: on_action_add_line(){
+    add_line(0, 0, 200, 0, 10);
+}
 
+void editor:: on_action_add_textInBox(){
+    add_text("textInBox", 0, 0, 100, 40, 10, "Arial", false, false, tr("Sample text"));
 }
 
 
-void editor::on_setTopButton_clicked()
-{
-    QGraphicsItem* item = ui_scene->selectedItems().at(0);
-    item->setY(0);
+void editor::add_barcode(float startX, float startY, float w, float h,
+                         int font_size, QString font_family, bool Bold, bool Italic,
+                         int brAddition, int brOtstup,
+                         QString text) {
+    BarcodeBox *brBox = new BarcodeBox(w, h);
+    brBox->setPos(startX, startY);
+    brBox->setBrAddition(brAddition);
+    brBox->setBrOtstup(brOtstup);
+    brBox->setFont(font_size, font_family, Bold, Italic);
+    brBox->setText(text);
+
+    scene->addItem(brBox);
+    connect(brBox, SIGNAL(some_changed()), SLOT(generate_preview()));
 }
 
+void editor::add_text(QString method, float startX, float startY, float w, float h, int font_size, QString font_family, bool Bold, bool Italic, QString text) {
+    TextBox *txBox = new TextBox(w, h, method);
 
-void editor::on_setRightButton_clicked()
-{
-    QGraphicsItem* item = ui_scene->selectedItems().at(0);
-    item->setX(ui_widthSpin->value() - item->sceneBoundingRect().width());
+    txBox->setPos(startX, startY);
+    txBox->setFont(font_size, font_family, Bold, Italic);
+    txBox->setText(text);
+    scene->addItem(txBox);
+    connect(txBox, SIGNAL(some_changed()), SLOT(generate_preview()));
 }
 
-void editor::on_setButtomButton_clicked()
-{
-    QGraphicsItem* item = ui_scene->selectedItems().at(0);
-    item->setY(ui_heithSpin->value() - item->sceneBoundingRect().height());
+void editor::add_good(float startX, float startY, float w, float h, int font_size, QString font_family, bool Bold, bool Italic, QString text) {
+    Good *gBox = new Good(w, h);
+    gBox->setPos(startX, startY);
+    gBox->setFont(font_size, font_family, Bold, Italic);
+    gBox->setText(text);
+    scene->addItem(gBox);
+    connect(gBox, SIGNAL(some_changed()), SLOT(generate_preview()));
 }
 
-void editor::on_barTextButton_clicked()
-{
-    switch_cennic_element(c_items["barcodeAsText"]);
+void editor::add_image(float startX, float startY, float w, float h, QString fileName) {
+    Image *iBox = new Image(w, h, fileName);
+    iBox->setPos(startX, startY);
+    scene->addItem(iBox);
+    connect(iBox, SIGNAL(some_changed()), SLOT(generate_preview()));
 }
 
-void editor::on_zoomOutButton_clicked()
-{
-    ui_view->scale(0.5, 0.5);
-}
-
-void editor::on_zoomInButton_clicked()
-{
-    ui_view->scale(2, 2);
-}
-
-void editor::on_lineButton_clicked()
-{
-
-    AddLineMaster* ln_master = new AddLineMaster;
-    connect(ln_master, SIGNAL(values_changed(QString,float,float,float,float,float)), SLOT(add_element_to_scene(QString,float,float,float,float,float)));
-
-    if (ui_scene->selectedItems().count() == 1) {
-        QGraphicsItem* item = ui_scene->selectedItems().at(0);
-        QString item_value = c_items.key(item);
-        if (item_value.contains("line")) {
-            //вычисляем параметры линии
-            float startX = item->x();
-            float startY = item->y();
-            float rotation = c_text_items[item_value].text.toFloat();
-            float width, heith;
-            item->rotate(0-rotation);
-            float linethick = item->sceneBoundingRect().height();
-            float len = item->sceneBoundingRect().width();
-            width = len * cos(rotation/180*M_PI);
-            heith = len * sin(rotation/180*M_PI);
-            item->rotate(rotation);
-            ln_master->set_values(startX, startY, width, heith, linethick);
-            //qDebug() << "item value = " << item_value;
-            ln_master->set_line_number(item_value.split("line").at(1).toInt());
-        } else {
-            ln_master->set_line_number(number++);
-        }
-
-
+void editor::add_line(float startX, float startY, float w, float h, float lineThick) {
+    //переводим прямоугольные координаты в полярные
+    qDebug() << "w, h" << w << h;
+    float len = sqrt(w*w + h*h);
+    float angl;
+    if (w) {
+        angl = atan(h / w) * 180 / M_PI;
     } else {
-        ln_master->set_line_number(number++);
+        angl = 90;
     }
 
-    ln_master->exec();
+    qDebug() << "len, algl" << len << angl;
 
+
+    Line *lBox = new Line(len, angl, lineThick);
+    lBox->setPos(startX, startY);
+    scene->addItem(lBox);
+    connect(lBox, SIGNAL(some_changed()), SLOT(generate_preview()));
+}
+
+void editor::on_scene_selected() {
+    if (brIs) {
+        brToolBar->hide();
+        brIs = false;
+    }
+    if (txIs) {
+        txToolBar->hide();
+        txIs = false;
+    }
+    if (gIs) {
+        gToolBar->hide();
+        gIs = false;
+    }
+    if (iIs) {
+        iToolBar->hide();
+        iIs = false;
+    }
+    if (lIs) {
+        lToolBar->hide();
+        lIs = false;
+    }
+
+    QList<QGraphicsItem*> lst = scene->selectedItems();
+    if (!lst.count()) {
+        //ничего не выделено, выходим
+        action_del->setEnabled(false);
+
+    }
+    if (lst.count() == 1) {
+        //выделен один элемент - выведем его свойства
+        //qDebug() << "Selected type: " << lst.at(0)->type();
+        int tp = lst.at(0)->type();
+        if (tp == 700) {
+            //штрих-код
+            BarcodeBox *brBox = (BarcodeBox*)lst.at(0);
+            brToolBar = brBox->toolBar();
+            layout->addWidget(brToolBar, 2, 0);
+            brIs = true;
+        }
+        if (tp == 701) {
+            //text in box
+            TextBox *txBox = (TextBox*)lst.at(0);
+            txToolBar = txBox->toolBar();
+            //txToolBar->show();
+            layout->addWidget(txToolBar, 2, 0);
+            txIs = true;
+        }
+        if (tp == 702) {
+            //good name field
+            Good *gBox = (Good*)lst.at(0);
+            gToolBar = gBox->toolBar();
+            layout->addWidget(gToolBar, 2, 0);
+            gIs = true;
+        }
+        if (tp == 703) {
+            //image field
+            Image *iBox = (Image*)lst.at(0);
+            iToolBar = iBox->toolBar();
+            layout->addWidget(iToolBar, 2, 0);
+            iIs = true;
+        }
+        if (tp == 704) {
+            //line field
+            Line *lBox = (Line*)lst.at(0);
+            lToolBar = lBox->toolBar();
+            layout->addWidget(lToolBar, 2, 0);
+            lIs = true;
+        }
+
+        action_del->setEnabled(true);
+    }
+}
+
+void editor::create_font_xml_element(QDomElement elem, AbstractItem *itm) {
+    QString font_family = itm->fontFamily();
+    elem.setAttribute("font-family", font_family);
+    int font_size = itm->fontSize();
+    elem.setAttribute("font-size", QString::number(font_size));
+    elem.setAttribute("font-bold", itm->fontBold());
+    elem.setAttribute("font-italic", itm->fontItalic());
+}
+
+void editor::generate_preview() {
+//    isSaved = false;
+
+    doc.clear();
+    QDomNode xmlNode = doc.createProcessingInstruction("xml",
+                                    "version=\"1.0\" encoding=\"UTF-8\"");
+    doc.insertBefore(xmlNode, doc.firstChild());
+
+    QDomElement cennic = doc.createElement("cennic");
+
+    //устанавливаем название шаблона
+    QDomElement elementName = doc.createElement("name");
+    //QDomText domText = doc.createTextNode(ui_shalon_nameEdit->text());
+    QDomText domText = doc.createTextNode(labelName->text());
+    elementName.appendChild(domText);
+    cennic.appendChild(elementName);
+
+    //устанавливаем базовый размер - ширину и высоту
+    QDomElement domElement = doc.createElement("base");
+    domElement.setAttribute("width", QString::number(baseRect->sceneBoundingRect().width()));
+    domElement.setAttribute("heith", QString::number(baseRect->sceneBoundingRect().height()));
+    cennic.appendChild(domElement);
+
+    Tovar tovar;
+
+    QList<QGraphicsItem *> lst = scene->items();
+    for (int i = 0; i<lst.count(); i++) {
+        QDomElement elem;
+        int tp = lst.at(i)->type();
+
+        //AbstractItem *itm = (AbstractItem*)lst.at(i);
+        if (tp == 700) {
+            //штрих-код
+            BarcodeBox *brBox = (BarcodeBox*)lst.at(i);
+
+            elem = doc.createElement("barcode");
+            elem.setAttribute("addition", brBox->addition());
+            elem.setAttribute("otstup", brBox->otstup());
+            create_font_xml_element(elem, brBox);
+
+            tovar.barcode = brBox->text();
+        }
+        if (tp == 701) {
+            //text field
+            TextBox *txBox = (TextBox*)lst.at(i);
+            elem = doc.createElement("text");
+
+            elem.setAttribute("method", txBox->getMethod());
+            create_font_xml_element(elem, txBox);
+            QDomText dm = doc.createTextNode(txBox->text());
+            elem.appendChild(dm);
+
+            if (txBox->getMethod() == "nomer") {
+                tovar.nomer_of_tovar = txBox->text().toInt();
+            }
+            if (txBox->getMethod() == "price" || txBox->getMethod() == "priceOld") {
+                QStringList rub_kop = txBox->text().split("::");
+                if (rub_kop.count()<2) {
+                    rub_kop << tr("kop");
+                }
+                elem.setAttribute("rub", rub_kop.at(0));
+                elem.setAttribute("kop", rub_kop.at(1));
+            }
+            if (txBox->getMethod() == "quantity") {
+                tovar.quantity = txBox->text().toInt();
+            }
+            if (txBox->getMethod() == "barcodeAsText") {
+                tovar.barcode = txBox->text();
+            }
+        }
+        if (tp == 702) {
+            //Good name field
+            Good *gBox = (Good*)lst.at(i);
+            elem = doc.createElement("good");
+            create_font_xml_element(elem, gBox);
+            tovar.name_of_tovar = gBox->text();
+        }
+        if (tp == 703) {
+            //Image field
+            Image *iBox = (Image*)lst.at(i);
+            elem = doc.createElement("image");
+            QDomText dm = doc.createTextNode(iBox->text());
+            elem.appendChild(dm);
+        }
+        if (tp == 704) {
+            //Line field
+            //Line *lBox = (Line*)lst.at(i);
+            elem = doc.createElement("line");
+        }
+
+
+
+
+        QString startX, startY, width, heith;
+        startX = QString::number(lst.at(i)->mapToScene(0, 0).x());
+        startY = QString::number(lst.at(i)->mapToScene(0, 0).y());
+
+        if (tp != 704) {
+            //если не линия - то размеры соответствуют размеру прямоугольника
+            width = QString::number(lst.at(i)->sceneBoundingRect().width());
+            heith = QString::number(lst.at(i)->sceneBoundingRect().height());
+        } else {
+            //если линия - то вычисляем размеры линии
+            //вычисляем параметры линии
+            Line *lBox = (Line*)lst.at(i);
+            float rotation = lBox->angl();
+            //qDebug () << "rotation is " << rotation;
+            lBox->rotate(0-rotation);
+            float linethick = lBox->sceneBoundingRect().height();
+            float len = lBox->sceneBoundingRect().width();
+            width = QString::number(len * cos(rotation/180*M_PI));
+            heith = QString::number(len * sin(rotation/180*M_PI));
+            lBox->rotate(rotation);
+            elem.setAttribute("linethick", linethick);
+        }
+
+
+
+
+        elem.setAttribute("startX", startX);
+        elem.setAttribute("startY", startY);
+        elem.setAttribute("width", width);
+        elem.setAttribute("heith", heith);
+
+        cennic.appendChild(elem);
+    }
+    doc.appendChild(cennic);
+
+    //qDebug() << doc.toString();
+
+    pre_scene->clear();
+
+    tovar.price1 = 299.90;
+    tovar.price2 = 999.90;
+    Cennic* preview_cennic = new Cennic(&tovar, doc.documentElement());
+    QGraphicsItemGroup *pos = preview_cennic->render(pre_scene, 0, 0);
+
+    pre_view->fitInView(0, 0, pos->x(), pos->y(), Qt::KeepAspectRatio);
+    //qDebug() << "Preview finished";
+}
+
+QString editor::get_new_fileName() {
+//    if (isSaved) {
+        return fileName;
+//    }
+//    return "";
+}
+
+QDomDocument editor::get_new_shablon() {
+    return doc;
 }
