@@ -3,12 +3,8 @@
 editor::editor(QWidget *parent, Qt::WFlags f) :
     QDialog(parent, f)
 {
-//    wnd_ = new QMainWindow(this);
-//    wnd_->setWindowFlags(wnd_->windowFlags() & ~Qt::Window);
-
     scene = new QGraphicsScene;
     view = new QGraphicsView(scene, this);
-    //view->setMaximumWidth(this->width()/2);
     connect(scene, SIGNAL(selectionChanged()), SLOT(on_scene_selected()));
     connect(scene, SIGNAL(changed(QList<QRectF>)), SLOT(generate_preview()));
 
@@ -38,9 +34,12 @@ editor::editor(QWidget *parent, Qt::WFlags f) :
      iIs = false;
      lIs = false;
 
+    onXchanged = false;
+    onYchanged = false;
+
     QLabel *lb = new QLabel(" ");
     layout->addWidget(secToolBar, 0, 0, 1, 2);
-    layout->addWidget(mainToolBar, 1, 0, 1, 1);
+    layout->addWidget(mainToolBar, 1, 0, 1, 2);
     layout->addWidget(lb, 2, 1);
     layout->addWidget(view, 3, 0);
     layout->addWidget(pre_view, 3, 1);
@@ -189,6 +188,23 @@ void editor::makeActions() {
     action_zoom_out = new QAction(tr("-", "Zoom out"), this);
     connect(action_zoom_out, SIGNAL(triggered()), SLOT(on_zoom_out()));
 
+    buttonRight = new QAction(tr("<", "Move right"), this);
+    buttonLeft = new QAction(tr(">", "Move left"), this);
+    buttonTop = new QAction(tr("/\\", "Move top"), this);
+    buttonButtom = new QAction(tr("\\/", "Move buttom"), this);
+    buttonCenter = new QAction(tr("(.)"), this);
+    connect(buttonRight, SIGNAL(triggered()), SLOT(on_button_right()));
+    connect(buttonLeft, SIGNAL(triggered()), SLOT(on_button_left()));
+    connect(buttonTop, SIGNAL(triggered()), SLOT(on_button_top()));
+    connect(buttonButtom, SIGNAL(triggered()), SLOT(on_button_buttom()));
+    connect(buttonCenter, SIGNAL(triggered()), SLOT(on_button_center()));
+    buttonRight->setEnabled(false);
+    buttonLeft->setEnabled(false);
+    buttonTop->setEnabled(false);
+    buttonButtom->setEnabled(false);
+    buttonCenter->setEnabled(false);
+
+
 }
 
 void editor::makeToolBars() {
@@ -211,7 +227,6 @@ void editor::makeToolBars() {
     mainToolBar->addAction(action_add_image);
     mainToolBar->addAction(action_add_line);
     mainToolBar->addAction(action_add_textInBox);
-    //wnd_->addToolBar(Qt::LeftToolBarArea, mainToolBar);
 
     secToolBar = new QToolBar();
     lineWidth = new QSpinBox();
@@ -227,11 +242,20 @@ void editor::makeToolBars() {
     secToolBar->addAction(action_zoom_in);
     secToolBar->addAction(action_zoom_out);
 
+    secToolBar->addSeparator();
+
+    //secToolBar->addWidget(buttonRight);
+    secToolBar->addAction(buttonRight);
+    secToolBar->addAction(buttonLeft);
+    secToolBar->addAction(buttonTop);
+    secToolBar->addAction(buttonButtom);
+    secToolBar->addAction(buttonCenter);
+
+    secToolBar->addSeparator();
+
 
     labelName = new QLineEdit(tr("Sample shablon"));
     secToolBar->addWidget(labelName);
-
-    //wnd_->addToolBar(Qt::TopToolBarArea, secToolBar);
 
 }
 
@@ -564,7 +588,20 @@ void editor::on_scene_selected() {
     if (!lst.count()) {
         //ничего не выделено, выходим
         action_del->setEnabled(false);
-
+        buttonRight->setEnabled(false);
+        buttonLeft->setEnabled(false);
+        buttonTop->setEnabled(false);
+        buttonButtom->setEnabled(false);
+        buttonCenter->setEnabled(false);
+        onXchanged = false;
+        onYchanged = false;
+    } else {
+        buttonRight->setEnabled(true);
+        buttonLeft->setEnabled(true);
+        buttonTop->setEnabled(true);
+        buttonButtom->setEnabled(true);
+        action_del->setEnabled(true);
+        buttonCenter->setEnabled(true);
     }
     if (lst.count() == 1) {
         //выделен один элемент - выведем его свойства
@@ -607,7 +644,127 @@ void editor::on_scene_selected() {
             lIs = true;
         }
 
-        action_del->setEnabled(true);
+    }
+}
+
+void editor::on_button_right() {
+    onXchanged = true;
+    onYchanged = false;
+    QList<QGraphicsItem*> lst = scene->selectedItems();
+    if (lst.count() == 1) {
+        //только один элемент - переместим его к правому краю
+        lst.at(0)->setPos(0, lst.at(0)->y());
+
+    } else {
+        //выделено несколько элементов - выровняем по правому элементу
+        float maxPos = baseRect->sceneBoundingRect().width();
+        for (int i = 0; i<lst.count(); i++) {
+            if (maxPos > lst.at(i)->x()) maxPos = lst.at(i)->x();
+        }
+        for (int i = 0; i<lst.count(); i++) {
+            lst.at(i)->setPos(maxPos, lst.at(i)->y());
+        }
+    }
+}
+
+void editor::on_button_left() {
+    onXchanged = true;
+    onYchanged = false;
+    QList<QGraphicsItem*> lst = scene->selectedItems();
+    float len = baseRect->sceneBoundingRect().width();
+    if (lst.count() == 1) {
+        //только один элемент - переместим его к правому краю
+        lst.at(0)->setPos(len-lst.at(0)->sceneBoundingRect().width(), lst.at(0)->y());
+
+    } else {
+        //выделено несколько элементов - выровняем по правому элементу
+        float maxPos = 0;
+        for (int i = 0; i<lst.count(); i++) {
+            float curPos = lst.at(i)->x() + lst.at(i)->sceneBoundingRect().width();
+            if (maxPos < curPos) maxPos = curPos;
+        }
+        for (int i = 0; i<lst.count(); i++) {
+            lst.at(i)->setPos(maxPos - lst.at(i)->sceneBoundingRect().width(), lst.at(i)->y());
+        }
+    }
+}
+
+void editor::on_button_top() {
+    onXchanged = false;
+    onYchanged = true;
+    QList<QGraphicsItem*> lst = scene->selectedItems();
+    if (lst.count() == 1) {
+        //только один элемент - переместим его к правому краю
+        lst.at(0)->setPos(lst.at(0)->x(), 0);
+
+    } else {
+        //выделено несколько элементов - выровняем по правому элементу
+        float maxPos = baseRect->sceneBoundingRect().height();
+        for (int i = 0; i<lst.count(); i++) {
+            if (maxPos > lst.at(i)->y()) maxPos = lst.at(i)->y();
+        }
+        for (int i = 0; i<lst.count(); i++) {
+            lst.at(i)->setPos(lst.at(i)->x(), maxPos);
+        }
+    }
+}
+
+void editor::on_button_buttom() {
+    onXchanged = false;
+    onYchanged = true;
+    QList<QGraphicsItem*> lst = scene->selectedItems();
+    float len = baseRect->sceneBoundingRect().height();
+    if (lst.count() == 1) {
+        //только один элемент - переместим его к правому краю
+        lst.at(0)->setPos(lst.at(0)->x(), len-lst.at(0)->sceneBoundingRect().height());
+
+    } else {
+        //выделено несколько элементов - выровняем по правому элементу
+        float maxPos = 0;
+        for (int i = 0; i<lst.count(); i++) {
+            float curPos = lst.at(i)->y() + lst.at(i)->sceneBoundingRect().height();
+            if (maxPos < curPos) maxPos = curPos;
+        }
+        for (int i = 0; i<lst.count(); i++) {
+            lst.at(i)->setPos(lst.at(i)->x(), maxPos - lst.at(i)->sceneBoundingRect().height());
+        }
+    }
+}
+
+void editor::on_button_center() {
+    QList<QGraphicsItem*> lst = scene->selectedItems();
+    if (lst.count() == 1) {
+        //выбран только один элемент - отцентруем относительно всего шаблона
+        if (onXchanged) {
+            float len = baseRect->sceneBoundingRect().width() / 2.0;
+            lst.at(0)->setPos(len - lst.at(0)->sceneBoundingRect().width()/2, lst.at(0)->y());
+        }
+        if (onYchanged) {
+            float len = baseRect->sceneBoundingRect().height() / 2.0;
+            lst.at(0)->setPos(lst.at(0)->x(), len - lst.at(0)->sceneBoundingRect().height()/2);
+
+        }
+
+    } else {
+        //выбрано несколько элементов - найдем общую середину и отцентруем
+        if (onXchanged) {
+            //float len = baseRect->sceneBoundingRect().width() / 2.0;
+            float maxLen = 0;
+            float centr = baseRect->sceneBoundingRect().width() / 2.0;
+            for (int i = 0; i<lst.count(); i++) {
+                if (lst.at(i)->sceneBoundingRect().width() > maxLen) {
+                    maxLen = lst.at(i)->sceneBoundingRect().width();
+                    centr = maxLen / 2.0 - lst.at(i)->x();
+                }
+            }
+
+//            float centr = len - maxLen / 2.0;
+            qDebug() << "center: " << centr;
+            for (int i = 0; i<lst.count(); i++) {
+                lst.at(i)->setPos(centr - lst.at(i)->sceneBoundingRect().width()/ 2, lst.at(i)->y());
+            }
+
+        }
     }
 }
 

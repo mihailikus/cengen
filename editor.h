@@ -76,6 +76,10 @@ private:
     QAction *action_zoom_in;
     QAction *action_zoom_out;
 
+    QAction *buttonRight, *buttonLeft;
+    QAction *buttonTop,   *buttonButtom;
+    QAction *buttonCenter;
+    bool onXchanged, onYchanged;
 
     QAction *action_add_barcode;
     QAction *action_add_barcodeText;
@@ -124,6 +128,13 @@ private slots:
 
     void on_zoom_in();
     void on_zoom_out();
+
+    void on_button_right();
+    void on_button_left();
+    void on_button_top();
+    void on_button_buttom();
+    void on_button_center();
+
 
     void on_baseSize_changed();
 
