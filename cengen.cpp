@@ -1853,14 +1853,18 @@ void cengen::trigger_source_selection(bool state) {
 
 void cengen::on_selectSourceDBF_file_button_clicked()
 {
-    //выбор DBF-файла
+    ///выбор DBF-файла
     QString str = QFileDialog::getOpenFileName(0, "Open Dialog", "", "DBF-files (*.dbf)");
     if (str == "") return;
-    labelDBFname->setText(str);
-    //this->dbf = new DbfConfig;
-    dbf->fileName = str;
-    my_informer->set_tb_name(str);
-    QStringList list = my_informer->tb_describe(str);
+    on_sourceDBFfile_changed(str);
+}
+
+void cengen::on_sourceDBFfile_changed(QString fileName) {
+    ///устанавливаем DBF-файл (источник данных) в fileName
+    labelDBFname->setText(fileName);
+    dbf->fileName = fileName;
+    my_informer->set_tb_name(fileName);
+    QStringList list = my_informer->tb_describe(fileName);
     this->update_ui_tb_fields(list);
     ui_spinLimit->setMaximum(my_informer->get_maximum());
 
@@ -3860,6 +3864,7 @@ void cengen::execute_macro_file(QString fileName) {
                                 if (!elementItem.isNull()) {
                                     itemName = elementItem.tagName();
                                     itemValue = elementItem.text();
+                                    qDebug() << "exec name " << itemName;
                                     if (itemName == "LoadTovarList") {
                                         this->open_tovar_list(itemValue);
                                     }
@@ -3937,6 +3942,28 @@ void cengen::execute_macro_file(QString fileName) {
                                     if (itemName == "CollapsItems") {
                                         this->on_collaps_same_items();
                                     }
+                                    if (itemName == "SetSource") {
+                                        //группа настроек источника данных
+                                        QString field = elementItem.attribute("field", "0");
+                                        qDebug() << "field " << field <<itemValue;
+                                        if (field == "file") {
+                                            on_sourceDBFfile_changed(itemValue);
+                                        }
+                                        if (field == "tnomer") {
+                                            comboBoxSetText(ui_comboTnomer, itemValue);
+                                        }
+                                        if (field == "tname") {
+                                            comboBoxSetText(ui_comboTname, itemValue);
+                                        }
+                                        if (field == "tprice") {
+                                            comboBoxSetText(ui_comboTprice, itemValue);
+                                        }
+                                        if (field == "tbarcode") {
+                                            comboBoxSetText(ui_comboTbarcode, itemValue);
+                                        }
+
+
+                                    }
                                 }
                             }
                             nodeItem = nodeItem.nextSibling();
@@ -3963,4 +3990,18 @@ void cengen::on_action_get_sold_items() {
 
 void cengen::on_action_filter_not_delete(bool statu) {
     delete_filtered_box->setChecked(statu);
+}
+
+void cengen::comboBoxSetText(QComboBox *bx, QString txt) {
+    QString curtxt;
+    if (bx->count()<2) return;
+
+    bx->setCurrentIndex(0);
+    curtxt = bx->currentText();
+    int i = 1;
+    while (curtxt != txt) {
+        bx->setCurrentIndex(i);
+        curtxt = bx->currentText();
+        i++;
+    }
 }

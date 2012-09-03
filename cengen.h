@@ -443,6 +443,7 @@ private slots:
     void set_opisateli_from_settings();
 
     void on_selectSourceDBF_file_button_clicked();
+    void on_sourceDBFfile_changed(QString fileName);
     void on_spinLimit_valueChanged(int );
     void on_maxButton_clicked();
 
@@ -484,6 +485,8 @@ private slots:
     void debug_tovar(QList<Tovar> list);
 
     void execute_macro_file(QString fileName);
+
+    void comboBoxSetText(QComboBox *bx, QString txt);
 
 };
 
