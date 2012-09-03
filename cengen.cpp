@@ -176,6 +176,13 @@ void cengen::make_actions() {
     connect(action_on_off_filter, SIGNAL(triggered(bool)),
             SLOT(on_filterBox_toggled(bool)));
 
+    action_filter_not_delete = new QAction(tr("Delete filtered items"), this);
+    action_filter_not_delete->setShortcut(QKeySequence("Ctrl+E"));
+    action_filter_not_delete->setCheckable(true);
+    action_filter_not_delete->setChecked(true);
+    connect(action_filter_not_delete, SIGNAL(triggered(bool)),
+            SLOT(on_action_filter_not_delete(bool)));
+
     action_load_tovar_list_from_clipboard = new QAction(tr("Load tovar list from clipboard"), this);
     connect (action_load_tovar_list_from_clipboard, SIGNAL(triggered()),
              SLOT(on_action_load_tovar_list_in_clipboard_triggered()));
@@ -303,6 +310,7 @@ void cengen::make_mainMenu() {
 
     menuEdit = mainMenu->addMenu(tr("Edit"));
     menuEdit->addAction(action_on_off_filter);
+    menuEdit->addAction(action_filter_not_delete);
     menuEdit->addSeparator();
     menuEdit->addAction(interchange_prices_in_table);
     menuEdit->addAction(intellect_interchange_prices_in_table);
@@ -3089,9 +3097,11 @@ void cengen::load_filter_settings_file(QString fileName) {
         //settings += QString::number(delete_filtered_box->isChecked()) + "\n";
         line = fstream.readLine();
         delete_filtered_box->setChecked(line.toInt(&ok));
+        action_filter_not_delete->setChecked(line.toInt());
         if (!ok) {
             //по умолчанию - удалять ненайденные
             delete_filtered_box->setChecked(true);
+            action_filter_not_delete->setChecked(true);
         }
 
         //использовать ли найденное в фильтре поле для обновления значений
@@ -3862,6 +3872,7 @@ void cengen::execute_macro_file(QString fileName) {
                                     if (itemName == "SetFilterDontDelete") {
                                         bool var = itemValue.toInt();
                                         delete_filtered_box->setChecked(var);
+                                        action_filter_not_delete->setChecked(var);
                                     }
                                     if (itemName == "GetAllTovar") {
                                         this->load_all_records();
@@ -3948,4 +3959,8 @@ void cengen::on_action_get_sold_items() {
     update_prices(false);
     on_action_get_sum_of_tovar();
 
+}
+
+void cengen::on_action_filter_not_delete(bool statu) {
+    delete_filtered_box->setChecked(statu);
 }

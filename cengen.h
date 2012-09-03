@@ -341,6 +341,7 @@ private:
     QAction* action_load_tovar_list_from_clipboard;
     QAction* action_export_tovar_list_to_clipboard;
     QAction* action_on_off_filter;
+    QAction* action_filter_not_delete;
     QAction* action_set_special_shablon_to_zero_price2;
     QAction* action_sell_filter;
     QAction* action_render_in_external_app;
@@ -409,6 +410,7 @@ private slots:
     void on_collaps_same_items();
     QVector<Tovar> collaps_same_items(QVector<Tovar> inputList);
     void on_action_get_sold_items();
+    void on_action_filter_not_delete(bool statu);
 
     void on_lineEdit_returnPressed();
     void tovar_search();
