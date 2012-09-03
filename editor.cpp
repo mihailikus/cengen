@@ -796,6 +796,7 @@ void editor::generate_preview() {
 
     //устанавливаем базовый размер - ширину и высоту
     QDomElement domElement = doc.createElement("base");
+
     domElement.setAttribute("width", QString::number(baseRect->sceneBoundingRect().width()));
     domElement.setAttribute("heith", QString::number(baseRect->sceneBoundingRect().height()));
     cennic.appendChild(domElement);

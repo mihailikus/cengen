@@ -43,6 +43,7 @@ public:
     void load_xml_data_into_editor(QDomElement* domElement);
     QDomDocument get_new_shablon();
     QString get_new_fileName();
+    void new_shablon(int w, int h);
 
 private:
     //QMainWindow *wnd_;
@@ -138,7 +139,6 @@ private slots:
 
     void on_baseSize_changed();
 
-    void new_shablon(int w, int h);
     void add_barcode(float startX, float startY, float w, float h,
                      int font_size, QString font_family, bool Bold, bool Italic,
                      int brAddition, int brOtstup,

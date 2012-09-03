@@ -57,6 +57,8 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
 
     previewed = false;
 
+    file_is_ready = false;
+
     //После создания всех форм - читаем настройки из конфига
     this->readSettings();
 
@@ -986,6 +988,7 @@ void cengen::on_shablon_name_changed(QString str) {
     currShablonFileName = str;
     if (str == "") {
         ui_label->setText(tr("Please select file", "If no file selected"));
+        file_is_ready = false;
     } else {
         domDoc = this->read_file_shablon(str);
         this->describe_shablon(domDoc);
@@ -1486,7 +1489,12 @@ void cengen::readSettings() {
     //set_tableWidget_header(tableWidget);
 
     //добавить, если там нет названия шаблона
-    on_shablon_name_changed(m_settings.value("/Settings/shablon", "").toString());
+    QString sbl_name = m_settings.value("/Settings/shablon", "").toString();
+    if (sbl_name != "") {
+        on_shablon_name_changed(sbl_name);
+    } else {
+        file_is_ready = false;
+    }
 
     //создаем новые переменные для работы
     this->dbf = new DbfConfig;
@@ -1649,7 +1657,7 @@ void cengen::read_filter_settings() {
     //читаем название файла фильтра и обновляем UI по необходимости
     filterDbf.fileName = m_settings.value("/Settings/filter/FileName", "").toString();
     if (filterDbf.fileName == "") {
-        this->file_is_ready = false;
+        //this->file_is_ready = false;
         ui_statusLabel->setText(tr("Wrong shablon"));
         return;
     }
@@ -1910,28 +1918,34 @@ void cengen::on_maxButton_clicked()
 
 void cengen::on_show_editor_button_clicked()
 {
-    if (file_is_ready) {
-        //подготовка редактора шаблонов
-        shablon_editor = new editor(this);
+    //подготовка редактора шаблонов
+    shablon_editor = new editor(this);
 
+    if (file_is_ready) {
         shablonElement = domDoc.documentElement();
         shablon_editor->load_xml_data_into_editor(&shablonElement);
         shablon_editor->set_file_name(currShablonFileName);
 
-        shablon_editor->resize(this->size());
-
-        shablon_editor->exec();
-
-        domDoc.clear();
-        domDoc = shablon_editor->get_new_shablon();
-        currShablonFileName = shablon_editor->get_new_fileName();
-        //file.setFileName(str);
-
-
-        this->describe_shablon(domDoc);
-
-        delete(shablon_editor);
+    } else {
+        shablon_editor->new_shablon(500, 400);
     }
+
+    shablon_editor->resize(this->size());
+
+    shablon_editor->exec();
+
+    domDoc.clear();
+    domDoc = shablon_editor->get_new_shablon();
+    currShablonFileName = shablon_editor->get_new_fileName();
+    on_shablon_name_changed(currShablonFileName);
+    file_is_ready = true;
+    //file.setFileName(str);
+
+
+    this->describe_shablon(domDoc);
+
+    delete(shablon_editor);
+
 }
 
 void cengen::describe_shablon(QDomDocument shablon) {
