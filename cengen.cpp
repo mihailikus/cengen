@@ -3539,7 +3539,7 @@ void cengen::on_action_program_update() {
     update_counter = 0;
     updatingPath = "http://mihol.ru/cengen/bin/" + QApplication::organizationName() + "/";
     QString file = updatingPath + "list.txt";
-    //qDebug() << "upload path " << updatingPath;
+    qDebug() << "uploading file: " << file;
 
     manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
