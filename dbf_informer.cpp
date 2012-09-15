@@ -179,6 +179,7 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
         offset = 1 + method_offset + length_of_each_record*(maximum-startPos-1);
         i = maximum-1;
     }
+    int delPosOffset = offset - 1 - method_offset;
 
     int count = 0;
     int curLength;
@@ -229,6 +230,11 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
                 }
             }
         }
+
+        if (all_records[delPosOffset] == '*') {
+            found = false;
+        }
+
         if (found)
         {
             curLength = offset - method_offset;
@@ -253,9 +259,11 @@ QList<Tovar> dbf_informer::found_record_in_dbf(QString searchText, QString metho
         if (FromStartToEnd) {
             i++;
             offset += this->length_of_each_record;
+            delPosOffset += length_of_each_record;
         } else {
             i--;
             offset -= this->length_of_each_record;
+            delPosOffset -= length_of_each_record;
         }
         j++;
         found = false;
