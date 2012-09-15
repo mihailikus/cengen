@@ -4004,4 +4004,5 @@ void cengen::comboBoxSetText(QComboBox *bx, QString txt) {
         curtxt = bx->currentText();
         i++;
     }
+    on_opisateli_updated();
 }
