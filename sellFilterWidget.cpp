@@ -87,6 +87,16 @@ SellFilterWidget::~SellFilterWidget() {
 
 }
 
+bool SellFilterWidget::is_sell_file_good() {
+    bool gd = false;
+    QFileInfo fi;
+    fi.setFile(sellFileName);
+    if (fi.exists()) {
+        gd = true;
+    }
+    return gd;
+}
+
 void SellFilterWidget::check_sell_file() {
     qDebug() << "Checking sell file" << sellFileName;
     sell_informer = new Tinformer;
@@ -323,15 +333,25 @@ void SellFilterWidget::on_selectSellFileButtonClicked() {
     //выбор DBF-файла
     QString str = QFileDialog::getOpenFileName(0, "Select SELL file", sellFileName, "DBF-files (*.dbf)");
     sellFileName = str;
+    last_known_file = str;
+    last_known_pos = 0;
+    last_known_date = QDate::currentDate().addYears(-50);
     updateSellTab();
     check_sell_file();
 }
 
 void SellFilterWidget::updateSellTab() {
-    lb1->setText(lb1->text() + sellFileName +
+    lb1->setText(/*lb1->text() + */sellFileName +
                  last_known_date.toString(" dd MM yyyy, ") +
                  QString::number(last_known_pos));
-    qDebug() << "last date " << last_known_date;
+
+    Tinformer *slInfo = new Tinformer();
+    DbfConfig *dbcfg = new DbfConfig;
+    dbcfg->fileName = sellFileName;
+    slInfo->prepare(dbcfg);
+    QStringList opstl = slInfo->tb_describe(sellFileName);
+    this->setOpisateli(opstl);
+    delete slInfo;
 
 }
 

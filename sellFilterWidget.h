@@ -40,6 +40,8 @@ public:
     ~SellFilterWidget();
 
     void check_sell_file();
+    bool is_sell_file_good();
+
     QList<Tovar> apply_sell_filter(QList<Tovar> curTb, QDate dt1, QDate dt2, int methodSell);
     QList<Tovar> apply_sell_filter(QList<Tovar> curTb);
 

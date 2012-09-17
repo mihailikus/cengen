@@ -1427,20 +1427,23 @@ void cengen::writeSettings()
     }
 
     //сохраняем настройки о файле продаж
-    m_settings.beginGroup("/Sell");
-    m_settings.setValue("sellFileName", sellFilter->getSellFileName());
-    m_settings.setValue("sellFileFields", sellFilter->getOpisateli());
-    m_settings.setValue("nomer", sellFilter->getNomberBoxIndex());
-    m_settings.setValue("date", sellFilter->getDateBoxIndex());
-    m_settings.setValue("time", sellFilter->getTimeBoxIndex());
-    m_settings.setValue("kol", sellFilter->getKolBoxIndex());
-    m_settings.setValue("lastFile", sellFilter->getLastKnownFile());
-    int last_known_pos = sellFilter->getLastKnownPos();
-    if (last_known_pos) {
-        m_settings.setValue("lastDate", sellFilter->getLastKnownDate());
-        m_settings.setValue("lastPos", last_known_pos);
+    if (sellFilter->is_sell_file_good()) {
+        m_settings.beginGroup("/Sell");
+        m_settings.setValue("sellFileName", sellFilter->getSellFileName());
+        m_settings.setValue("sellFileFields", sellFilter->getOpisateli());
+        m_settings.setValue("nomer", sellFilter->getNomberBoxIndex());
+        m_settings.setValue("date", sellFilter->getDateBoxIndex());
+        m_settings.setValue("time", sellFilter->getTimeBoxIndex());
+        m_settings.setValue("kol", sellFilter->getKolBoxIndex());
+        m_settings.setValue("lastFile", sellFilter->getLastKnownFile());
+        int last_known_pos = sellFilter->getLastKnownPos();
+        if (last_known_pos) {
+            m_settings.setValue("lastDate", sellFilter->getLastKnownDate());
+            m_settings.setValue("lastPos", last_known_pos);
+        }
+        m_settings.endGroup();
     }
-    m_settings.endGroup();
+
 
     //указываем текущую вкладку
     m_settings.setValue("tabIndex", ui_tabWidget->currentIndex());
