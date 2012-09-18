@@ -211,6 +211,7 @@ private:
     QComboBox *filterCheckOutBox, *filterCheckInBox;
     QPushButton *saveFilterSettings, *loadFilterSettings;
     QCheckBox *delete_filtered_box;
+    QCheckBox *fill_by_zero_box;
 
 
 
@@ -342,6 +343,7 @@ private:
     QAction* action_export_tovar_list_to_clipboard;
     QAction* action_on_off_filter;
     QAction* action_filter_not_delete;
+    QAction* action_filter_fill_zero_if_no_contains;
     QAction* action_set_special_shablon_to_zero_price2;
     QAction* action_sell_filter;
     QAction* action_render_in_external_app;
@@ -411,6 +413,7 @@ private slots:
     QVector<Tovar> collaps_same_items(QVector<Tovar> inputList);
     void on_action_get_sold_items();
     void on_action_filter_not_delete(bool statu);
+    void on_action_filter_fill_zero_if_no_contains(bool state);
 
     void on_lineEdit_returnPressed();
     void tovar_search();

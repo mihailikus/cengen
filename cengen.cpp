@@ -183,6 +183,12 @@ void cengen::make_actions() {
     connect(action_filter_not_delete, SIGNAL(triggered(bool)),
             SLOT(on_action_filter_not_delete(bool)));
 
+    action_filter_fill_zero_if_no_contains = new QAction(tr("Fill by zero if no data contains in filter file"), this);
+    action_filter_fill_zero_if_no_contains->setCheckable(true);
+    action_filter_fill_zero_if_no_contains->setChecked(false);
+    connect(action_filter_fill_zero_if_no_contains, SIGNAL(triggered()),
+            SLOT(on_action_filter_fill_zero_if_no_contains(bool)));
+
     action_load_tovar_list_from_clipboard = new QAction(tr("Load tovar list from clipboard"), this);
     connect (action_load_tovar_list_from_clipboard, SIGNAL(triggered()),
              SLOT(on_action_load_tovar_list_in_clipboard_triggered()));
@@ -311,6 +317,7 @@ void cengen::make_mainMenu() {
     menuEdit = mainMenu->addMenu(tr("Edit"));
     menuEdit->addAction(action_on_off_filter);
     menuEdit->addAction(action_filter_not_delete);
+    menuEdit->addAction(action_filter_fill_zero_if_no_contains);
     menuEdit->addSeparator();
     menuEdit->addAction(interchange_prices_in_table);
     menuEdit->addAction(intellect_interchange_prices_in_table);
@@ -792,13 +799,16 @@ void cengen::make_filter_tab() {
     filBoxCheck->setLayout(filCheckLay);
     laytab5g1->addWidget(filBoxCheck, 4, 0, 1, 4);
 
-    laytab5g1->addWidget(saveFilterSettings, 7, 0);
-    laytab5g1->addWidget(loadFilterSettings, 7, 1);
+    laytab5g1->addWidget(saveFilterSettings, 8, 0);
+    laytab5g1->addWidget(loadFilterSettings, 8, 1);
 
     delete_filtered_box = new QCheckBox(tr("Delete items not found by filter"));
     delete_filtered_box->setChecked(true);
     laytab5g1->addWidget(delete_filtered_box, 5, 0, 1, 2);
 
+    fill_by_zero_box = new QCheckBox(tr("Fill by zero value if no data found in file used by filter"));
+    fill_by_zero_box->setChecked(true);
+    laytab5g1->addWidget(fill_by_zero_box, 6, 0, 1, 2);
 
     ui_filterBox = new QGroupBox(tr("Filter") + tr(" - version alpha, just DBF"));
     ui_filterBox->setCheckable(true);
@@ -2335,6 +2345,7 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList, bool startProgressBar)
     QList<Tovar> filteredList;
 
     bool delete_filtered = delete_filtered_box->isChecked();
+    bool fill_zero       = fill_by_zero_box->isChecked();
 
     filterConfig.tnomer = ui_filterWhereBox->currentText();
     filterConfig.tprice = ui_filterWhereBox->currentText();
@@ -2446,7 +2457,7 @@ QList<Tovar> cengen::apply_filter(QList<Tovar> inputList, bool startProgressBar)
             }
             if (itemfound) filteredList <<tovarItem;
         } else {
-            if (!delete_filtered) {
+            if (fill_zero) {
                 tovarItem.quantity = 0;
                 filteredList << tovarItem;
 
@@ -3993,6 +4004,18 @@ void cengen::on_action_get_sold_items() {
 
 void cengen::on_action_filter_not_delete(bool statu) {
     delete_filtered_box->setChecked(statu);
+//    if (!statu) {
+//        action_filter_fill_zero_if_no_contains->setChecked(false);
+//        action_filter_fill_zero_if_no_contains->setEnabled(false);
+//    } else {
+//        action_filter_fill_zero_if_no_contains->setEnabled(true);
+//        action_filter_fill_zero_if_no_contains->setChecked(false);
+
+//    }
+}
+
+void cengen::on_action_filter_fill_zero_if_no_contains(bool state) {
+    fill_by_zero_box->setChecked(state);
 }
 
 void cengen::comboBoxSetText(QComboBox *bx, QString txt) {
