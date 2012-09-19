@@ -2607,6 +2607,15 @@ void cengen::on_action_verify_barcode() {
             }
         }
         statusBar->removeWidget(progressBar);
+    } else {
+        if (strs.count() == 2) {
+            ui_lineEdit->setText(strs.at(0));
+        } else {
+            QTextEdit *edt = new QTextEdit();
+            edt->setText(br);
+            edt->show();
+
+        }
     }
 
 }

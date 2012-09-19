@@ -20,6 +20,7 @@
 #include <QSpinBox>
 #include <QRadioButton>
 #include <QLineEdit>
+#include <QTextEdit>
 #include <QCalendarWidget>
 #include <QToolBar>
 #include <QStatusBar>
