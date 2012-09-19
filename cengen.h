@@ -101,6 +101,7 @@ public:
     void open_tovar_list(QString fileName);
     void load_all_records();
     void set_ext_shablon_name(QString fileName);
+    void execute_macro_file(QString fileName);
 
     //порядок вкладок
     struct TabsOrder
@@ -488,8 +489,6 @@ private slots:
     bool save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok);
 
     void debug_tovar(QList<Tovar> list);
-
-    void execute_macro_file(QString fileName);
 
     void comboBoxSetText(QComboBox *bx, QString txt);
 

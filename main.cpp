@@ -109,6 +109,9 @@ int main(int argc, char *argv[])
         if (check_extention(param, "frf")) {
             w.set_ext_shablon_name(param);
         }
+        if (check_extention(param, "csf")) {
+            w.execute_macro_file(param);
+        }
     }
 
     w.show();
