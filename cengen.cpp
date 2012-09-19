@@ -275,6 +275,10 @@ void cengen::make_actions() {
     connect(action_start_macro, SIGNAL(triggered()),
             SLOT(on_action_start_macro()));
 
+    action_edit_macro = new QAction(tr("Edit macro"), this);
+    connect(action_edit_macro, SIGNAL(triggered()),
+            SLOT(on_action_edit_macro()));
+
     action_collaps_same_items = new QAction(tr("Collaps same items"), this);
     connect(action_collaps_same_items, SIGNAL(triggered()),
             SLOT(on_collaps_same_items()));
@@ -363,6 +367,7 @@ void cengen::make_mainMenu() {
 
     macroMenu = mainMenu->addMenu(tr("Macro"));
     macroMenu->addAction(action_start_macro);
+    macroMenu->addAction(action_edit_macro);
 
     menuHelp = mainMenu->addMenu(tr("About"));
     menuHelp->addAction(action_check_line_prices);
@@ -3873,6 +3878,30 @@ void cengen::on_action_start_macro() {
         return;
     }
     execute_macro_file(fileName);
+}
+
+void cengen::on_action_edit_macro() {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Select scenarium file"), QApplication::applicationDirPath(), tr("CenGen scenarium (*.csf)"));
+    if (fileName == "") {
+        qDebug() << "Please select file name";
+        return;
+    }
+    edit_macro_file(fileName);
+}
+
+void cengen::edit_macro_file(QString fileName) {
+    QDomDocument doc;
+
+    QFile file;
+    file.setFileName(fileName);
+
+    if (file.open(QIODevice::ReadOnly)) {
+        if (doc.setContent(&file)) {
+            QTextEdit* edt = new QTextEdit();
+            edt->setText(doc.toString());
+            edt->show();
+        }
+    }
 }
 
 void cengen::execute_macro_file(QString fileName) {

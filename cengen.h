@@ -102,6 +102,7 @@ public:
     void load_all_records();
     void set_ext_shablon_name(QString fileName);
     void execute_macro_file(QString fileName);
+    void edit_macro_file(QString fileName);
 
     //порядок вкладок
     struct TabsOrder
@@ -362,6 +363,7 @@ private:
     QAction* action_group_same_shablons;
     QAction* action_check_line_prices;
     QAction* action_start_macro;
+    QAction* action_edit_macro;
     QAction* action_collaps_same_items;
     QAction* action_get_sold_items;
 
@@ -411,6 +413,7 @@ private slots:
     void on_action_left_itms_zero_price2();
     void on_action_check_line_prices();
     void on_action_start_macro();
+    void on_action_edit_macro();
     void on_collaps_same_items();
     QVector<Tovar> collaps_same_items(QVector<Tovar> inputList);
     void on_action_get_sold_items();
