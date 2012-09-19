@@ -414,6 +414,7 @@ private slots:
     void on_action_get_sold_items();
     void on_action_filter_not_delete(bool statu);
     void on_action_filter_fill_zero_if_no_contains(bool state);
+    void on_fill_by_zero_box_checked(bool state);
 
     void on_lineEdit_returnPressed();
     void tovar_search();

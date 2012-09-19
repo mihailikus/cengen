@@ -186,7 +186,7 @@ void cengen::make_actions() {
     action_filter_fill_zero_if_no_contains = new QAction(tr("Fill by zero if no data contains in filter file"), this);
     action_filter_fill_zero_if_no_contains->setCheckable(true);
     action_filter_fill_zero_if_no_contains->setChecked(false);
-    connect(action_filter_fill_zero_if_no_contains, SIGNAL(triggered()),
+    connect(action_filter_fill_zero_if_no_contains, SIGNAL(triggered(bool)),
             SLOT(on_action_filter_fill_zero_if_no_contains(bool)));
 
     action_load_tovar_list_from_clipboard = new QAction(tr("Load tovar list from clipboard"), this);
@@ -807,7 +807,8 @@ void cengen::make_filter_tab() {
     laytab5g1->addWidget(delete_filtered_box, 5, 0, 1, 2);
 
     fill_by_zero_box = new QCheckBox(tr("Fill by zero value if no data found in file used by filter"));
-    fill_by_zero_box->setChecked(true);
+    fill_by_zero_box->setChecked(false);
+    connect(fill_by_zero_box, SIGNAL(clicked(bool)), SLOT(on_fill_by_zero_box_checked(bool)));
     laytab5g1->addWidget(fill_by_zero_box, 6, 0, 1, 2);
 
     ui_filterBox = new QGroupBox(tr("Filter") + tr(" - version alpha, just DBF"));
@@ -3052,6 +3053,9 @@ void cengen::on_saveFilterSettings() {
         //использовать ли найденное в фильтре поле для обновления значений
         settings += QString::number(filBoxCheck->isChecked()) + "\n";
 
+        //заполнять ли нулями те позиции, которые не найдены в файле фильтра
+        settings += QString::number(fill_by_zero_box->isChecked()) + "\n";
+
         QTextStream out(&file);
         out.setCodec("UTF-8");
         out << settings;
@@ -3129,6 +3133,14 @@ void cengen::load_filter_settings_file(QString fileName) {
         if (!ok) {
             //по умолчанию - использовать фильтр для обновления количества
             filBoxCheck->setChecked(true);
+        }
+
+        //заполнятьт ли нулями те позиции, которых нет в файле фильтра
+        line = fstream.readLine();
+        fill_by_zero_box->setChecked(line.toInt(&ok));
+        if (!ok){
+            //по умолчанию - не заполнять
+            fill_by_zero_box->setChecked(false);
         }
 
     } else {
@@ -4015,7 +4027,16 @@ void cengen::on_action_filter_not_delete(bool statu) {
 }
 
 void cengen::on_action_filter_fill_zero_if_no_contains(bool state) {
+    fill_by_zero_box->blockSignals(true);
     fill_by_zero_box->setChecked(state);
+    fill_by_zero_box->blockSignals(false);
+}
+
+void cengen::on_fill_by_zero_box_checked(bool state) {
+    qDebug() << "State" << state;
+    action_filter_fill_zero_if_no_contains->blockSignals(true);
+    action_filter_fill_zero_if_no_contains->setChecked(state);
+    action_filter_fill_zero_if_no_contains->blockSignals(false);
 }
 
 void cengen::comboBoxSetText(QComboBox *bx, QString txt) {
