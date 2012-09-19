@@ -398,7 +398,7 @@ void cengen::make_search_tab() {
     ui_radioButton_1 = new QRadioButton(tr("Barcode"));
     ui_radioButton_2 = new QRadioButton(tr("Tnomer"));
     ui_radioButton_3 = new QRadioButton(tr("Name"));
-    ui_radioButton_5 = new QRadioButton(tr("FREE", "uses for NULL search"));
+    ui_radioButton_5 = new QRadioButton(tr("Few digits of br", "some digits of barcode"));
     connect (ui_radioButton_1, SIGNAL(clicked()), SLOT(get_method_from_ui()));
     connect (ui_radioButton_2, SIGNAL(clicked()), SLOT(get_method_from_ui()));
     connect (ui_radioButton_3, SIGNAL(clicked()), SLOT(get_method_from_ui()));
