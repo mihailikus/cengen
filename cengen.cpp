@@ -4026,8 +4026,43 @@ void cengen::execute_macro_file(QString fileName) {
                                         if (field == "tbarcode") {
                                             comboBoxSetText(ui_comboTbarcode, itemValue);
                                         }
-
-
+                                    }
+                                    if (itemName == "SetFilterField") {
+                                        QString field = elementItem.attribute("field", "0");
+                                        if (field == "file") {
+                                            filterDbf.fileName = itemValue;
+                                            on_filterFileName_changed();
+                                        }
+                                        if (field == "what") {
+                                            comboBoxSetText(ui_filterWhatBox, itemValue);
+                                        }
+                                        if (field == "where") {
+                                            comboBoxSetText(ui_filterWhereBox, itemValue);
+                                        }
+                                        if (field == "whattofound") {
+                                            ui_filterWhatToFoundBox->setCurrentIndex(itemValue.toInt());
+                                        }
+                                        if (field == "method") {
+                                            ui_filterMethodBox->setCurrentIndex(itemValue.toInt());
+                                        }
+                                        if (field == "value") {
+                                            ui_filterLineText->setText(itemValue);
+                                        }
+                                    }
+                                    if (itemName == "SetFilterToUpdate") {
+                                        QString field = elementItem.attribute("field", "0");
+                                        if (field == "field") {
+                                            comboBoxSetText(filterCheckOutBox, itemValue);
+                                        }
+                                        if (field == "item") {
+                                            filterCheckInBox->setCurrentIndex(itemValue.toInt());
+                                        }
+                                    }
+                                    if (itemName == "SetFilterToDelete") {
+                                        action_filter_not_delete->setChecked(itemValue.toInt());
+                                    }
+                                    if (itemName == "SetFilterFillByZero") {
+                                        action_filter_fill_zero_if_no_contains->setChecked(itemValue.toInt());
                                     }
                                 }
                             }
