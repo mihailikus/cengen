@@ -3970,7 +3970,8 @@ void cengen::execute_macro_file(QString fileName) {
                                         this->on_action_remove_zero_items();
                                     }
                                     if (itemName == "GetSoldItems") {
-                                        this->on_action_get_sold_items();
+                                        int toGroup = elementItem.attribute("toGroup", "1").toInt();
+                                        this->get_sold_items(toGroup);
                                     }
                                     if (itemName == "SortItems") {
                                         QVector<Tovar> lst = tableWidget->get_tovar_list("x").toVector();
@@ -4042,14 +4043,26 @@ void cengen::execute_macro_file(QString fileName) {
 }
 
 void cengen::on_action_get_sold_items() {
+    get_sold_items(true);
+
+}
+
+void cengen::get_sold_items(bool toGroup) {
+    ///функция получения списка проданных товаров по датам, указанным на вкладке Продажи
+    ///  если ключ toGroup ИСТИНА, то товары группируются по товарному номеру
+    ///     а также обновляются названия и цены товаров по ИСТОЧНИКУ данных
     QVector<Tovar> lst = sellFilter->get_sold_tovars();
-    tableWidget->load_tovar_list_into_table(collaps_same_items(lst));
+    if (toGroup) {
+        tableWidget->load_tovar_list_into_table(collaps_same_items(lst));
+        on_action_update_names();
+        update_prices(false);
+    } else {
+        tableWidget->load_tovar_list_into_table(lst);
+    }
+
     ui_tabWidget->setCurrentIndex(0);
 
-    on_action_update_names();
-    update_prices(false);
     on_action_get_sum_of_tovar();
-
 }
 
 void cengen::on_action_filter_not_delete(bool statu) {
