@@ -3897,9 +3897,29 @@ void cengen::edit_macro_file(QString fileName) {
 
     if (file.open(QIODevice::ReadOnly)) {
         if (doc.setContent(&file)) {
-            QTextEdit* edt = new QTextEdit();
-            edt->setText(doc.toString());
-            edt->show();
+            QTextEdit    *txt = new QTextEdit();
+
+            QFont fnt("Lucida Console", 9, QFont::Normal);
+            txt->document()->setDefaultFont(fnt);
+
+            new SyntaxHighlighter(txt->document());
+
+//            QPalette pal = txt->palette();
+//            pal.setColor(QPalette::Base, Qt::darkBlue);
+//            pal.setColor(QPalette::Text, Qt::yellow);
+//            txt->setPalette(pal);
+
+            txt->show();
+            txt->resize(640, 480);
+
+//            QFile file(":/SyntaxHighlighter.cpp");
+//            file.open(QFile::ReadOnly);
+            txt->setPlainText(doc.toString());
+
+//            txt->show();
+
+//            edt->setText(doc.toString());
+//            edt->show();
         }
     }
 }
@@ -3928,7 +3948,7 @@ void cengen::execute_macro_file(QString fileName) {
                                 if (!elementItem.isNull()) {
                                     itemName = elementItem.tagName();
                                     itemValue = elementItem.text();
-                                    qDebug() << "exec name " << itemName;
+                                    //qDebug() << "exec name " << itemName;
                                     if (itemName == "LoadTovarList") {
                                         this->open_tovar_list(itemValue);
                                     }
@@ -4010,7 +4030,7 @@ void cengen::execute_macro_file(QString fileName) {
                                     if (itemName == "SetSource") {
                                         //группа настроек источника данных
                                         QString field = elementItem.attribute("field", "0");
-                                        qDebug() << "field " << field <<itemValue;
+                                        //qDebug() << "field " << field <<itemValue;
                                         if (field == "file") {
                                             on_sourceDBFfile_changed(itemValue);
                                         }
@@ -4029,6 +4049,7 @@ void cengen::execute_macro_file(QString fileName) {
                                     }
                                     if (itemName == "SetFilterField") {
                                         QString field = elementItem.attribute("field", "0");
+                                        //qDebug() << "field " << field << itemValue;
                                         if (field == "file") {
                                             filterDbf.fileName = itemValue;
                                             on_filterFileName_changed();
@@ -4051,18 +4072,19 @@ void cengen::execute_macro_file(QString fileName) {
                                     }
                                     if (itemName == "SetFilterToUpdate") {
                                         QString field = elementItem.attribute("field", "0");
+                                        if (field == "on") {
+                                            filBoxCheck->setChecked(itemValue.toInt());
+                                        }
                                         if (field == "field") {
-                                            comboBoxSetText(filterCheckOutBox, itemValue);
+                                            comboBoxSetText(filterCheckInBox, itemValue);
                                         }
                                         if (field == "item") {
-                                            filterCheckInBox->setCurrentIndex(itemValue.toInt());
+                                            filterCheckOutBox->setCurrentIndex(itemValue.toInt());
                                         }
                                     }
-                                    if (itemName == "SetFilterToDelete") {
-                                        action_filter_not_delete->setChecked(itemValue.toInt());
-                                    }
                                     if (itemName == "SetFilterFillByZero") {
-                                        action_filter_fill_zero_if_no_contains->setChecked(itemValue.toInt());
+                                        //action_filter_fill_zero_if_no_contains->setChecked(itemValue.toInt());
+                                        fill_by_zero_box->setChecked(itemValue.toInt());
                                     }
                                 }
                             }

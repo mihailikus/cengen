@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     models/image.cpp \
     models/good.cpp \
     models/barcodeBox.cpp \
-    models/abstract_item.cpp
+    models/abstract_item.cpp \
+    SyntaxHighlighter.cpp
 HEADERS += cengen.h \
     tinformer.h \
     tovar.h \
@@ -60,7 +61,8 @@ HEADERS += cengen.h \
     models/image.h \
     models/good.h \
     models/barcodeBox.h \
-    models/abstract_item.h
+    models/abstract_item.h \
+    SyntaxHighlighter.h
 FORMS += \
     autozakaz.ui
 

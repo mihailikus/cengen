@@ -44,6 +44,7 @@
 #include "mainTableWidget.h"
 #include "autozakaz.h"
 #include "sellFilterWidget.h"
+#include "SyntaxHighlighter.h"
 
 QT_BEGIN_NAMESPACE
 class QPushButton;
