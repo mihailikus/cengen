@@ -303,6 +303,7 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
         for (int j = file_read_start; j<=file_read_end; j++) {
             nomer = get_one_cell(dbf_fields["tnomer"].offset + curLen,
                                      dbf_fields["tnomer"].length).toInt();
+
             if (nomer>i) i = nomer;
             curLen += length_of_each_record;
         }
@@ -314,10 +315,15 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
         }
         curLen =file_read_start * length_of_each_record + 1;
 
+        QString isDel;
         for (int j = file_read_start; j<=file_read_end; j++) {
             nomer = get_one_cell(dbf_fields["tnomer"].offset + curLen,
                                      dbf_fields["tnomer"].length).toInt();
-            offsets[nomer] = curLen;
+            isDel = get_one_cell(curLen-1, 1);
+            qDebug() << "is del " << isDel;
+            if (isDel != "*") {
+                offsets[nomer] = curLen;
+            }
 
             curLen += length_of_each_record;
         }
