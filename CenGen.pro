@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     models/good.cpp \
     models/barcodeBox.cpp \
     models/abstract_item.cpp \
-    SyntaxHighlighter.cpp
+    SyntaxHighlighter.cpp \
+    xmlTextEditor.cpp
 HEADERS += cengen.h \
     tinformer.h \
     tovar.h \
@@ -62,7 +63,8 @@ HEADERS += cengen.h \
     models/good.h \
     models/barcodeBox.h \
     models/abstract_item.h \
-    SyntaxHighlighter.h
+    SyntaxHighlighter.h \
+    xmlTextEditor.h
 FORMS += \
     autozakaz.ui
 

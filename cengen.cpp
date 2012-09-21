@@ -3890,38 +3890,9 @@ void cengen::on_action_edit_macro() {
 }
 
 void cengen::edit_macro_file(QString fileName) {
-    QDomDocument doc;
 
-    QFile file;
-    file.setFileName(fileName);
-
-    if (file.open(QIODevice::ReadOnly)) {
-        if (doc.setContent(&file)) {
-            QTextEdit    *txt = new QTextEdit();
-
-            QFont fnt("Lucida Console", 9, QFont::Normal);
-            txt->document()->setDefaultFont(fnt);
-
-            new SyntaxHighlighter(txt->document());
-
-//            QPalette pal = txt->palette();
-//            pal.setColor(QPalette::Base, Qt::darkBlue);
-//            pal.setColor(QPalette::Text, Qt::yellow);
-//            txt->setPalette(pal);
-
-            txt->show();
-            txt->resize(640, 480);
-
-//            QFile file(":/SyntaxHighlighter.cpp");
-//            file.open(QFile::ReadOnly);
-            txt->setPlainText(doc.toString());
-
-//            txt->show();
-
-//            edt->setText(doc.toString());
-//            edt->show();
-        }
-    }
+    xmlTextEditor *txt = new xmlTextEditor(fileName);
+    txt->show();
 }
 
 void cengen::execute_macro_file(QString fileName) {

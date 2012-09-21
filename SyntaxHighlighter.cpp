@@ -18,8 +18,8 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
      keywordFormat.setForeground(Qt::darkBlue);
      keywordFormat.setFontWeight(QFont::Bold);
      QStringList keywordPatterns;
-     keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
-                     << "\\bdouble\\b" << "\\benum\\b" << "\\bexplicit\\b"
+     keywordPatterns << "\\bSetFilterField\\b" << "\\bNewTovarList\\b" << "\\bSetFilterEnabled\\b"
+                     << "\\bSetFilterToUpdate\\b" << "\\bSetFilterDontDelete\\b" << "\\bSetFilterFillByZero\\b"
                      << "\\bfriend\\b" << "\\binline\\b" << "\\bint\\b"
                      << "\\blong\\b" << "\\bnamespace\\b" << "\\boperator\\b"
                      << "\\bprivate\\b" << "\\bprotected\\b" << "\\bpublic\\b"
@@ -41,7 +41,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
      highlightingRules.append(rule);
 
      singleLineCommentFormat.setForeground(Qt::red);
-     rule.pattern = QRegExp("//[^\n]*");
+     rule.pattern = QRegExp("<.*\/>");
      rule.format = singleLineCommentFormat;
      highlightingRules.append(rule);
 
@@ -53,8 +53,10 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
      highlightingRules.append(rule);
 
      functionFormat.setFontItalic(true);
+     functionFormat.setFontWeight(4);
      functionFormat.setForeground(Qt::blue);
-     rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
+     //rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
+     rule.pattern = QRegExp(">.*<");
      rule.format = functionFormat;
      highlightingRules.append(rule);
 
