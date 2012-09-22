@@ -20,7 +20,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
      QStringList keywordPatterns;
      keywordPatterns << "\\bSetFilterField\\b" << "\\bNewTovarList\\b" << "\\bSetFilterEnabled\\b"
                      << "\\bSetFilterToUpdate\\b" << "\\bSetFilterDontDelete\\b" << "\\bSetFilterFillByZero\\b"
-                     << "\\bfriend\\b" << "\\binline\\b" << "\\bint\\b"
+                     << "\\bmacro\\b" << "\\binline\\b" << "\\bint\\b"
                      << "\\blong\\b" << "\\bnamespace\\b" << "\\boperator\\b"
                      << "\\bprivate\\b" << "\\bprotected\\b" << "\\bpublic\\b"
                      << "\\bshort\\b" << "\\bsignals\\b" << "\\bsigned\\b"

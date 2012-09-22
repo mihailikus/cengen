@@ -3920,6 +3920,19 @@ void cengen::execute_macro_file(QString fileName) {
                                     itemName = elementItem.tagName();
                                     itemValue = elementItem.text();
                                     //qDebug() << "exec name " << itemName;
+                                    if (itemName == "macro") {
+                                        QFileInfo fi(itemName);
+                                        if (!fi.exists()) {
+                                            itemValue = QApplication::applicationDirPath() + "/" + itemValue;
+                                            qDebug() << "trying " << itemValue;
+                                        }
+                                        QFileInfo f2(itemName);
+                                        if (f2.exists()) {
+                                            qDebug() << "exec file " << itemName;
+                                            this->execute_macro_file(itemValue);
+                                            qDebug() << "execed file " << itemName;
+                                        }
+                                    }
                                     if (itemName == "LoadTovarList") {
                                         this->open_tovar_list(itemValue);
                                     }
