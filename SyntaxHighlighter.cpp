@@ -41,7 +41,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
      highlightingRules.append(rule);
 
      singleLineCommentFormat.setForeground(Qt::red);
-     rule.pattern = QRegExp("<.*\/>");
+     rule.pattern = QRegExp("<.*/>");
      rule.format = singleLineCommentFormat;
      highlightingRules.append(rule);
 
