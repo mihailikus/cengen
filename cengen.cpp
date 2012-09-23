@@ -2837,6 +2837,10 @@ void cengen::update_names(bool ask) {
             tovar.name_of_tovar = tr("NOT FOUND ")
                     + tovar.name_of_tovar;
             spisokWrong << tovar;
+            if (!ask) {
+                tovar.name_of_tovar = tr("NOT FOUND ") + QString::number(tovar.nomer_of_tovar);
+                spisokNew << tovar;
+            }
         } else {
             tovar.name_of_tovar = spTmp.at(0).name_of_tovar;
             tovar.barcode = spTmp.at(0).barcode;
