@@ -3335,7 +3335,7 @@ bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
     header.append(zeroh);
     header.append(zeroh);
 
-    //два байта 12 и 13 - зарезервировано (будет использоваться в 2050 году, когда � оссия создаст поселение на Марсе)
+    //два байта 12 и 13 - зарезервировано (будет использоваться в 2050 году, когда  оссия создаст поселение на Марсе)
     header.append(zeroh);
     header.append(zeroh);
 
@@ -4155,3 +4155,4 @@ void cengen::comboBoxSetText(QComboBox *bx, QString txt) {
     }
     on_opisateli_updated();
 }
+

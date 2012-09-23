@@ -14,7 +14,6 @@ QMAKE_CXXFLAGS += -fno-show-column
 TARGET = CenGen
 TEMPLATE = app
 SOURCES += main.cpp \
-    cengen.cpp \
     tinformer.cpp \
     cen_viewer.cpp \
     barcode.cpp \
@@ -34,7 +33,8 @@ SOURCES += main.cpp \
     models/barcodeBox.cpp \
     models/abstract_item.cpp \
     SyntaxHighlighter.cpp \
-    xmlTextEditor.cpp
+    xmlTextEditor.cpp \
+    cengen.cpp
 HEADERS += cengen.h \
     tinformer.h \
     tovar.h \
