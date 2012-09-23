@@ -50,18 +50,19 @@ xmlTextEditor::~xmlTextEditor() {
 }
 
 void xmlTextEditor::loadFile(QString name) {
-    QDomDocument doc;
+//    QDomDocument doc;
 
     QFile file;
     file.setFileName(name);
 
     if (file.open(QIODevice::ReadOnly)) {
-        if (doc.setContent(&file)) {
+        QByteArray tm = file.readAll();
+        QString atm;
+        atm = tm;
+        this->setText(atm);
+        new SyntaxHighlighter(this->document());
 
-        }
     }
-    this->setPlainText(doc.toString());
-    new SyntaxHighlighter(this->document());
 
 }
 
