@@ -471,6 +471,7 @@ private slots:
     QList<Tovar> group(QList<Tovar> list);
 
     void on_action_minus_triggered();
+    void minus_file(QString str);
     void on_filterBox_toggled(bool arg1);
     void on_filterFileSelectButton_clicked();
     void on_filterFileName_changed();

@@ -2229,7 +2229,10 @@ void cengen::on_action_minus_triggered()
         qDebug() << "Please select file name";
         return;
     }
+    this->minus_file(fileName);
+}
 
+void cengen::minus_file(QString fileName) {
     QDomDocument doc;
 
     QFile file;
@@ -3328,7 +3331,7 @@ bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {
     header.append(zeroh);
     header.append(zeroh);
 
-    //два байта 12 и 13 - зарезервировано (будет использоваться в 2050 году, когда Россия создаст поселение на Марсе)
+    //два байта 12 и 13 - зарезервировано (будет использоваться в 2050 году, когда � оссия создаст поселение на Марсе)
     header.append(zeroh);
     header.append(zeroh);
 
@@ -3938,6 +3941,9 @@ void cengen::execute_macro_file(QString fileName) {
                                     }
                                     if (itemName == "SaveTovarList") {
                                         this->save_tovar_list_into_file(itemValue, tableWidget->get_tovar_list("x"), ask);
+                                    }
+                                    if (itemName == "MinusTovarList") {
+                                        this->minus_file(itemValue);
                                     }
                                     if (itemName == "NewTovarList") {
                                         this->on_action_new_triggered();
