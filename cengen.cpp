@@ -2834,11 +2834,13 @@ void cengen::update_names(bool ask) {
         tovar = spisokCur.at(i);
         spTmp = my_informer->info(QString::number(tovar.nomer_of_tovar), "tnomer");
         if (!spTmp.count()) {
+            if (ask) {
             tovar.name_of_tovar = tr("NOT FOUND ")
                     + tovar.name_of_tovar;
+            }
             spisokWrong << tovar;
             if (!ask) {
-                tovar.name_of_tovar = tr("NOT FOUND ") + QString::number(tovar.nomer_of_tovar);
+                //tovar.name_of_tovar = QString::number(tovar.nomer_of_tovar);
                 spisokNew << tovar;
             }
         } else {
