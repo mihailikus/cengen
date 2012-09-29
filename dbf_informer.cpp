@@ -320,7 +320,7 @@ QList<Tovar> dbf_informer::found_by_tnomer(int tnomer) {
             nomer = get_one_cell(dbf_fields["tnomer"].offset + curLen,
                                      dbf_fields["tnomer"].length).toInt();
             isDel = get_one_cell(curLen-1, 1);
-            qDebug() << "is del " << isDel;
+            //qDebug() << "is del " << isDel;
             if (isDel != "*") {
                 offsets[nomer] = curLen;
             }
