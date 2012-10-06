@@ -4098,7 +4098,7 @@ void cengen::execute_macro_file(QString fileName) {
                                             ui_filterMethodBox->setCurrentIndex(itemValue.toInt());
                                         }
                                         if (field == "value") {
-                                            if (itemValue == "%currentDate%") {
+                                            if (itemValue == "%today%") {
                                                 itemValue = QDate::currentDate().toString("yyyyMMdd");
                                             }
                                             ui_filterLineText->setText(itemValue);
