@@ -59,6 +59,8 @@ cengen::cengen(QWidget *parent) : QMainWindow(parent)
 
     file_is_ready = false;
 
+    preferDBFName = ""; //имя файла для экспорта в DBF
+
     //После создания всех форм - читаем настройки из конфига
     this->readSettings();
 
@@ -93,6 +95,11 @@ void cengen::make_actions() {
     action_save->setShortcut(QKeySequence("Ctrl+S"));
     action_save->setToolTip(tr("Save current tovar list"));
     connect(action_save, SIGNAL(triggered()), SLOT(on_action_save_triggered()));
+
+    action_export_to_dbf = new QAction(tr("Export to DBF file"), this);
+    action_export_to_dbf->setShortcut(QKeySequence("Alt+E"));
+    connect(action_export_to_dbf, SIGNAL(triggered()),
+            SLOT(on_action_export_to_dbf()));
 
     //сформировать ценники
     action_make = new QAction(QIcon(":/share/images/resources/apply.png"),
@@ -314,9 +321,14 @@ void cengen::make_mainMenu() {
     menuFile->addAction(action_minus);
     menuFile->addAction(action_save);
     menuFile->addSeparator();
+    exportMenu = menuFile->addMenu(tr("Export... "));
+    menuFile->addSeparator();
     menuFile->addAction(action_print);
     menuFile->addSeparator();
     menuFile->addAction(action_exit);
+
+    exportMenu->addAction(action_export_to_dbf);
+    exportMenu->addAction(action_export_tovar_list_to_clipboard);
 
     menuEdit = mainMenu->addMenu(tr("Edit"));
     menuEdit->addAction(action_on_off_filter);
@@ -3280,6 +3292,14 @@ void cengen::select_ext_shablon_button_clicked() {
     QFileInfo fi(ext_shablon_name_edit->text());
     QString fileName = QFileDialog::getOpenFileName(this, tr("Choose external shablon location"), fi.path() , tr("Fast report shablons (*.frf)"));
     ext_shablon_name_edit->setText(fileName);
+}
+
+void cengen::on_action_export_to_dbf() {
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save tovar list"), preferDBFName , tr("d-Base DBF files (*.dbf)"));
+    if (fileName == "") return;
+    if (save_tovar_list_into_dbf(fileName, tableWidget->get_tovar_list("x")))
+        preferDBFName = fileName;
+    //если сохранено успешно - запоминаем имя для (возможно) еще раз экспорта
 }
 
 bool cengen::save_tovar_list_into_dbf(QString fileName, QList<Tovar> spisok) {

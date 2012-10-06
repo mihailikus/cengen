@@ -123,6 +123,7 @@ protected:
 
 private:
     QString org_name, app_name;
+    QString preferDBFName;  //запоминание имени файла для экспорта в DBF
 
     TabsOrder order;
 
@@ -323,11 +324,13 @@ private:
     QMenu *menuFile, *menuEdit, *menuSell, *menuHelp;
     QMenu *cenMenu;
     QMenu *macroMenu;
+    QMenu *exportMenu;
     QMenu *selectFoundMethodMenu;
 
     QAction* action_new; //новый файл
     QAction* action_exit; //выход
     QAction* action_save; //сохранить
+    QAction* action_export_to_dbf;
     QAction* action_open; //загрузить список
     QAction* action_make; //сформировать ценники
     QAction* action_scale_up;
@@ -444,6 +447,7 @@ private slots:
     void select_ext_app_button_clicked();
     void select_ext_shablon_button_clicked();
     void on_data_changed();
+    void on_action_export_to_dbf();
 
 
     QList<Tovar> show_found_items(QList<Tovar> inputList);
