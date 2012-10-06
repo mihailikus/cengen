@@ -906,6 +906,21 @@ void cengen::changeEvent(QEvent *e)
     }
 }
 
+bool cengen::set_source_from_dbf(QString fileName) {
+
+    on_sourceDBFfile_changed(fileName);
+
+//    if (field == "tnomer") {
+    comboBoxSetText(ui_comboTnomer, "N_TOV");
+//    if (field == "tname") {
+    comboBoxSetText(ui_comboTname, "NAME_T");
+//    if (field == "tprice") {
+    comboBoxSetText(ui_comboTprice, "CHENA");
+//    if (field == "tbarcode") {
+    comboBoxSetText(ui_comboTbarcode, "SHKOD");
+    return true;
+}
+
 void cengen::load_all_records() {
     QList<Tovar> tovarAll;
     my_informer->set_limit_search(my_informer->get_maximum());

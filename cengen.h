@@ -100,6 +100,7 @@ public:
     void save_source_settings_file(QString fileName);
     void turn_filter_ON();
     void open_tovar_list(QString fileName);
+    bool set_source_from_dbf(QString fileName);
     void load_all_records();
     void set_ext_shablon_name(QString fileName);
     void execute_macro_file(QString fileName);

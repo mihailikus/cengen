@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
         if (check_extention(param, ".dbf")) {
             qDebug() << "Trying to load dbf file";
             w.save_source_settings_file("_$tmp.das");
-            bool good = w.load_source_settings_file("_$dbf");
+            bool good = w.set_source_from_dbf(param);
             if (good) w.load_all_records();
             w.load_source_settings_file("_$tmp.das");
             w.repaint();
