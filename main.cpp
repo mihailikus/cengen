@@ -110,7 +110,10 @@ int main(int argc, char *argv[])
             w.set_ext_shablon_name(param);
         }
         if (check_extention(param, "csf")) {
+            QLabel *lbl = new QLabel("Please wait! Executing scenarium file");
+            lbl->show();
             w.execute_macro_file(param);
+            lbl->hide();
         }
     }
 
