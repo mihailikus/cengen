@@ -61,6 +61,8 @@ public:
         return sellFileName;
     }
 
+    void selectSellFile(QString str);
+
     void setOpisateli(QStringList lst) {
         sellOpisateli = lst;
         sellNomerBox->addItems(sellOpisateli);

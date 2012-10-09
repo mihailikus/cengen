@@ -70,7 +70,8 @@ FORMS += \
 
 OTHER_FILES += \
     todo.txt \
-    tmp.txt
+    tmp.txt \
+    ../CenGen-build-desktop-Qt_4_8_1________/debug/startup.csf
 
 TRANSLATIONS = cengen_ru.ts\
     cengen_en.ts

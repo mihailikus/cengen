@@ -21,10 +21,15 @@ xmlTextEditor::xmlTextEditor(QString name) {
     action_exit->setShortcut(QKeySequence("Esc"));
     connect(action_exit, SIGNAL(triggered()), SLOT(on_action_exit()));
 
+    action_xml = new QAction(tr("Parse to XML"), this);
+    action_xml->setShortcut(QKeySequence("F2"));
+    connect(action_xml, SIGNAL(triggered()), SLOT(on_action_xml()));
+
 
     addAction(action_save);
     addAction(action_update);
     addAction(action_exit);
+    addAction(action_xml);
 
 
     //            QPalette pal = txt->palette();
@@ -47,6 +52,17 @@ xmlTextEditor::xmlTextEditor(QString name) {
 
 xmlTextEditor::~xmlTextEditor() {
     saveFile(fileName);
+}
+
+void xmlTextEditor::on_action_xml() {
+    QDomDocument doc;
+    if (doc.setContent(this->toPlainText())) {
+        this->setText(doc.toString());
+    } else {
+        //если в текста есть ошибки и он не парсится - вывести сообщение
+        QLabel *lbl = new QLabel("error");
+        lbl->show();
+    }
 }
 
 void xmlTextEditor::loadFile(QString name) {

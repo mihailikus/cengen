@@ -3963,7 +3963,7 @@ void cengen::execute_macro_file(QString fileName) {
                                 if (!elementItem.isNull()) {
                                     itemName = elementItem.tagName();
                                     itemValue = elementItem.text();
-                                    //qDebug() << "exec name " << itemName;
+                                    qDebug() << "exec name " << itemName;
                                     if (itemName == "macro") {
                                         QFileInfo fi(itemValue);
                                         if (!fi.exists()) {
@@ -4123,7 +4123,7 @@ void cengen::execute_macro_file(QString fileName) {
                                     if (itemName == "SetSellField") {
                                         QString field = elementItem.attribute("field", "0");
                                         if (field == "file") {
-                                            sellFilter->setSellFileName(itemValue);
+                                            sellFilter->selectSellFile(itemValue);
                                         }
                                         if (field == "tnomer") {
                                             comboBoxSetText(sellFilter->sellNomerBox, itemValue);

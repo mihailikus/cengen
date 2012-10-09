@@ -332,6 +332,9 @@ QList<Tovar> SellFilterWidget::apply_sell_filter(QList<Tovar> curTb, QDate dt1, 
 void SellFilterWidget::on_selectSellFileButtonClicked() {
     //выбор DBF-файла
     QString str = QFileDialog::getOpenFileName(0, "Select SELL file", sellFileName, "DBF-files (*.dbf)");
+}
+
+void SellFilterWidget::selectSellFile(QString str) {
     sellFileName = str;
     last_known_file = str;
     last_known_pos = 0;
