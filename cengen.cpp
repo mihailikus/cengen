@@ -3963,7 +3963,7 @@ void cengen::execute_macro_file(QString fileName) {
                                 if (!elementItem.isNull()) {
                                     itemName = elementItem.tagName();
                                     itemValue = elementItem.text();
-                                    qDebug() << "exec name " << itemName;
+                                    //qDebug() << "exec name " << itemName;
                                     if (itemName == "macro") {
                                         QFileInfo fi(itemValue);
                                         if (!fi.exists()) {
@@ -4149,6 +4149,25 @@ void cengen::execute_macro_file(QString fileName) {
                                     }
                                     if (itemName == "SetExternalShablon") {
                                         ext_shablon_name_edit->setText(itemValue);
+                                    }
+                                    if (itemName == "Autozakaz") {
+                                        QString field = elementItem.attribute("field", "0");
+                                        if (field == "magaz") {
+                                            acfg.ostat_magazin = itemValue;
+                                        }
+                                        if (field == "sklad") {
+                                            acfg.ostat_sklad = itemValue;
+                                        }
+                                        if (field == "assort") {
+                                            acfg.assort = itemValue;
+                                        }
+                                        if (field == "quants") {
+                                            acfg.korob_quantum = itemValue;
+                                        }
+                                        if (field == "korob") {
+                                            acfg.kol_v_korob = itemValue;
+                                        }
+
                                     }
 
 
