@@ -127,6 +127,11 @@ public:
     void on_clear_last_button_clicked(QSettings *m_settings);
     void updateSellTab();
 
+    //по-хорошему конечно так не делается, но мне уже лень писать, я скоро увольняюсь
+    QComboBox *sellNomerBox, *sellDateBox, *sellTimeBox, *sellKolBox;
+    QCalendarWidget *dateStart, *dateStop;
+
+
 private slots:
     void on_selectSellFileButtonClicked();
     void on_clear_last_button_clicked();
@@ -138,14 +143,12 @@ private:
     //QWidget *tab7;
     QGridLayout *layTab7;
     QLabel *lb1, *lb2, *lb3, *lb4, *lb5, *lb6, *lb7, *lb8, *lb9, *lb10;
-    QComboBox *sellNomerBox, *sellDateBox, *sellTimeBox, *sellKolBox;
     QPushButton *selectSellFileButton;
     QPushButton *saveSellSettingsButton;
     QString sellFileName;
     QStringList sellOpisateli;
     QComboBox *methodSellBox;
     //QLineEdit *methodSellValue;
-    QCalendarWidget *dateStart, *dateStop;
     bool sell_file_is_checked;
     Tinformer *sell_informer;
     QDate last_known_date;

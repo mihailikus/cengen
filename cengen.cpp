@@ -4120,6 +4120,38 @@ void cengen::execute_macro_file(QString fileName) {
                                         //action_filter_fill_zero_if_no_contains->setChecked(itemValue.toInt());
                                         fill_by_zero_box->setChecked(itemValue.toInt());
                                     }
+                                    if (itemName == "SetSellField") {
+                                        QString field = elementItem.attribute("field", "0");
+                                        if (field == "file") {
+                                            sellFilter->setSellFileName(itemValue);
+                                        }
+                                        if (field == "tnomer") {
+                                            comboBoxSetText(sellFilter->sellNomerBox, itemValue);
+                                        }
+                                        if (field == "date") {
+                                            comboBoxSetText(sellFilter->sellDateBox, itemValue);
+                                        }
+                                        if (field == "time") {
+                                            comboBoxSetText(sellFilter->sellTimeBox, itemValue);
+                                        }
+                                        if (field == "quantity") {
+                                            comboBoxSetText(sellFilter->sellKolBox, itemValue);
+                                        }
+                                        if (field == "dateStart") {
+                                            sellFilter->dateStart->setSelectedDate(QDate::currentDate().addDays(itemValue.toInt()));
+                                        }
+                                        if (field == "dateStop") {
+                                            sellFilter->dateStop->setSelectedDate(QDate::currentDate().addDays(itemValue.toInt()));
+                                        }
+                                    }
+                                    if (itemName == "SetExternalApp") {
+                                        ext_prog_name_edit->setText(itemValue);
+                                    }
+                                    if (itemName == "SetExternalShablon") {
+                                        ext_shablon_name_edit->setText(itemValue);
+                                    }
+
+
                                 }
                             }
                             nodeItem = nodeItem.nextSibling();
